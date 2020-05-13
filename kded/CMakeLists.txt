@@ -1,8 +1,8 @@
-add_definitions(-DTRANSLATION_DOMAIN=\"kscreen\")
+add_definitions(-DTRANSLATION_DOMAIN=\"kdisplay\")
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/../)
 
-set(kscreen_daemon_SRCS
+set(kdisplay_daemon_SRCS
     daemon.cpp
     config.cpp
     output.cpp
@@ -17,37 +17,41 @@ set(kscreen_daemon_SRCS
     ${CMAKE_SOURCE_DIR}/common/utils.cpp
 )
 
-ecm_qt_declare_logging_category(kscreen_daemon_SRCS HEADER kscreen_daemon_debug.h IDENTIFIER KSCREEN_KDED CATEGORY_NAME kscreen.kded)
-
-qt5_add_dbus_interface(kscreen_daemon_SRCS
-    org.freedesktop.DBus.Properties.xml
-    freedesktop_interface)
-qt5_add_dbus_adaptor(kscreen_daemon_SRCS
-    org.kde.KScreen.xml
-    daemon.h
-    KScreenDaemon
+ecm_qt_declare_logging_category(kdisplay_daemon_SRCS
+    HEADER kdisplay_daemon_debug.h
+    IDENTIFIER KDISPLAY_KDED
+    CATEGORY_NAME kdisplay.kded
 )
 
-add_library(kscreen MODULE ${kscreen_daemon_SRCS})
+qt5_add_dbus_interface(kdisplay_daemon_SRCS
+    org.freedesktop.DBus.Properties.xml
+    freedesktop_interface)
+qt5_add_dbus_adaptor(kdisplay_daemon_SRCS
+    org.kwinft.kdisplay.xml
+    daemon.h
+    KDisplayDaemon
+)
 
-target_link_libraries(kscreen Qt5::Widgets
+add_library(kdisplay MODULE ${kdisplay_daemon_SRCS})
+
+target_link_libraries(kdisplay Qt5::Widgets
                               Qt5::DBus
                               Qt5::Quick
                               Qt5::Sensors
                               KF5::Declarative
-                              KF5::Screen
+                              Disman
                               KF5::DBusAddons
                               KF5::I18n
                               KF5::XmlGui
                               KF5::GlobalAccel)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/kscreen.desktop.cmake
-               ${CMAKE_CURRENT_BINARY_DIR}/kscreen.desktop
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/kdisplay.desktop.cmake
+               ${CMAKE_CURRENT_BINARY_DIR}/kdisplay.desktop
                @ONLY)
 
-kcoreaddons_desktop_to_json(kscreen ${CMAKE_CURRENT_BINARY_DIR}/kscreen.desktop)
+kcoreaddons_desktop_to_json(kdisplay ${CMAKE_CURRENT_BINARY_DIR}/kdisplay.desktop)
 
-install(TARGETS kscreen DESTINATION ${KDE_INSTALL_PLUGINDIR}/kf5/kded)
+install(TARGETS kdisplay DESTINATION ${KDE_INSTALL_PLUGINDIR}/kf5/kded)
 
 set(QML_FILES
     qml/Osd.qml
@@ -56,4 +60,4 @@ set(QML_FILES
     qml/OutputIdentifier.qml
 )
 
-install(FILES ${QML_FILES} DESTINATION ${KDE_INSTALL_DATADIR}/kded_kscreen/qml)
+install(FILES ${QML_FILES} DESTINATION ${KDE_INSTALL_DATADIR}/kded_kdisplay/qml)

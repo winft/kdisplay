@@ -30,7 +30,7 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.kquickcontrolsaddons 2.0
 
-import org.kde.private.kscreen 1.0
+import org.kwinft.private.kdisplay 1.0
 
 Item {
     id: root
@@ -39,7 +39,7 @@ Item {
     Plasmoid.status: presentationModeEnabled || plasmoid.nativeInterface.connectedOutputCount > 1 ? PlasmaCore.Types.ActiveStatus : PlasmaCore.Types.PassiveStatus
     Plasmoid.toolTipSubText: presentationModeEnabled ? i18n("Presentation mode is enabled") : ""
 
-    readonly property string kcmName: "kcm_kscreen"
+    readonly property string kcmName: "kcm_kdisplay"
     // does this need an ellipsis?
     readonly property string kcmLabel: i18nc("Open the full display settings module", "Advanced Display Settings")
     readonly property string kcmIconName: "preferences-desktop-display-randr"

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KQuickAddons/ConfigModule>
 
-namespace KScreen
+namespace Disman
 {
 class ConfigOperation;
 }
@@ -28,7 +28,7 @@ class OrientationSensor;
 class OutputIdentifier;
 class OutputModel;
 
-class KCMKScreen : public KQuickAddons::ConfigModule
+class KCMKDisplay : public KQuickAddons::ConfigModule
 {
     Q_OBJECT
 
@@ -57,9 +57,9 @@ class KCMKScreen : public KQuickAddons::ConfigModule
 
 
 public:
-    explicit KCMKScreen (QObject *parent = nullptr,
+    explicit KCMKDisplay (QObject *parent = nullptr,
                          const QVariantList &args = QVariantList());
-    ~KCMKScreen() override = default;
+    ~KCMKDisplay() override = default;
 
     void load() override;
     void save() override;
@@ -117,7 +117,7 @@ private:
     void fetchGlobalScale();
     void writeGlobalScale();
 
-    void configReady(KScreen::ConfigOperation *op);
+    void configReady(Disman::ConfigOperation *op);
     void continueNeedsSaveCheck(bool needs);
 
     std::unique_ptr<OutputIdentifier> m_outputIdentifier;

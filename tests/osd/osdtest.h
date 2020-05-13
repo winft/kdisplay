@@ -22,7 +22,7 @@
 #include <QObject>
 
 
-namespace KScreen
+namespace Disman
 {
 class OsdManager;
 

@@ -14,10 +14,10 @@ target_link_libraries(osdtest Qt5::Core
                               Qt5::DBus
                               Qt5::Quick
                               Qt5::Qml
-                              KF5::Screen
+                              Disman
                               KF5::I18n
                               KF5::Declarative
 )
 
-add_test(NAME kscreen-kded-osdtest COMMAND osdtest)
+add_test(NAME kdisplay-kded-osdtest COMMAND osdtest)
 ecm_mark_as_test(osdtest)

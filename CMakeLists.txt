@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(KScreen)
+project(KDisplay)
 set(PROJECT_VERSION "5.18.80")
-set(KSCREEN_VERSION ${PROJECT_VERSION})
+set(KDISPLAY_VERSION ${PROJECT_VERSION})
 
-add_definitions("-DKSCREEN_VERSION=\"${KSCREEN_VERSION}\"")
+add_definitions("-DKDISPLAY_VERSION=\"${KDISPLAY_VERSION}\"")
 
 set(QT_MIN_VERSION "5.14.0")
 set(KF5_MIN_VERSION "5.66.0")
@@ -36,8 +36,8 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
 # WARNING PlasmaQuick provides unversioned CMake config
 find_package(KF5 REQUIRED COMPONENTS PlasmaQuick)
 
-set(MIN_LIBKSCREEN_VERSION "5.2.91")
-find_package(KF5Screen ${MIN_LIBKSCREEN_VERSION} REQUIRED)
+set(MIN_DISMAN_VERSION "0.518.0")
+find_package(Disman ${MIN_DISMAN_VERSION} REQUIRED)
 
 add_subdirectory(kcm)
 add_subdirectory(kded)
@@ -49,6 +49,6 @@ add_subdirectory(console)
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)
 kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
 
-install(FILES kscreen.categories  DESTINATION  ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
+install(FILES kdisplay.categories  DESTINATION  ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

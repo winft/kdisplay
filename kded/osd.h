@@ -24,7 +24,7 @@
 #include <QRect>
 #include <QString>
 
-#include <KScreen/Output>
+#include <Disman/Output>
 
 #include "osdmanager.h"
 
@@ -34,7 +34,7 @@ namespace KDeclarative {
 
 class QTimer;
 
-namespace KScreen {
+namespace Disman {
 
 class Osd : public QObject {
 
@@ -45,7 +45,7 @@ public:
     ~Osd() override;
 
     void showGenericOsd(const QString &icon, const QString &text);
-    void showOutputIdentifier(const KScreen::OutputPtr &output);
+    void showOutputIdentifier(const Disman::OutputPtr &output);
     void showActionSelector();
     void hideOsd();
 
@@ -61,7 +61,7 @@ private:
     void showOsd();
     void updatePosition();
 
-    KScreen::OutputPtr m_output;
+    Disman::OutputPtr m_output;
     QRect m_outputGeometry;
     KDeclarative::QmlObject *m_osdObject = nullptr;
     KDeclarative::QmlObject *m_osdActionSelector = nullptr;

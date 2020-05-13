@@ -25,27 +25,27 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-#include <kscreen/types.h>
-#include <kscreen/config.h>
-#include <kscreen/output.h>
-#include <kscreen/mode.h>
-#include <kscreen/configmonitor.h>
-#include <kscreen/edid.h>
-#include <kscreen/getconfigoperation.h>
+#include <disman/types.h>
+#include <disman/config.h>
+#include <disman/output.h>
+#include <disman/mode.h>
+#include <disman/configmonitor.h>
+#include <disman/edid.h>
+#include <disman/getconfigoperation.h>
 
 
 static QTextStream cout(stdout);
 
-namespace KScreen
+namespace Disman
 {
 namespace ConfigSerializer
 {
-// Exported private symbol in configserializer_p.h in KScreen
-extern QJsonObject serializeConfig(const KScreen::ConfigPtr &config);
+// Exported private symbol in configserializer_p.h in Disman
+extern QJsonObject serializeConfig(const Disman::ConfigPtr &config);
 }
 }
 
-using namespace KScreen;
+using namespace Disman;
 
 Console::Console(const ConfigPtr &config)
     : QObject()
@@ -181,13 +181,13 @@ QString Console::typetoString(const Output::Type& type) const
 
 void Console::printJSONConfig()
 {
-    QJsonDocument doc(KScreen::ConfigSerializer::serializeConfig(m_config));
+    QJsonDocument doc(Disman::ConfigSerializer::serializeConfig(m_config));
     cout << doc.toJson(QJsonDocument::Indented);
 }
 
 void Console::printSerializations()
 {
-    QString path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kscreen/");
+    QString path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kdisplay/");
     qDebug() << "Configs in: " << path;
 
     QDir dir(path);

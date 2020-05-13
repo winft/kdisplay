@@ -1,21 +1,21 @@
-add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_org.kde.kscreen\")
+add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_org.kwinft.kdisplay\")
 
-set(kscreenapplet_SRCS
-    kscreenapplet.cpp
+set(kdisplayApplet_SRCS
+    kdisplay_applet.cpp
     ../kded/osdaction.cpp
 )
 
-add_library(plasma_applet_kscreen MODULE ${kscreenapplet_SRCS})
+add_library(plasma_applet_kdisplay MODULE ${kdisplayApplet_SRCS})
 
-kcoreaddons_desktop_to_json(plasma_applet_kscreen package/metadata.desktop)
+kcoreaddons_desktop_to_json(plasma_applet_kdisplay package/metadata.desktop)
 
-target_link_libraries(plasma_applet_kscreen
+target_link_libraries(plasma_applet_kdisplay
                       Qt5::Qml
                       Qt5::DBus
                       KF5::I18n
                       KF5::Plasma
-                      KF5::Screen)
+                      Disman)
 
-install(TARGETS plasma_applet_kscreen DESTINATION ${KDE_INSTALL_PLUGINDIR}/plasma/applets)
+install(TARGETS plasma_applet_kdisplay DESTINATION ${KDE_INSTALL_PLUGINDIR}/plasma/applets)
 
-plasma_install_package(package org.kde.kscreen)
+plasma_install_package(package org.kwinft.kdisplay)

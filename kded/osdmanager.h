@@ -27,7 +27,7 @@
 #include "osdaction.h"
 
 
-namespace KScreen {
+namespace Disman {
 
 class ConfigOperation;
 class Osd;
@@ -35,7 +35,7 @@ class Output;
 
 class OsdManager : public QObject {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.kscreen.osdService")
+    Q_CLASSINFO("D-Bus Interface", "org.kwinft.kidsplay.osdService")
 
 public:
     OsdManager(QObject *parent = nullptr);
@@ -48,8 +48,8 @@ public Q_SLOTS:
     OsdAction *showActionSelector();
 
 private:
-    void slotIdentifyOutputs(KScreen::ConfigOperation *op);
-    QMap<QString, KScreen::Osd*> m_osds;
+    void slotIdentifyOutputs(Disman::ConfigOperation *op);
+    QMap<QString, Disman::Osd*> m_osds;
     QTimer* m_cleanupTimer;
 };
 

@@ -21,7 +21,7 @@
  *
  */
 
-#include "kscreenapplet.h"
+#include "kdisplay_applet.h"
 
 #include <QQmlEngine> // for qmlRegisterType
 #include <QMetaEnum>
@@ -29,48 +29,48 @@
 #include <QDBusConnection>
 #include <QDBusMessage>
 
-#include <KScreen/Config>
-#include <KScreen/ConfigMonitor>
-#include <KScreen/GetConfigOperation>
-#include <KScreen/Output>
+#include <Disman/Config>
+#include <Disman/ConfigMonitor>
+#include <Disman/GetConfigOperation>
+#include <Disman/Output>
 
 #include "../kded/osdaction.h"
 
 #include <algorithm>
 
-KScreenApplet::KScreenApplet(QObject *parent, const QVariantList &data)
+KDisplayApplet::KDisplayApplet(QObject *parent, const QVariantList &data)
     : Plasma::Applet(parent, data)
 {
 
 }
 
-KScreenApplet::~KScreenApplet() = default;
+KDisplayApplet::~KDisplayApplet() = default;
 
-void KScreenApplet::init()
+void KDisplayApplet::init()
 {
-    qmlRegisterSingletonType<KScreen::OsdAction>("org.kde.private.kscreen", 1, 0, "OsdAction", [](QQmlEngine *, QJSEngine *) -> QObject* {
-        return new KScreen::OsdAction();
+    qmlRegisterSingletonType<Disman::OsdAction>("org.kwinft.private.kdisplay", 1, 0, "OsdAction", [](QQmlEngine *, QJSEngine *) -> QObject* {
+        return new Disman::OsdAction();
     });
 
-    connect(new KScreen::GetConfigOperation(KScreen::GetConfigOperation::NoEDID), &KScreen::ConfigOperation::finished,
-            this, [this](KScreen::ConfigOperation *op) {
-                m_screenConfiguration = qobject_cast<KScreen::GetConfigOperation *>(op)->config();
+    connect(new Disman::GetConfigOperation(Disman::GetConfigOperation::NoEDID), &Disman::ConfigOperation::finished,
+            this, [this](Disman::ConfigOperation *op) {
+                m_screenConfiguration = qobject_cast<Disman::GetConfigOperation *>(op)->config();
 
-                KScreen::ConfigMonitor::instance()->addConfig(m_screenConfiguration);
-                connect(KScreen::ConfigMonitor::instance(), &KScreen::ConfigMonitor::configurationChanged, this, &KScreenApplet::checkOutputs);
+                Disman::ConfigMonitor::instance()->addConfig(m_screenConfiguration);
+                connect(Disman::ConfigMonitor::instance(), &Disman::ConfigMonitor::configurationChanged, this, &KDisplayApplet::checkOutputs);
 
                 checkOutputs();
     });
 }
 
-int KScreenApplet::connectedOutputCount() const
+int KDisplayApplet::connectedOutputCount() const
 {
     return m_connectedOutputCount;
 }
 
-void KScreenApplet::applyLayoutPreset(Action action)
+void KDisplayApplet::applyLayoutPreset(Action action)
 {
-    const QMetaEnum actionEnum = QMetaEnum::fromType<KScreen::OsdAction::Action>();
+    const QMetaEnum actionEnum = QMetaEnum::fromType<Disman::OsdAction::Action>();
     Q_ASSERT(actionEnum.isValid());
 
     const QString presetName = QString::fromLatin1(actionEnum.valueToKey(action));
@@ -80,8 +80,8 @@ void KScreenApplet::applyLayoutPreset(Action action)
 
     QDBusMessage msg = QDBusMessage::createMethodCall(
         QStringLiteral("org.kde.kded5"),
-        QStringLiteral("/modules/kscreen"),
-        QStringLiteral("org.kde.KScreen"),
+        QStringLiteral("/modules/kdisplay"),
+        QStringLiteral("org.kwinft.kdisplay"),
         QStringLiteral("applyLayoutPreset")
     );
 
@@ -90,7 +90,7 @@ void KScreenApplet::applyLayoutPreset(Action action)
     QDBusConnection::sessionBus().call(msg, QDBus::NoBlock);
 }
 
-void KScreenApplet::checkOutputs()
+void KDisplayApplet::checkOutputs()
 {
     if (!m_screenConfiguration) {
         return;
@@ -99,7 +99,7 @@ void KScreenApplet::checkOutputs()
     const int oldConnectedOutputCount = m_connectedOutputCount;
 
     const auto outputs = m_screenConfiguration->outputs();
-    m_connectedOutputCount = std::count_if(outputs.begin(), outputs.end(), [](const KScreen::OutputPtr &output) {
+    m_connectedOutputCount = std::count_if(outputs.begin(), outputs.end(), [](const Disman::OutputPtr &output) {
         return output->isConnected();
     });
 
@@ -108,6 +108,6 @@ void KScreenApplet::checkOutputs()
     }
 }
 
-K_EXPORT_PLASMA_APPLET_WITH_JSON(kscreen, KScreenApplet, "metadata.json")
+K_EXPORT_PLASMA_APPLET_WITH_JSON(kdisplay, KDisplayApplet, "metadata.json")
 
-#include "kscreenapplet.moc"
+#include "kdisplay_applet.moc"

@@ -59,7 +59,7 @@ KCM.SimpleKCM {
             id: errBackendMsg
             Layout.fillWidth: true
             type: Kirigami.MessageType.Error
-            text: i18n("No KScreen backend found. Please check your KScreen installation.")
+            text: i18n("No KDisplay backend found. Please check your KDisplay installation.")
             visible: false
             showCloseButton: false
         }

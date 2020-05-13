@@ -18,7 +18,7 @@ import QtQuick 2.9
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.4 as Controls
 import org.kde.kirigami 2.4 as Kirigami
-import org.kde.private.kcm.kscreen 1.0 as KScreen
+import org.kwinft.private.kcm.kdisplay 1.0 as KDisplay
 
 Controls.ToolButton {
     id: root
@@ -57,20 +57,20 @@ Controls.ToolButton {
     Component.onCompleted: {
         switch(value) {
         case 90:
-            rot = KScreen.Output.Left;
+            rot = KDisplay.Output.Left;
             tooltip = i18n("90° Clockwise");
             break;
         case 180:
-            rot = KScreen.Output.Inverted;
+            rot = KDisplay.Output.Inverted;
             tooltip = i18n("Upside Down");
             break;
         case 270:
-            rot = KScreen.Output.Right;
+            rot = KDisplay.Output.Right;
             tooltip = i18n("90° Counterclockwise")
             break;
         case 0:
         default:
-            rot = KScreen.Output.None;
+            rot = KDisplay.Output.None;
             tooltip = i18n("No Rotation");
         }
     }

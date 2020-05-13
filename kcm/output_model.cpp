@@ -43,14 +43,14 @@ QVariant OutputModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    const KScreen::OutputPtr &output = m_outputs[index.row()].ptr;
+    const Disman::OutputPtr &output = m_outputs[index.row()].ptr;
     switch (role) {
     case Qt::DisplayRole:
         return Utils::outputName(output);
     case EnabledRole:
         return output->isEnabled();
     case InternalRole:
-        return output->type() == KScreen::Output::Type::Panel;
+        return output->type() == Disman::Output::Type::Panel;
     case PrimaryRole:
         return output->isPrimary();
     case SizeRole:
@@ -150,9 +150,9 @@ bool OutputModel::setData(const QModelIndex &index,
         }
         break;
     case RotationRole:
-        if (value.canConvert<KScreen::Output::Rotation>()) {
+        if (value.canConvert<Disman::Output::Rotation>()) {
             return setRotation(index.row(),
-                               value.value<KScreen::Output::Rotation>());
+                               value.value<Disman::Output::Rotation>());
         }
         break;
     case ReplicationSourceIndexRole:
@@ -197,7 +197,7 @@ QHash<int, QByteArray> OutputModel::roleNames() const {
     return roles;
 }
 
-void OutputModel::add(const KScreen::OutputPtr &output)
+void OutputModel::add(const Disman::OutputPtr &output)
 {
     const int insertPos = m_outputs.count();
     Q_EMIT beginInsertRows(QModelIndex(), insertPos, insertPos);
@@ -223,7 +223,7 @@ void OutputModel::add(const KScreen::OutputPtr &output)
     }
     m_outputs.insert(i, Output(output, pos));
 
-    connect(output.data(), &KScreen::Output::isPrimaryChanged,
+    connect(output.data(), &Disman::Output::isPrimaryChanged,
             this, [this, output](){
         roleChanged(output->id(), PrimaryRole);
     });
@@ -317,7 +317,7 @@ bool OutputModel::setResolution(int outputIndex, int resIndex)
     const auto modes = output.ptr->modes();
 
     auto modeIt = std::find_if(modes.begin(), modes.end(),
-                 [size, oldRate](const KScreen::ModePtr &mode) {
+                 [size, oldRate](const Disman::ModePtr &mode) {
         // TODO: we don't want to compare against old refresh rate if
         //       refresh rate selection is auto.
         return mode->size() == size &&
@@ -367,7 +367,7 @@ bool OutputModel::setRefreshRate(int outputIndex, int refIndex)
     const auto oldMode = output.ptr->currentMode();
 
     auto modeIt = std::find_if(modes.begin(), modes.end(),
-                 [oldMode, refreshRate](const KScreen::ModePtr &mode) {
+                 [oldMode, refreshRate](const Disman::ModePtr &mode) {
         // TODO: we don't want to compare against old refresh rate if
         //       refresh rate selection is auto.
         return mode->size() == oldMode->size() &&
@@ -413,14 +413,14 @@ bool OutputModel::setAutoRotateOnlyInTabletMode(int outputIndex, bool value)
     return true;
 }
 
-bool OutputModel::setRotation(int outputIndex, KScreen::Output::Rotation rotation)
+bool OutputModel::setRotation(int outputIndex, Disman::Output::Rotation rotation)
 {
     const Output &output = m_outputs[outputIndex];
 
-    if (rotation != KScreen::Output::None
-            && rotation != KScreen::Output::Left
-            && rotation != KScreen::Output::Inverted
-            && rotation != KScreen::Output::Right) {
+    if (rotation != Disman::Output::None
+            && rotation != Disman::Output::Left
+            && rotation != Disman::Output::Inverted
+            && rotation != Disman::Output::Right) {
         return false;
     }
     if (output.ptr->rotation() == rotation) {
@@ -435,7 +435,7 @@ bool OutputModel::setRotation(int outputIndex, KScreen::Output::Rotation rotatio
 
 }
 
-int OutputModel::resolutionIndex(const KScreen::OutputPtr &output) const
+int OutputModel::resolutionIndex(const Disman::OutputPtr &output) const
 {
     const QSize currentResolution = output->enforcedModeSize();
 
@@ -456,7 +456,7 @@ int OutputModel::resolutionIndex(const KScreen::OutputPtr &output) const
     return it - sizes.begin();
 }
 
-int OutputModel::refreshRateIndex(const KScreen::OutputPtr &output) const
+int OutputModel::refreshRateIndex(const Disman::OutputPtr &output) const
 {
     if (!output->currentMode()) {
         return 0;
@@ -482,7 +482,7 @@ static int greatestCommonDivisor(int a, int b) {
     return greatestCommonDivisor(b, a % b);
 }
 
-QVariantList OutputModel::resolutionsStrings(const KScreen::OutputPtr &output) const
+QVariantList OutputModel::resolutionsStrings(const Disman::OutputPtr &output) const
 {
     QVariantList ret;
     for (const QSize &size : resolutions(output)) {
@@ -505,7 +505,7 @@ QVariantList OutputModel::resolutionsStrings(const KScreen::OutputPtr &output) c
     return ret;
 }
 
-QVector<QSize> OutputModel::resolutions(const KScreen::OutputPtr &output) const
+QVector<QSize> OutputModel::resolutions(const Disman::OutputPtr &output) const
 {
     QVector<QSize> hits;
 
@@ -527,7 +527,7 @@ QVector<QSize> OutputModel::resolutions(const KScreen::OutputPtr &output) const
     return hits;
 }
 
-QVector<float> OutputModel::refreshRates(const KScreen::OutputPtr
+QVector<float> OutputModel::refreshRates(const Disman::OutputPtr
                                                   &output) const
 {
     QVector<float> hits;
@@ -560,14 +560,14 @@ QVector<float> OutputModel::refreshRates(const KScreen::OutputPtr
 
 int OutputModel::replicationSourceId(const Output &output) const
 {
-    const KScreen::OutputPtr source = m_config->replicationSource(output.ptr);
+    const Disman::OutputPtr source = m_config->replicationSource(output.ptr);
     if (!source) {
         return 0;
     }
     return source->id();
 }
 
-QStringList OutputModel::replicationSourceModel(const KScreen::OutputPtr &output) const
+QStringList OutputModel::replicationSourceModel(const Disman::OutputPtr &output) const
 {
     QStringList ret = { i18n("None") };
 
@@ -657,7 +657,7 @@ int OutputModel::replicationSourceIndex(int outputIndex) const
     return 0;
 }
 
-QVariantList OutputModel::replicasModel(const KScreen::OutputPtr &output) const
+QVariantList OutputModel::replicasModel(const Disman::OutputPtr &output) const
 {
     QVariantList ret;
     for (int i = 0; i < m_outputs.size(); i++) {

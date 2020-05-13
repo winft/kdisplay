@@ -22,7 +22,7 @@ namespace Globals
 {
 
 QString s_dirPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) %
-                                                     QStringLiteral("/kscreen/");
+                                                     QStringLiteral("/kdisplay/");
 
 QString dirPath() {
     return s_dirPath;

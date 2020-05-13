@@ -19,7 +19,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.3 as Controls
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.kirigami 2.4 as Kirigami
-import org.kde.private.kcm.kscreen 1.0 as KScreen
+import org.kwinft.private.kcm.kdisplay 1.0 as KDisplay
 
 ColumnLayout {
     Kirigami.FormLayout {
@@ -155,14 +155,14 @@ ColumnLayout {
                 id: globalRetentionRadio
                 text: i18n("For any display arrangement")
                 checked: !individualRetentionRadio.checked
-                onClicked: kcm.outputRetention = KScreen.Control.Global
+                onClicked: kcm.outputRetention = KDisplay.Control.Global
             }
 
             Controls.RadioButton {
                 id: individualRetentionRadio
                 text: i18n("For only this specific display arrangement")
-                checked: kcm.outputRetention === KScreen.Control.Individual
-                onClicked: kcm.outputRetention = KScreen.Control.Individual
+                checked: kcm.outputRetention === KDisplay.Control.Individual
+                onClicked: kcm.outputRetention = KDisplay.Control.Individual
             }
         }
     }

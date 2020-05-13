@@ -22,7 +22,7 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 
-import org.kde.KScreen 1.0
+import org.kwinft.kdisplay 1.0
 
 PlasmaCore.Dialog {
     id: root

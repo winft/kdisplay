@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "../common/control.h"
 
-#include <kscreen/config.h>
+#include <disman/config.h>
 
 #include <memory>
 
@@ -31,7 +31,7 @@ public:
     explicit ConfigHandler (QObject *parent = nullptr);
     ~ConfigHandler() override = default;
 
-    void setConfig(KScreen::ConfigPtr config);
+    void setConfig(Disman::ConfigPtr config);
     void updateInitialData();
 
     OutputModel* outputModel() const {
@@ -40,27 +40,27 @@ public:
 
     QSize normalizeScreen();
 
-    KScreen::ConfigPtr config() const {
+    Disman::ConfigPtr config() const {
         return m_config;
     }
 
-    KScreen::ConfigPtr initialConfig() const {
+    Disman::ConfigPtr initialConfig() const {
         return m_initialConfig;
     }
 
     int retention() const;
     void setRetention(int retention);
 
-    qreal scale(const KScreen::OutputPtr &output) const;
-    void setScale(KScreen::OutputPtr &output, qreal scale);
+    qreal scale(const Disman::OutputPtr &output) const;
+    void setScale(Disman::OutputPtr &output, qreal scale);
 
-    KScreen::OutputPtr replicationSource(const KScreen::OutputPtr &output) const;
-    void setReplicationSource(KScreen::OutputPtr &output, const KScreen::OutputPtr &source);
+    Disman::OutputPtr replicationSource(const Disman::OutputPtr &output) const;
+    void setReplicationSource(Disman::OutputPtr &output, const Disman::OutputPtr &source);
 
-    bool autoRotate(const KScreen::OutputPtr &output) const;
-    void setAutoRotate(KScreen::OutputPtr &output, bool autoRotate);
-    bool autoRotateOnlyInTabletMode(const KScreen::OutputPtr &output) const;
-    void setAutoRotateOnlyInTabletMode(KScreen::OutputPtr &output, bool value);
+    bool autoRotate(const Disman::OutputPtr &output) const;
+    void setAutoRotate(Disman::OutputPtr &output, bool autoRotate);
+    bool autoRotateOnlyInTabletMode(const Disman::OutputPtr &output) const;
+    void setAutoRotateOnlyInTabletMode(Disman::OutputPtr &output, bool value);
 
     void writeControl();
 
@@ -79,12 +79,12 @@ private:
     QSize screenSize() const;
     Control::OutputRetention getRetention() const;
     void primaryOutputSelected(int index);
-    void primaryOutputChanged(const KScreen::OutputPtr &output);
-    void initOutput(const KScreen::OutputPtr &output);
-    void resetScale(const KScreen::OutputPtr &output);
+    void primaryOutputChanged(const Disman::OutputPtr &output);
+    void initOutput(const Disman::OutputPtr &output);
+    void resetScale(const Disman::OutputPtr &output);
 
-    KScreen::ConfigPtr m_config = nullptr;
-    KScreen::ConfigPtr m_initialConfig;
+    Disman::ConfigPtr m_config = nullptr;
+    Disman::ConfigPtr m_initialConfig;
     OutputModel *m_outputs = nullptr;
 
     std::unique_ptr<ControlConfig> m_control;

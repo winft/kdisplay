@@ -23,7 +23,7 @@
 
 #include <KLocalizedString>
 
-using namespace KScreen;
+using namespace Disman;
 
 OsdAction::OsdAction(QObject *parent)
     : QObject(parent)
@@ -46,12 +46,12 @@ QString OsdAction::actionLabel(OsdAction::Action action) const
 {
     switch (action) {
     // this is built by both daemon and plasmoid, needs explicit translation domain here
-    case SwitchToExternal: return i18nd("kscreen", "Switch to external screen");
-    case SwitchToInternal: return i18nd("kscreen", "Switch to laptop screen");
-    case Clone: return i18nd("kscreen", "Unify outputs");
-    case ExtendLeft: return i18nd("kscreen", "Extend to left");
-    case ExtendRight: return i18nd("kscreen", "Extend to right");
-    case NoAction: return i18nd("kscreen", "Leave unchanged");
+    case SwitchToExternal: return i18nd("kdisplay", "Switch to external screen");
+    case SwitchToInternal: return i18nd("kdisplay", "Switch to laptop screen");
+    case Clone: return i18nd("kdisplay", "Unify outputs");
+    case ExtendLeft: return i18nd("kdisplay", "Extend to left");
+    case ExtendRight: return i18nd("kdisplay", "Extend to right");
+    case NoAction: return i18nd("kdisplay", "Leave unchanged");
     }
 
     Q_UNREACHABLE();

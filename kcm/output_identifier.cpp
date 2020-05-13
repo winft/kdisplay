@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "../common/utils.h"
 
-#include <kscreen/output.h>
+#include <disman/output.h>
 
 #include <QStandardPaths>
 #include <QTimer>
@@ -27,9 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDeclarative/kdeclarative/qmlobject.h>
 #include <PlasmaQuick/Dialog>
 
-#define QML_PATH "kpackage/kcms/kcm_kscreen/contents/ui/"
+#define QML_PATH "kpackage/kcms/kcm_kdisplay/contents/ui/"
 
-OutputIdentifier::OutputIdentifier(KScreen::ConfigPtr config, QObject *parent)
+OutputIdentifier::OutputIdentifier(Disman::ConfigPtr config, QObject *parent)
     : QObject(parent)
 {
 
@@ -43,7 +43,7 @@ OutputIdentifier::OutputIdentifier(KScreen::ConfigPtr config, QObject *parent)
             continue;
         }
 
-        const KScreen::ModePtr mode = output->currentMode();
+        const Disman::ModePtr mode = output->currentMode();
         auto *view = new PlasmaQuick::Dialog();
 
         auto qmlObject = new KDeclarative::QmlObject(view);
@@ -68,7 +68,7 @@ OutputIdentifier::OutputIdentifier(KScreen::ConfigPtr config, QObject *parent)
         } else {
             deviceSize = QSize(mode->size().height(), mode->size().width());
         }
-        if (config->supportedFeatures() & KScreen::Config::Feature::PerOutputScaling) {
+        if (config->supportedFeatures() & Disman::Config::Feature::PerOutputScaling) {
             // Scale adjustment is not needed on Wayland, we use logical size.
             logicalSize = output->logicalSize().toSize();
         } else {

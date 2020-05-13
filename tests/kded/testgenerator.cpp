@@ -21,18 +21,18 @@
 #include <QtTest>
 #include <QObject>
 
-#include <kscreen/config.h>
-#include <kscreen/getconfigoperation.h>
-#include <kscreen/backendmanager_p.h>
+#include <disman/config.h>
+#include <disman/getconfigoperation.h>
+#include <disman/backendmanager_p.h>
 
-using namespace KScreen;
+using namespace Disman;
 
 class testScreenConfig : public QObject
 {
     Q_OBJECT
 
 private:
-    KScreen::ConfigPtr loadConfig(const QByteArray &fileName);
+    Disman::ConfigPtr loadConfig(const QByteArray &fileName);
 
     void switchDisplayTwoScreensNoCommonMode();
 
@@ -55,15 +55,15 @@ private Q_SLOTS:
     void switchDisplayTwoScreens();
 };
 
-KScreen::ConfigPtr testScreenConfig::loadConfig(const QByteArray& fileName)
+Disman::ConfigPtr testScreenConfig::loadConfig(const QByteArray& fileName)
 {
-    KScreen::BackendManager::instance()->shutdownBackend();
+    Disman::BackendManager::instance()->shutdownBackend();
 
     QByteArray path(TEST_DATA "configs/" + fileName);
-    qputenv("KSCREEN_BACKEND_ARGS", "TEST_DATA=" + path);
+    qputenv("DISMAN_BACKEND_ARGS", "TEST_DATA=" + path);
     qDebug() << path;
 
-    KScreen::GetConfigOperation *op = new KScreen::GetConfigOperation;
+    Disman::GetConfigOperation *op = new Disman::GetConfigOperation;
     if (!op->exec()) {
         qWarning() << op->errorString();
         return ConfigPtr();
@@ -73,13 +73,13 @@ KScreen::ConfigPtr testScreenConfig::loadConfig(const QByteArray& fileName)
 
 void testScreenConfig::initTestCase()
 {
-    qputenv("KSCREEN_LOGGING", "false");
-    setenv("KSCREEN_BACKEND", "Fake", 1);
+    qputenv("DISMAN_LOGGING", "false");
+    setenv("DISMAN_BACKEND", "Fake", 1);
 }
 
 void testScreenConfig::cleanupTestCase()
 {
-    KScreen::BackendManager::instance()->shutdownBackend();
+    Disman::BackendManager::instance()->shutdownBackend();
 }
 
 void testScreenConfig::singleOutput()

@@ -21,19 +21,19 @@
 
 #include "utils.h"
 
-#include <kscreen/output.h>
-#include <kscreen/edid.h>
+#include <disman/output.h>
+#include <disman/edid.h>
 
 #include <KLocalizedString>
 
-QString Utils::outputName(const KScreen::OutputPtr& output)
+QString Utils::outputName(const Disman::OutputPtr& output)
 {
     return outputName(output.data());
 }
 
-QString Utils::outputName(const KScreen::Output *output)
+QString Utils::outputName(const Disman::Output *output)
 {
-    if (output->type() == KScreen::Output::Panel) {
+    if (output->type() == Disman::Output::Panel) {
         return i18n("Laptop Screen");
     }
 

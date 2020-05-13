@@ -22,7 +22,7 @@
 #include "../common/globals.h"
 #include "osdaction.h"
 
-#include <kscreen/config.h>
+#include <disman/config.h>
 
 #include <kdedmodule.h>
 
@@ -33,21 +33,21 @@
 class Config;
 class OrientationSensor;
 
-namespace KScreen
+namespace Disman
 {
 class OsdManager;
 }
 
 class QTimer;
 
-class KScreenDaemon : public KDEDModule
+class KDisplayDaemon : public KDEDModule
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.KScreen")
+    Q_CLASSINFO("D-Bus Interface", "org.kwinft.kdisplay")
 
 public:
-    KScreenDaemon(QObject *parent, const QList<QVariant>&);
-    ~KScreenDaemon() override;
+    KDisplayDaemon(QObject *parent, const QList<QVariant>&);
+    ~KDisplayDaemon() override;
 
 public Q_SLOTS:
     // DBus
@@ -76,14 +76,14 @@ private:
 
     void outputConnectedChanged();
     void showOutputIdentifier();
-    void applyOsdAction(KScreen::OsdAction::Action action);
+    void applyOsdAction(Disman::OsdAction::Action action);
 
-    void doApplyConfig(const KScreen::ConfigPtr &config);
+    void doApplyConfig(const Disman::ConfigPtr &config);
     void doApplyConfig(std::unique_ptr<Config> config);
     void refreshConfig();
 
     void monitorConnectedChange();
-    void disableOutput(KScreen::OutputPtr &output);
+    void disableOutput(Disman::OutputPtr &output);
     void showOsd(const QString &icon, const QString &text);
 
     void updateOrientation();
@@ -94,7 +94,7 @@ private:
     QTimer* m_changeCompressor;
     QTimer* m_saveTimer;
     QTimer* m_lidClosedTimer;
-    KScreen::OsdManager *m_osdManager;
+    Disman::OsdManager *m_osdManager;
     OrientationSensor *m_orientationSensor;
     bool m_startingUp = true;
 };

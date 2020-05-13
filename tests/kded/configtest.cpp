@@ -21,11 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtTest>
 #include <QObject>
 
-#include <KScreen/Config>
-#include <KScreen/EDID>
-#include <KScreen/Screen>
-#include <KScreen/Mode>
-#include <KScreen/Output>
+#include <Disman/Config>
+#include <Disman/EDID>
+#include <Disman/Screen>
+#include <Disman/Mode>
+#include <Disman/Output>
 
 #include <memory>
 
@@ -56,16 +56,16 @@ private:
 
 std::unique_ptr<Config> TestConfig::createConfig(bool output1Connected, bool output2Connected)
 {
-    KScreen::ScreenPtr screen = KScreen::ScreenPtr::create();
+    Disman::ScreenPtr screen = Disman::ScreenPtr::create();
     screen->setCurrentSize(QSize(1920, 1080));
     screen->setMaxSize(QSize(32768, 32768));
     screen->setMinSize(QSize(8, 8));
 
     QList<QSize> sizes({ QSize(320, 240), QSize(640, 480), QSize(1024, 768), QSize(1280, 1024), QSize(1920, 1280) });
-    KScreen::ModeList modes;
+    Disman::ModeList modes;
     for (int i = 0; i < sizes.count(); ++i) {
         const QSize &size = sizes[i];
-        KScreen::ModePtr mode = KScreen::ModePtr::create();
+        Disman::ModePtr mode = Disman::ModePtr::create();
         mode->setId(QStringLiteral("MODE-%1").arg(i));
         mode->setName(QStringLiteral("%1x%2").arg(size.width()).arg(size.height()));
         mode->setSize(size);
@@ -73,7 +73,7 @@ std::unique_ptr<Config> TestConfig::createConfig(bool output1Connected, bool out
         modes.insert(mode->id(), mode);
     }
 
-    KScreen::OutputPtr output1 = KScreen::OutputPtr::create();
+    Disman::OutputPtr output1 = Disman::OutputPtr::create();
     output1->setId(1);
     output1->setName(QStringLiteral("OUTPUT-1"));
     output1->setPos(QPoint(0, 0));
@@ -83,7 +83,7 @@ std::unique_ptr<Config> TestConfig::createConfig(bool output1Connected, bool out
         output1->setModes(modes);
     }
 
-    KScreen::OutputPtr output2 = KScreen::OutputPtr::create();
+    Disman::OutputPtr output2 = Disman::OutputPtr::create();
     output2->setId(2);
     output2->setName(QStringLiteral("OUTPUT-2"));
     output2->setPos(QPoint(0, 0));
@@ -92,7 +92,7 @@ std::unique_ptr<Config> TestConfig::createConfig(bool output1Connected, bool out
         output2->setModes(modes);
     }
 
-    KScreen::ConfigPtr config = KScreen::ConfigPtr::create();
+    Disman::ConfigPtr config = Disman::ConfigPtr::create();
     config->setScreen(screen);
     config->addOutput(output1);
     config->addOutput(output2);
@@ -109,7 +109,7 @@ void TestConfig::init()
 
 void TestConfig::initTestCase()
 {
-    qputenv("KSCREEN_LOGGING", "false");
+    qputenv("DISMAN_LOGGING", "false");
 }
 
 void TestConfig::testSimpleConfig()
@@ -126,7 +126,7 @@ void TestConfig::testSimpleConfig()
     QCOMPARE(output->currentModeId(), QLatin1String("MODE-4"));
     QCOMPARE(output->currentMode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
-    QCOMPARE(output->rotation(), KScreen::Output::None);
+    QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->pos(), QPoint(0, 0));
     QCOMPARE(output->isPrimary(), true);
 
@@ -149,7 +149,7 @@ void TestConfig::testTwoScreenConfig()
     QCOMPARE(output->currentModeId(), QLatin1String("MODE-4"));
     QCOMPARE(output->currentMode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
-    QCOMPARE(output->rotation(), KScreen::Output::None);
+    QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->pos(), QPoint(0, 0));
     QCOMPARE(output->isPrimary(), true);
 
@@ -158,7 +158,7 @@ void TestConfig::testTwoScreenConfig()
     QCOMPARE(output->currentModeId(), QLatin1String("MODE-3"));
     QCOMPARE(output->currentMode()->size(), QSize(1280, 1024));
     QCOMPARE(output->isEnabled(), true);
-    QCOMPARE(output->rotation(), KScreen::Output::None);
+    QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->pos(), QPoint(1920, 0));
     QCOMPARE(output->isPrimary(), false);
 
@@ -181,7 +181,7 @@ void TestConfig::testRotatedScreenConfig()
     QCOMPARE(output->currentModeId(), QLatin1String("MODE-4"));
     QCOMPARE(output->currentMode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
-    QCOMPARE(output->rotation(), KScreen::Output::None);
+    QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->pos(), QPoint(0, 0));
     QCOMPARE(output->isPrimary(), true);
 
@@ -190,7 +190,7 @@ void TestConfig::testRotatedScreenConfig()
     QCOMPARE(output->currentModeId(), QLatin1String("MODE-3"));
     QCOMPARE(output->currentMode()->size(), QSize(1280, 1024));
     QCOMPARE(output->isEnabled(), true);
-    QCOMPARE(output->rotation(), KScreen::Output::Left);
+    QCOMPARE(output->rotation(), Disman::Output::Left);
     QCOMPARE(output->pos(), QPoint(1920, 0));
     QCOMPARE(output->isPrimary(), false);
 
@@ -213,7 +213,7 @@ void TestConfig::testDisabledScreenConfig()
     QCOMPARE(output->currentModeId(), QLatin1String("MODE-4"));
     QCOMPARE(output->currentMode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
-    QCOMPARE(output->rotation(), KScreen::Output::None);
+    QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->pos(), QPoint(0, 0));
     QCOMPARE(output->isPrimary(), true);
 
@@ -286,16 +286,16 @@ void TestConfig::testIdenticalOutputs()
 {
     // Test configuration of a video wall with 6 identical outputs connected
     // this is the autotest for https://bugs.kde.org/show_bug.cgi?id=325277
-    KScreen::ScreenPtr screen = KScreen::ScreenPtr::create();
+    Disman::ScreenPtr screen = Disman::ScreenPtr::create();
     screen->setCurrentSize(QSize(1920, 1080));
     screen->setMaxSize(QSize(32768, 32768));
     screen->setMinSize(QSize(8, 8));
 
     QList<QSize> sizes({ QSize(640, 480), QSize(1024, 768), QSize(1920, 1080), QSize(1280, 1024), QSize(1920, 1280) });
-    KScreen::ModeList modes;
+    Disman::ModeList modes;
     for (int i = 0; i < sizes.count(); ++i) {
         const QSize &size = sizes[i];
-        KScreen::ModePtr mode = KScreen::ModePtr::create();
+        Disman::ModePtr mode = Disman::ModePtr::create();
         mode->setId(QStringLiteral("MODE-%1").arg(i));
         mode->setName(QStringLiteral("%1x%2").arg(size.width()).arg(size.height()));
         mode->setSize(size);
@@ -308,7 +308,7 @@ void TestConfig::testIdenticalOutputs()
     // When setting up the outputs, make sure they're not added in alphabetical order
     // or in the same order of the config file, as that makes the tests accidentally pass
 
-    KScreen::OutputPtr output1 = KScreen::OutputPtr::create();
+    Disman::OutputPtr output1 = Disman::OutputPtr::create();
     output1->setId(1);
     output1->setEdid(data);
     output1->setName(QStringLiteral("DisplayPort-0"));
@@ -317,7 +317,7 @@ void TestConfig::testIdenticalOutputs()
     output1->setEnabled(false);
     output1->setModes(modes);
 
-    KScreen::OutputPtr output2 = KScreen::OutputPtr::create();
+    Disman::OutputPtr output2 = Disman::OutputPtr::create();
     output2->setId(2);
     output2->setEdid(data);
     output2->setName(QStringLiteral("DisplayPort-1"));
@@ -326,7 +326,7 @@ void TestConfig::testIdenticalOutputs()
     output2->setEnabled(false);
     output2->setModes(modes);
 
-    KScreen::OutputPtr output3 = KScreen::OutputPtr::create();
+    Disman::OutputPtr output3 = Disman::OutputPtr::create();
     output3->setId(3);
     output3->setEdid(data);
     output3->setName(QStringLiteral("DisplayPort-2"));
@@ -335,7 +335,7 @@ void TestConfig::testIdenticalOutputs()
     output3->setEnabled(false);
     output3->setModes(modes);
 
-    KScreen::OutputPtr output6 = KScreen::OutputPtr::create();
+    Disman::OutputPtr output6 = Disman::OutputPtr::create();
     output6->setId(6);
     output6->setEdid(data);
     output6->setName(QStringLiteral("DVI-0"));
@@ -344,7 +344,7 @@ void TestConfig::testIdenticalOutputs()
     output6->setEnabled(false);
     output6->setModes(modes);
 
-    KScreen::OutputPtr output4 = KScreen::OutputPtr::create();
+    Disman::OutputPtr output4 = Disman::OutputPtr::create();
     output4->setId(4);
     output4->setEdid(data);
     output4->setName(QStringLiteral("DisplayPort-3"));
@@ -353,7 +353,7 @@ void TestConfig::testIdenticalOutputs()
     output4->setEnabled(false);
     output4->setModes(modes);
 
-    KScreen::OutputPtr output5 = KScreen::OutputPtr::create();
+    Disman::OutputPtr output5 = Disman::OutputPtr::create();
     output5->setId(5);
     output5->setEdid(data);
     output5->setName(QStringLiteral("DVI-1"));
@@ -362,7 +362,7 @@ void TestConfig::testIdenticalOutputs()
     output5->setEnabled(false);
     output5->setModes(modes);
 
-    KScreen::ConfigPtr config = KScreen::ConfigPtr::create();
+    Disman::ConfigPtr config = Disman::ConfigPtr::create();
     config->setScreen(screen);
     config->addOutput(output6);
     config->addOutput(output2);
@@ -382,7 +382,7 @@ void TestConfig::testIdenticalOutputs()
     positions[QStringLiteral("DVI-1")] = QPoint(0, 0);
 
     auto configWrapper2 = configWrapper.readFile(QStringLiteral("outputgrid_2x3.json"));
-    KScreen::ConfigPtr config2 = configWrapper2->data();
+    Disman::ConfigPtr config2 = configWrapper2->data();
     QVERIFY(config2);
     QVERIFY(config != config2);
 
@@ -412,7 +412,7 @@ void TestConfig::testMoveConfig()
 
     // Make sure we don't write into TEST_DATA
     QStandardPaths::setTestModeEnabled(true);
-    Globals::setDirPath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) % QStringLiteral("/kscreen/"));
+    Globals::setDirPath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) % QStringLiteral("/kdisplay/"));
     // TODO: this needs setup of the control directory
 
     // Basic assumptions for the remainder of our tests, this is the situation where the lid is opened
@@ -498,7 +498,7 @@ void TestConfig::testFixedConfig()
 
     // Make sure we don't write into TEST_DATA
     QStandardPaths::setTestModeEnabled(true);
-    Globals::setDirPath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) % QStringLiteral("/kscreen/"));
+    Globals::setDirPath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) % QStringLiteral("/kdisplay/"));
     // TODO: this needs setup of the control directory
 
     const QString fixedCfgPath = Config::configsDirPath() % Config::s_fixedConfigFileName;

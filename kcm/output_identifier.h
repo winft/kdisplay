@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #pragma once
 
-#include <kscreen/config.h>
+#include <disman/config.h>
 
 #include <QVector>
 
@@ -30,7 +30,7 @@ class OutputIdentifier : public QObject
     Q_OBJECT
 
 public:
-    explicit OutputIdentifier (KScreen::ConfigPtr config, QObject *parent = nullptr);
+    explicit OutputIdentifier (Disman::ConfigPtr config, QObject *parent = nullptr);
     ~OutputIdentifier() override;
 
 Q_SIGNALS:

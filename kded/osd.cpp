@@ -19,11 +19,11 @@
 
 #include "osd.h"
 
-#include "kscreen_daemon_debug.h"
+#include "kdisplay_daemon_debug.h"
 
 #include "../common/utils.h"
 
-#include <KScreen/Mode>
+#include <Disman/Mode>
 
 #include <QCursor>
 #include <QGuiApplication>
@@ -33,19 +33,19 @@
 
 #include <KDeclarative/QmlObjectSharedEngine>
 
-using namespace KScreen;
+using namespace Disman;
 
-Osd::Osd(const KScreen::OutputPtr &output, QObject *parent)
+Osd::Osd(const Disman::OutputPtr &output, QObject *parent)
     : QObject(parent)
     , m_output(output)
 {
-    connect(output.data(), &KScreen::Output::isConnectedChanged,
+    connect(output.data(), &Disman::Output::isConnectedChanged,
             this, &Osd::onOutputAvailabilityChanged);
-    connect(output.data(), &KScreen::Output::isEnabledChanged,
+    connect(output.data(), &Disman::Output::isEnabledChanged,
             this, &Osd::onOutputAvailabilityChanged);
-    connect(output.data(), &KScreen::Output::currentModeIdChanged,
+    connect(output.data(), &Disman::Output::currentModeIdChanged,
             this, &Osd::updatePosition);
-    connect(output.data(), &KScreen::Output::destroyed,
+    connect(output.data(), &Disman::Output::destroyed,
             this, &Osd::hideOsd);
 }
 
@@ -59,9 +59,9 @@ bool Osd::initOsd()
         return true;
     }
 
-    const QString osdPath = QStandardPaths::locate(QStandardPaths::QStandardPaths::GenericDataLocation, QStringLiteral("kded_kscreen/qml/Osd.qml"));
+    const QString osdPath = QStandardPaths::locate(QStandardPaths::QStandardPaths::GenericDataLocation, QStringLiteral("kded_kdisplay/qml/Osd.qml"));
     if (osdPath.isEmpty()) {
-        qCWarning(KSCREEN_KDED) << "Failed to find OSD QML file" << osdPath;
+        qCWarning(KDISPLAY_KDED) << "Failed to find OSD QML file" << osdPath;
         return false;
     }
 
@@ -69,7 +69,7 @@ bool Osd::initOsd()
     m_osdObject->setSource(QUrl::fromLocalFile(osdPath));
 
     if (m_osdObject->status() != QQmlComponent::Ready) {
-        qCWarning(KSCREEN_KDED) << "Failed to load OSD QML file" << osdPath;
+        qCWarning(KDISPLAY_KDED) << "Failed to load OSD QML file" << osdPath;
         delete m_osdObject;
         m_osdObject = nullptr;
         return false;
@@ -98,7 +98,7 @@ void Osd::showGenericOsd(const QString &icon, const QString &text)
     showOsd();
 }
 
-void Osd::showOutputIdentifier(const KScreen::OutputPtr &output)
+void Osd::showOutputIdentifier(const Disman::OutputPtr &output)
 {
     if (!initOsd()) {
         return;
@@ -121,16 +121,16 @@ void Osd::showOutputIdentifier(const KScreen::OutputPtr &output)
 void Osd::showActionSelector()
 {
     if (!m_osdActionSelector) {
-        const QString osdPath = QStandardPaths::locate(QStandardPaths::QStandardPaths::GenericDataLocation, QStringLiteral("kded_kscreen/qml/OsdSelector.qml"));
+        const QString osdPath = QStandardPaths::locate(QStandardPaths::QStandardPaths::GenericDataLocation, QStringLiteral("kded_kdisplay/qml/OsdSelector.qml"));
         if (osdPath.isEmpty()) {
-            qCWarning(KSCREEN_KDED) << "Failed to find action selector OSD QML file" << osdPath;
+            qCWarning(KDISPLAY_KDED) << "Failed to find action selector OSD QML file" << osdPath;
             return;
         }
         m_osdActionSelector = new KDeclarative::QmlObjectSharedEngine(this);
         m_osdActionSelector->setSource(QUrl::fromLocalFile(osdPath));
 
         if (m_osdActionSelector->status() != QQmlComponent::Ready) {
-            qCWarning(KSCREEN_KDED) << "Failed to load OSD QML file" << osdPath;
+            qCWarning(KDISPLAY_KDED) << "Failed to load OSD QML file" << osdPath;
             delete m_osdActionSelector;
             m_osdActionSelector = nullptr;
             return;
@@ -147,7 +147,7 @@ void Osd::showActionSelector()
         }
         rootObject->setProperty("visible", true);
     } else {
-        qCWarning(KSCREEN_KDED) << "Could not get root object for action selector.";
+        qCWarning(KDISPLAY_KDED) << "Could not get root object for action selector.";
     }
 }
 

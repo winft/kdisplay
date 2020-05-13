@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KDED_CONFIG_H
 #define KDED_CONFIG_H
 
-#include <kscreen/config.h>
+#include <disman/config.h>
 
 #include <QOrientationReading>
 
@@ -29,7 +29,7 @@ class Config : public QObject
 {
     Q_OBJECT
 public:
-    explicit Config(KScreen::ConfigPtr config, QObject *parent = nullptr);
+    explicit Config(Disman::ConfigPtr config, QObject *parent = nullptr);
     ~Config() = default;
 
     QString id() const;
@@ -40,7 +40,7 @@ public:
     bool writeFile();
     bool writeOpenLidFile();
 
-    KScreen::ConfigPtr data() const {
+    Disman::ConfigPtr data() const {
         return m_data;
     }
 
@@ -51,7 +51,7 @@ public:
     void setAutoRotate(bool value);
     void log();
 
-    void setValidityFlags(KScreen::Config::ValidityFlags flags) {
+    void setValidityFlags(Disman::Config::ValidityFlags flags) {
         m_validityFlags = flags;
     }
 
@@ -67,10 +67,10 @@ private:
     std::unique_ptr<Config> readFile(const QString &fileName);
     bool writeFile(const QString &filePath);
 
-    bool canBeApplied(KScreen::ConfigPtr config) const;
+    bool canBeApplied(Disman::ConfigPtr config) const;
 
-    KScreen::ConfigPtr m_data;
-    KScreen::Config::ValidityFlags m_validityFlags;
+    Disman::ConfigPtr m_data;
+    Disman::Config::ValidityFlags m_validityFlags;
     ControlConfig *m_control;
 
     static QString s_configsDirName;

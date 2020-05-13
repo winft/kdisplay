@@ -25,14 +25,14 @@
 #include <QString>
 #include <QSize>
 
-#include <kscreen/types.h>
-#include <kscreen/output.h>
+#include <disman/types.h>
+#include <disman/output.h>
 
 namespace Utils
 {
 
-    QString outputName(const KScreen::Output *output);
-    QString outputName(const KScreen::OutputPtr &output);
+    QString outputName(const Disman::Output *output);
+    QString outputName(const Disman::OutputPtr &output);
 
     QString sizeToString(const QSize &size);
 }

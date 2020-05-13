@@ -25,9 +25,9 @@
 #include <QDBusPendingCall>
 #include <QLoggingCategory>
 
-Q_LOGGING_CATEGORY(KSCREEN_KDED, "kscreen.kded")
+Q_LOGGING_CATEGORY(KDISPLAY_KDED, "kdisplay.kded")
 
-namespace KScreen {
+namespace Disman {
 OsdTest::OsdTest(QObject *parent)
     : QObject(parent)
 {
@@ -52,15 +52,15 @@ void OsdTest::showOutputIdentifiers()
         getOsdManager()->showOutputIdentifiers();
     } else {
         QDBusMessage msg = QDBusMessage::createMethodCall(
-            QLatin1String("org.kde.kscreen.osdService"),
-            QLatin1String("/org/kde/kscreen/osdService"),
-            QLatin1String("org.kde.kscreen.osdService"),
+            QLatin1String("org.kwinft.kdisplay.osdService"),
+            QLatin1String("/org/kwinft/kdisplay/osdService"),
+            QLatin1String("org.kwinft.kdisplay.osdService"),
             QLatin1String("showOutputIdentifiers")
         );
         //msg << icon << text;
         QDBusConnection::sessionBus().asyncCall(msg);
 
-        qCWarning(KSCREEN_KDED) << "Sent dbus message.";
+        qCWarning(KDISPLAY_KDED) << "Sent dbus message.";
         QTimer::singleShot(500, qApp, &QCoreApplication::quit);
     }
 }
@@ -78,7 +78,7 @@ void OsdTest::showGenericOsd(const QString& icon, const QString& message)
         getOsdManager()->showOsd(!icon.isEmpty() ? icon : QStringLiteral("preferences-desktop-display-randr"),
                                              !message.isEmpty() ? message : QStringLiteral("On-Screen-Display"));
     } else {
-        qCWarning(KSCREEN_KDED) << "Implement me.";
+        qCWarning(KDISPLAY_KDED) << "Implement me.";
         QTimer::singleShot(100, qApp, &QCoreApplication::quit);
     }
 }
@@ -87,13 +87,13 @@ void OsdTest::showActionSelector()
 {
     if (!m_useDBus) {
         auto action = getOsdManager()->showActionSelector();
-        connect(action, &KScreen::OsdAction::selected,
-                [](KScreen::OsdAction::Action action) {
-                    qCDebug(KSCREEN_KDED) << "Selected action:" << action;
+        connect(action, &Disman::OsdAction::selected,
+                [](Disman::OsdAction::Action action) {
+                    qCDebug(KDISPLAY_KDED) << "Selected action:" << action;
                     qApp->quit();
                 });
     } else {
-        qCWarning(KSCREEN_KDED) << "Implement me.";
+        qCWarning(KDISPLAY_KDED) << "Implement me.";
         QTimer::singleShot(100, qApp, &QCoreApplication::quit);
     }
 }

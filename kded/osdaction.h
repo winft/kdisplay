@@ -25,7 +25,7 @@
 #include <QString>
 #include <QVector>
 
-namespace KScreen {
+namespace Disman {
 
 class OsdAction : public QObject
 {
@@ -52,4 +52,4 @@ Q_SIGNALS:
 
 };
 
-} // namespace KScreen
+} // namespace Disman

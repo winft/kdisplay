@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #include "output.h"
 #include "../common/control.h"
-#include "kscreen_daemon_debug.h"
+#include "kdisplay_daemon_debug.h"
 #include "device.h"
 
 #include <QFile>
@@ -27,8 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonDocument>
 #include <QDir>
 
-#include <kscreen/config.h>
-#include <kscreen/output.h>
+#include <disman/config.h>
+#include <disman/output.h>
 
 QString Config::s_fixedConfigFileName = QStringLiteral("fixed-config");
 QString Config::s_configsDirName = QStringLiteral("" /*"configs/"*/); // TODO: KDE6 - move these files into the subfolder
@@ -38,7 +38,7 @@ QString Config::configsDirPath()
     return Globals::dirPath() % s_configsDirName;
 }
 
-Config::Config(KScreen::ConfigPtr config, QObject *parent)
+Config::Config(Disman::ConfigPtr config, QObject *parent)
     : QObject(parent)
     , m_data(config)
     , m_control(new ControlConfig(config, this))
@@ -69,7 +69,7 @@ void Config::activateControlWatching()
 
 bool Config::autoRotationRequested() const
 {
-    for (KScreen::OutputPtr &output : m_data->outputs()) {
+    for (Disman::OutputPtr &output : m_data->outputs()) {
         if (m_control->getAutoRotate(output)) {
             return true;
         }
@@ -79,7 +79,7 @@ bool Config::autoRotationRequested() const
 
 void Config::setDeviceOrientation(QOrientationReading::Orientation orientation)
 {
-    for (KScreen::OutputPtr &output : m_data->outputs()) {
+    for (Disman::OutputPtr &output : m_data->outputs()) {
         if (!m_control->getAutoRotate(output)) {
             continue;
         }
@@ -98,8 +98,8 @@ bool Config::getAutoRotate() const
 {
     const auto outputs = m_data->outputs();
     return std::all_of(outputs.cbegin(), outputs.cend(),
-        [this](KScreen::OutputPtr output) {
-            if (output->type() != KScreen::Output::Type::Panel) {
+        [this](Disman::OutputPtr output) {
+            if (output->type() != Disman::Output::Type::Panel) {
                 return true;
             }
             return m_control->getAutoRotate(output);
@@ -108,8 +108,8 @@ bool Config::getAutoRotate() const
 
 void Config::setAutoRotate(bool value)
 {
-    for (KScreen::OutputPtr &output : m_data->outputs()) {
-        if (output->type() != KScreen::Output::Type::Panel) {
+    for (Disman::OutputPtr &output : m_data->outputs()) {
+        if (output->type() != Disman::Output::Type::Panel) {
             continue;
         }
         if (m_control->getAutoRotate(output) != value) {
@@ -135,7 +135,7 @@ std::unique_ptr<Config> Config::readFile()
             QFile::remove(filePath());
             if (QFile::copy(lidOpenedFilePath, filePath())) {
                 QFile::remove(lidOpenedFilePath);
-                qCDebug(KSCREEN_KDED) << "Restored lid opened config to" << id();
+                qCDebug(KDISPLAY_KDED) << "Restored lid opened config to" << id();
             }
         }
     }
@@ -161,12 +161,12 @@ std::unique_ptr<Config> Config::readFile(const QString &fileName)
     QFile file;
     if (QFile::exists(configsDirPath() % s_fixedConfigFileName)) {
         file.setFileName(configsDirPath() % s_fixedConfigFileName);
-        qCDebug(KSCREEN_KDED) << "found a fixed config, will use " << file.fileName();
+        qCDebug(KDISPLAY_KDED) << "found a fixed config, will use " << file.fileName();
     } else {
         file.setFileName(configsDirPath() % fileName);
     }
     if (!file.open(QIODevice::ReadOnly)) {
-        qCDebug(KSCREEN_KDED) << "failed to open file" << file.fileName();
+        qCDebug(KDISPLAY_KDED) << "failed to open file" << file.fileName();
         return nullptr;
     }
 
@@ -201,13 +201,13 @@ bool Config::canBeApplied() const
     return canBeApplied(m_data);
 }
 
-bool Config::canBeApplied(KScreen::ConfigPtr config) const
+bool Config::canBeApplied(Disman::ConfigPtr config) const
 {
 #ifdef KDED_UNIT_TEST
     Q_UNUSED(config);
     return true;
 #else
-    return KScreen::Config::canBeApplied(config, m_validityFlags);
+    return Disman::Config::canBeApplied(config, m_validityFlags);
 #endif
 }
 
@@ -226,24 +226,24 @@ bool Config::writeFile(const QString &filePath)
     if (id().isEmpty()) {
         return false;
     }
-    const KScreen::OutputList outputs = m_data->outputs();
+    const Disman::OutputList outputs = m_data->outputs();
 
     const auto oldConfig = readFile();
-    KScreen::OutputList oldOutputs;
+    Disman::OutputList oldOutputs;
     if (oldConfig) {
         oldOutputs = oldConfig->data()->outputs();
     }
 
     QVariantList outputList;
-    for (const KScreen::OutputPtr &output : outputs) {
+    for (const Disman::OutputPtr &output : outputs) {
         QVariantMap info;
 
         const auto oldOutputIt = std::find_if(oldOutputs.constBegin(), oldOutputs.constEnd(),
-                                              [output](const KScreen::OutputPtr &out) {
+                                              [output](const Disman::OutputPtr &out) {
                                                   return out->hashMd5() == output->hashMd5();
                                                }
         );
-        const KScreen::OutputPtr oldOutput = oldOutputIt != oldOutputs.constEnd() ? *oldOutputIt :
+        const Disman::OutputPtr oldOutput = oldOutputIt != oldOutputs.constEnd() ? *oldOutputIt :
                                                                                     nullptr;
 
         if (!output->isConnected()) {
@@ -254,7 +254,7 @@ bool Config::writeFile(const QString &filePath)
         info[QStringLiteral("primary")] = output->isPrimary();
         info[QStringLiteral("enabled")] = output->isEnabled();
 
-        auto setOutputConfigInfo = [&info](const KScreen::OutputPtr &out) {
+        auto setOutputConfigInfo = [&info](const Disman::OutputPtr &out) {
             if (!out) {
                 return;
             }
@@ -278,11 +278,11 @@ bool Config::writeFile(const QString &filePath)
 
     QFile file(filePath);
     if (!file.open(QIODevice::WriteOnly)) {
-        qCWarning(KSCREEN_KDED) << "Failed to open config file for writing! " << file.errorString();
+        qCWarning(KDISPLAY_KDED) << "Failed to open config file for writing! " << file.errorString();
         return false;
     }
     file.write(QJsonDocument::fromVariant(outputList).toJson());
-    qCDebug(KSCREEN_KDED) << "Config saved on: " << file.fileName();
+    qCDebug(KDISPLAY_KDED) << "Config saved on: " << file.fileName();
 
     return true;
 }
@@ -295,7 +295,7 @@ void Config::log()
     const auto outputs = m_data->outputs();
     for (const auto &o : outputs) {
         if (o->isConnected()) {
-            qCDebug(KSCREEN_KDED) << o;
+            qCDebug(KDISPLAY_KDED) << o;
         }
     }
 }

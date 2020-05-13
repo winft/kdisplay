@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef COMMON_CONTROL_H
 #define COMMON_CONTROL_H
 
-#include <kscreen/types.h>
+#include <disman/types.h>
 
 #include <QObject>
 #include <QVector>
@@ -70,35 +70,35 @@ class ControlConfig : public Control
 {
     Q_OBJECT
 public:
-    explicit ControlConfig(KScreen::ConfigPtr config, QObject *parent = nullptr);
+    explicit ControlConfig(Disman::ConfigPtr config, QObject *parent = nullptr);
 
-    OutputRetention getOutputRetention(const KScreen::OutputPtr &output) const;
+    OutputRetention getOutputRetention(const Disman::OutputPtr &output) const;
     OutputRetention getOutputRetention(const QString &outputId, const QString &outputName) const;
-    void setOutputRetention(const KScreen::OutputPtr &output, OutputRetention value);
+    void setOutputRetention(const Disman::OutputPtr &output, OutputRetention value);
     void setOutputRetention(const QString &outputId, const QString &outputName, OutputRetention value);
 
-    qreal getScale(const KScreen::OutputPtr &output) const;
+    qreal getScale(const Disman::OutputPtr &output) const;
     qreal getScale(const QString &outputId, const QString &outputName) const;
-    void setScale(const KScreen::OutputPtr &output, qreal value);
+    void setScale(const Disman::OutputPtr &output, qreal value);
     void setScale(const QString &outputId, const QString &outputName, qreal value);
 
-    bool getAutoRotate(const KScreen::OutputPtr &output) const;
+    bool getAutoRotate(const Disman::OutputPtr &output) const;
     bool getAutoRotate(const QString &outputId, const QString &outputName) const;
-    void setAutoRotate(const KScreen::OutputPtr &output, bool value);
+    void setAutoRotate(const Disman::OutputPtr &output, bool value);
     void setAutoRotate(const QString &outputId, const QString &outputName, bool value);
 
-    bool getAutoRotateOnlyInTabletMode(const KScreen::OutputPtr &output) const;
+    bool getAutoRotateOnlyInTabletMode(const Disman::OutputPtr &output) const;
     bool getAutoRotateOnlyInTabletMode(const QString &outputId, const QString &outputName) const;
-    void setAutoRotateOnlyInTabletMode(const KScreen::OutputPtr &output, bool value);
+    void setAutoRotateOnlyInTabletMode(const Disman::OutputPtr &output, bool value);
     void setAutoRotateOnlyInTabletMode(const QString &outputId, const QString &outputName,
                                        bool value);
 
-    KScreen::OutputPtr getReplicationSource(const KScreen::OutputPtr &output) const;
-    KScreen::OutputPtr getReplicationSource(const QString &outputId,
+    Disman::OutputPtr getReplicationSource(const Disman::OutputPtr &output) const;
+    Disman::OutputPtr getReplicationSource(const QString &outputId,
                                             const QString &outputName) const;
-    void setReplicationSource(const KScreen::OutputPtr &output, const KScreen::OutputPtr &source);
+    void setReplicationSource(const Disman::OutputPtr &output, const Disman::OutputPtr &source);
     void setReplicationSource(const QString &outputId, const QString &outputName,
-                              const KScreen::OutputPtr &source);
+                              const Disman::OutputPtr &source);
 
     QString dirPath() const override;
     QString filePath() const override;
@@ -112,7 +112,7 @@ private:
     bool infoIsOutput(const QVariantMap &info, const QString &outputId, const QString &outputName) const;
     ControlOutput* getOutputControl(const QString &outputId, const QString &outputName) const;
 
-    KScreen::ConfigPtr m_config;
+    Disman::ConfigPtr m_config;
     QStringList m_duplicateOutputIds;
     QVector<ControlOutput*> m_outputsControls;
 };
@@ -121,7 +121,7 @@ class ControlOutput : public Control
 {
     Q_OBJECT
 public:
-    explicit ControlOutput(KScreen::OutputPtr output, QObject *parent = nullptr);
+    explicit ControlOutput(Disman::OutputPtr output, QObject *parent = nullptr);
 
     QString id() const;
     QString name() const;
@@ -141,7 +141,7 @@ public:
     QString filePath() const override;
 
 private:
-    KScreen::OutputPtr m_output;
+    Disman::OutputPtr m_output;
 };
 
 #endif

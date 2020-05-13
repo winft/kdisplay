@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "output.h"
 #include "config.h"
 
-#include "kscreen_daemon_debug.h"
+#include "kdisplay_daemon_debug.h"
 #include "generator.h"
 
 #include <QStringList>
@@ -27,8 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLoggingCategory>
 #include <QRect>
 
-#include <kscreen/output.h>
-#include <kscreen/edid.h>
+#include <disman/output.h>
+#include <disman/edid.h>
 
 QString Output::s_dirName = QStringLiteral("outputs/");
 
@@ -46,9 +46,9 @@ QString Output::globalFileName(const QString &hash)
     return dir % hash;
 }
 
-void Output::readInGlobalPartFromInfo(KScreen::OutputPtr output, const QVariantMap &info)
+void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMap &info)
 {
-    output->setRotation(static_cast<KScreen::Output::Rotation>(info.value(QStringLiteral("rotation"), 1).toInt()));
+    output->setRotation(static_cast<Disman::Output::Rotation>(info.value(QStringLiteral("rotation"), 1).toInt()));
 
     bool scaleOk;
     const qreal scale = info.value(QStringLiteral("scale"), 1.).toDouble(&scaleOk);
@@ -60,11 +60,11 @@ void Output::readInGlobalPartFromInfo(KScreen::OutputPtr output, const QVariantM
     const QVariantMap modeSize = modeInfo[QStringLiteral("size")].toMap();
     const QSize size = QSize(modeSize[QStringLiteral("width")].toInt(), modeSize[QStringLiteral("height")].toInt());
 
-    qCDebug(KSCREEN_KDED) << "Finding a mode for" << size << "@" << modeInfo[QStringLiteral("refresh")].toFloat();
+    qCDebug(KDISPLAY_KDED) << "Finding a mode for" << size << "@" << modeInfo[QStringLiteral("refresh")].toFloat();
 
-    KScreen::ModeList modes = output->modes();
-    KScreen::ModePtr matchingMode;
-    for(const KScreen::ModePtr &mode : modes) {
+    Disman::ModeList modes = output->modes();
+    Disman::ModePtr matchingMode;
+    for(const Disman::ModePtr &mode : modes) {
         if (mode->size() != size) {
             continue;
         }
@@ -72,23 +72,23 @@ void Output::readInGlobalPartFromInfo(KScreen::OutputPtr output, const QVariantM
             continue;
         }
 
-        qCDebug(KSCREEN_KDED) << "\tFound: " << mode->id() << " " << mode->size() << "@" << mode->refreshRate();
+        qCDebug(KDISPLAY_KDED) << "\tFound: " << mode->id() << " " << mode->size() << "@" << mode->refreshRate();
         matchingMode = mode;
         break;
     }
 
     if (!matchingMode) {
-        qCWarning(KSCREEN_KDED) << "\tFailed to find a matching mode - this means that our config is corrupted"
+        qCWarning(KDISPLAY_KDED) << "\tFailed to find a matching mode - this means that our config is corrupted"
                                    "or a different device with the same serial number has been connected (very unlikely)."
                                    "Falling back to preferred modes.";
         matchingMode = output->preferredMode();
     }
     if (!matchingMode) {
-        qCWarning(KSCREEN_KDED) << "\tFailed to get a preferred mode, falling back to biggest mode.";
+        qCWarning(KDISPLAY_KDED) << "\tFailed to get a preferred mode, falling back to biggest mode.";
         matchingMode = Generator::biggestMode(modes);
     }
     if (!matchingMode) {
-        qCWarning(KSCREEN_KDED) << "\tFailed to get biggest mode. Which means there are no modes. Turning off the screen.";
+        qCWarning(KDISPLAY_KDED) << "\tFailed to get biggest mode. Which means there are no modes. Turning off the screen.";
         output->setEnabled(false);
         return;
     }
@@ -96,18 +96,18 @@ void Output::readInGlobalPartFromInfo(KScreen::OutputPtr output, const QVariantM
     output->setCurrentModeId(matchingMode->id());
 }
 
-QVariantMap Output::getGlobalData(KScreen::OutputPtr output)
+QVariantMap Output::getGlobalData(Disman::OutputPtr output)
 {
     QFile file(globalFileName(output->hashMd5()));
     if (!file.open(QIODevice::ReadOnly)) {
-        qCDebug(KSCREEN_KDED) << "Failed to open file" << file.fileName();
+        qCDebug(KDISPLAY_KDED) << "Failed to open file" << file.fileName();
         return QVariantMap();
     }
     QJsonDocument parser;
     return parser.fromJson(file.readAll()).toVariant().toMap();
 }
 
-bool Output::readInGlobal(KScreen::OutputPtr output)
+bool Output::readInGlobal(Disman::OutputPtr output)
 {
     const QVariantMap info = getGlobalData(output);
     if (info.empty()) {
@@ -118,20 +118,20 @@ bool Output::readInGlobal(KScreen::OutputPtr output)
     return true;
 }
 
-KScreen::Output::Rotation orientationToRotation(QOrientationReading::Orientation orientation,
-                                                KScreen::Output::Rotation fallback)
+Disman::Output::Rotation orientationToRotation(QOrientationReading::Orientation orientation,
+                                                Disman::Output::Rotation fallback)
 {
     using Orientation = QOrientationReading::Orientation;
 
     switch (orientation) {
     case Orientation::TopUp:
-        return KScreen::Output::Rotation::None;
+        return Disman::Output::Rotation::None;
     case Orientation::TopDown:
-        return KScreen::Output::Rotation::Inverted;
+        return Disman::Output::Rotation::Inverted;
     case Orientation::LeftUp:
-        return KScreen::Output::Rotation::Right;
+        return Disman::Output::Rotation::Right;
     case Orientation::RightUp:
-        return KScreen::Output::Rotation::Left;
+        return Disman::Output::Rotation::Left;
     case Orientation::Undefined:
     case Orientation::FaceUp:
     case Orientation::FaceDown:
@@ -141,10 +141,10 @@ KScreen::Output::Rotation orientationToRotation(QOrientationReading::Orientation
     }
 }
 
-bool Output::updateOrientation(KScreen::OutputPtr &output,
+bool Output::updateOrientation(Disman::OutputPtr &output,
                                QOrientationReading::Orientation orientation)
 {
-    if (output->type() != KScreen::Output::Type::Panel) {
+    if (output->type() != Disman::Output::Type::Panel) {
         return false;
     }
     const auto currentRotation = output->rotation();
@@ -157,13 +157,13 @@ bool Output::updateOrientation(KScreen::OutputPtr &output,
 }
 
 // TODO: move this into the Layouter class.
-void Output::adjustPositions(KScreen::ConfigPtr config, const QVariantList &outputsInfo)
+void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList &outputsInfo)
 {
     typedef QPair<int, QPoint> Out;
 
-    KScreen::OutputList outputs = config->outputs();
+    Disman::OutputList outputs = config->outputs();
     QVector<Out> sortedOutputs; // <id, pos>
-    for (const KScreen::OutputPtr &output : outputs) {
+    for (const Disman::OutputPtr &output : outputs) {
         sortedOutputs.append(Out(output->id(), output->pos()));
     }
 
@@ -175,7 +175,7 @@ void Output::adjustPositions(KScreen::ConfigPtr config, const QVariantList &outp
     });
 
     for (int cnt = 1; cnt < sortedOutputs.length(); cnt++) {
-        auto getOutputInfoProperties = [outputsInfo](KScreen::OutputPtr output, QRect &geo) -> bool {
+        auto getOutputInfoProperties = [outputsInfo](Disman::OutputPtr output, QRect &geo) -> bool {
             if (!output) {
                 return false;
             }
@@ -197,8 +197,8 @@ void Output::adjustPositions(KScreen::ConfigPtr config, const QVariantList &outp
                 if (!ok) {
                     return false;
                 }
-                return rot & KScreen::Output::Rotation::Left ||
-                        rot & KScreen::Output::Rotation::Right;
+                return rot & Disman::Output::Rotation::Left ||
+                        rot & Disman::Output::Rotation::Right;
             };
 
             const QVariantMap outputInfo = it->toMap();
@@ -229,8 +229,8 @@ void Output::adjustPositions(KScreen::ConfigPtr config, const QVariantList &outp
         };
 
         // it's guaranteed that we find the following values in the QMap
-        KScreen::OutputPtr prevPtr = outputs.find(sortedOutputs[cnt - 1].first).value();
-        KScreen::OutputPtr curPtr = outputs.find(sortedOutputs[cnt].first).value();
+        Disman::OutputPtr prevPtr = outputs.find(sortedOutputs[cnt - 1].first).value();
+        Disman::OutputPtr curPtr = outputs.find(sortedOutputs[cnt].first).value();
 
         QRect prevInfoGeo, curInfoGeo;
         if (!getOutputInfoProperties(prevPtr, prevInfoGeo) ||
@@ -305,7 +305,7 @@ void Output::adjustPositions(KScreen::ConfigPtr config, const QVariantList &outp
     }
 }
 
-void Output::readIn(KScreen::OutputPtr output, const QVariantMap &info, Control::OutputRetention retention)
+void Output::readIn(Disman::OutputPtr output, const QVariantMap &info, Control::OutputRetention retention)
 {
     const QVariantMap posInfo = info[QStringLiteral("pos")].toMap();
     QPoint point(posInfo[QStringLiteral("x")].toInt(), posInfo[QStringLiteral("y")].toInt());
@@ -321,9 +321,9 @@ void Output::readIn(KScreen::OutputPtr output, const QVariantMap &info, Control:
     readInGlobalPartFromInfo(output, info);
 }
 
-void Output::readInOutputs(KScreen::ConfigPtr config, const QVariantList &outputsInfo)
+void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList &outputsInfo)
 {
-    KScreen::OutputList outputs = config->outputs();
+    Disman::OutputList outputs = config->outputs();
     ControlConfig control(config);
     // As global outputs are indexed by a hash of their edid, which is not unique,
     // to be able to tell apart multiple identical outputs, these need special treatment
@@ -331,7 +331,7 @@ void Output::readInOutputs(KScreen::ConfigPtr config, const QVariantList &output
     {
     QStringList allIds;
     allIds.reserve(outputs.count());
-    for (const KScreen::OutputPtr &output : outputs) {
+    for (const Disman::OutputPtr &output : outputs) {
         const auto outputId = output->hash();
         if (allIds.contains(outputId) && !duplicateIds.contains(outputId)) {
             duplicateIds << outputId;
@@ -341,7 +341,7 @@ void Output::readInOutputs(KScreen::ConfigPtr config, const QVariantList &output
     allIds.clear();
     }
 
-    for (KScreen::OutputPtr output : outputs) {
+    for (Disman::OutputPtr output : outputs) {
         if (!output->isConnected()) {
             output->setEnabled(false);
             continue;
@@ -370,7 +370,7 @@ void Output::readInOutputs(KScreen::ConfigPtr config, const QVariantList &output
         if (!infoFound) {
             // no info in info for this output, try reading in global output info at least or set some default values
 
-            qCWarning(KSCREEN_KDED) << "\tFailed to find a matching output in the current info data - this means that our info is corrupted"
+            qCWarning(KDISPLAY_KDED) << "\tFailed to find a matching output in the current info data - this means that our info is corrupted"
                                        "or a different device with the same serial number has been connected (very unlikely).";
             if (!readInGlobal(output)) {
                 // set some default values instead
@@ -379,7 +379,7 @@ void Output::readInOutputs(KScreen::ConfigPtr config, const QVariantList &output
         }
     }
 
-    for (KScreen::OutputPtr output : outputs) {
+    for (Disman::OutputPtr output : outputs) {
         auto replicationSource = control.getReplicationSource(output);
         if (replicationSource) {
             output->setPos(replicationSource->pos());
@@ -396,7 +396,7 @@ void Output::readInOutputs(KScreen::ConfigPtr config, const QVariantList &output
 #endif
 }
 
-static QVariantMap metadata(const KScreen::OutputPtr &output)
+static QVariantMap metadata(const Disman::OutputPtr &output)
 {
     QVariantMap metadata;
     metadata[QStringLiteral("name")] = output->name();
@@ -408,8 +408,8 @@ static QVariantMap metadata(const KScreen::OutputPtr &output)
     return metadata;
 }
 
-bool Output::writeGlobalPart(const KScreen::OutputPtr &output, QVariantMap &info,
-                             const KScreen::OutputPtr &fallback)
+bool Output::writeGlobalPart(const Disman::OutputPtr &output, QVariantMap &info,
+                             const Disman::OutputPtr &fallback)
 {
 
     info[QStringLiteral("id")] = output->hash();
@@ -446,7 +446,7 @@ bool Output::writeGlobalPart(const KScreen::OutputPtr &output, QVariantMap &info
     return true;
 }
 
-void Output::writeGlobal(const KScreen::OutputPtr &output)
+void Output::writeGlobal(const Disman::OutputPtr &output)
 {
     // get old values and subsequently override
     QVariantMap info = getGlobalData(output);
@@ -456,7 +456,7 @@ void Output::writeGlobal(const KScreen::OutputPtr &output)
 
     QFile file(globalFileName(output->hashMd5()));
     if (!file.open(QIODevice::WriteOnly)) {
-        qCWarning(KSCREEN_KDED) << "Failed to open global output file for writing! " << file.errorString();
+        qCWarning(KDISPLAY_KDED) << "Failed to open global output file for writing! " << file.errorString();
         return;
     }
 

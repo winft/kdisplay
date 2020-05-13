@@ -1,6 +1,6 @@
-add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kscreen\")
+add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kdisplay\")
 
-set(kcm_kscreen_SRCS
+set(kcm_kdisplay_SRCS
     config_handler.cpp
     kcm.cpp
     output_identifier.cpp
@@ -11,18 +11,18 @@ set(kcm_kscreen_SRCS
     ${CMAKE_SOURCE_DIR}/common/orientation_sensor.cpp
 )
 
-ecm_qt_declare_logging_category(kcm_kscreen_SRCS
+ecm_qt_declare_logging_category(kcm_kdisplay_SRCS
     HEADER
-        kcm_screen_debug.h
+        kcm_kdisplay_debug.h
     IDENTIFIER
-        KSCREEN_KCM
+        KDISPLAY_KCM
     CATEGORY_NAME
-        kscreen.kcm
+        kdisplay.kcm
 )
 
-add_library(kcm_kscreen MODULE ${kcm_kscreen_SRCS})
+add_library(kcm_kdisplay MODULE ${kcm_kdisplay_SRCS})
 
-target_link_libraries(kcm_kscreen
+target_link_libraries(kcm_kdisplay
     Qt5::Sensors
     KF5::ConfigCore
     KF5::CoreAddons
@@ -30,14 +30,14 @@ target_link_libraries(kcm_kscreen
     KF5::I18n
     KF5::PlasmaQuick
     KF5::QuickAddons
-    KF5::Screen
+    Disman
 )
 
-kcoreaddons_desktop_to_json(kcm_kscreen "kcm_kscreen.desktop" SERVICE_TYPES kcmodule.desktop)
+kcoreaddons_desktop_to_json(kcm_kdisplay "kcm_kdisplay.desktop" SERVICE_TYPES kcmodule.desktop)
 
 #this desktop file is installed only for retrocompatibility with sycoca
-install(FILES kcm_kscreen.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
+install(FILES kcm_kdisplay.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
 
-install(TARGETS kcm_kscreen DESTINATION ${KDE_INSTALL_PLUGINDIR}/kcms)
+install(TARGETS kcm_kdisplay DESTINATION ${KDE_INSTALL_PLUGINDIR}/kcms)
 
-kpackage_install_package(package kcm_kscreen kcms)
+kpackage_install_package(package kcm_kdisplay kcms)

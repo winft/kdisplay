@@ -21,9 +21,9 @@
 
 #include <QObject>
 
-#include <kscreen/output.h>
+#include <disman/output.h>
 
-namespace KScreen
+namespace Disman
 {
 class Config;
 }
@@ -31,19 +31,19 @@ class Console : public QObject
 {
     Q_OBJECT
     public:
-        explicit Console(const KScreen::ConfigPtr &config);
+        explicit Console(const Disman::ConfigPtr &config);
         ~Console() override;
 
     public Q_SLOTS:
         void printConfig();
         void printJSONConfig();
-        QString typetoString(const KScreen::Output::Type &type) const;
+        QString typetoString(const Disman::Output::Type &type) const;
         void printSerializations();
         void monitor();
         void monitorAndPrint();
 
     private:
-        KScreen::ConfigPtr m_config;
+        Disman::ConfigPtr m_config;
 };
 
 #endif

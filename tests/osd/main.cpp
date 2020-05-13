@@ -35,7 +35,7 @@ int main(int argc, char **argv)
                                                   QStringLiteral("Icon to use for OSD"), QStringLiteral("OSD Test"));
     QCommandLineOption selector = QCommandLineOption({ QStringLiteral("s"), QStringLiteral("selector") },
                                                   QStringLiteral("Show new screen action selector"));
-    KScreen::OsdTest osdtest;
+    Disman::OsdTest osdtest;
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addOption(dbus);

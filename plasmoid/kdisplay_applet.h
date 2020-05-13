@@ -25,9 +25,9 @@
 
 #include <Plasma/Applet>
 
-#include <KScreen/Types>
+#include <Disman/Types>
 
-class KScreenApplet : public Plasma::Applet
+class KDisplayApplet : public Plasma::Applet
 {
     Q_OBJECT
 
@@ -37,8 +37,8 @@ class KScreenApplet : public Plasma::Applet
     Q_PROPERTY(int connectedOutputCount READ connectedOutputCount NOTIFY connectedOutputCountChanged)
 
 public:
-    explicit KScreenApplet(QObject *parent, const QVariantList &data);
-    ~KScreenApplet() override;
+    explicit KDisplayApplet(QObject *parent, const QVariantList &data);
+    ~KDisplayApplet() override;
 
     enum Action {
         SwitchToExternal,
@@ -61,7 +61,7 @@ Q_SIGNALS:
 private:
     void checkOutputs();
 
-    KScreen::ConfigPtr m_screenConfiguration;
+    Disman::ConfigPtr m_screenConfiguration;
     int m_connectedOutputCount = 0;
 
 };

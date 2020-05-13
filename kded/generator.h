@@ -21,10 +21,10 @@
 
 #include <QObject>
 
-#include <kscreen/output.h>
-#include <kscreen/mode.h>
+#include <disman/output.h>
+#include <disman/mode.h>
 
-namespace KScreen
+namespace Disman
 {
     class Config;
 }
@@ -44,17 +44,17 @@ class Generator : public QObject
         static Generator* self();
         static void destroy();
 
-        void setCurrentConfig(const KScreen::ConfigPtr &currentConfig);
+        void setCurrentConfig(const Disman::ConfigPtr &currentConfig);
 
-        KScreen::ConfigPtr idealConfig(const KScreen::ConfigPtr &currentConfig);
-        KScreen::ConfigPtr displaySwitch(DisplaySwitchAction iteration);
+        Disman::ConfigPtr idealConfig(const Disman::ConfigPtr &currentConfig);
+        Disman::ConfigPtr displaySwitch(DisplaySwitchAction iteration);
 
         void setForceLaptop(bool force);
         void setForceLidClosed(bool force);
         void setForceDocked(bool force);
         void setForceNotLaptop(bool force);
 
-        static KScreen::ModePtr biggestMode(const KScreen::ModeList &modes);
+        static Disman::ModePtr biggestMode(const Disman::ModeList &modes);
 
     Q_SIGNALS:
         void ready();
@@ -63,20 +63,20 @@ class Generator : public QObject
         explicit Generator();
         ~Generator() override;
 
-        KScreen::ConfigPtr fallbackIfNeeded(const KScreen::ConfigPtr &config);
+        Disman::ConfigPtr fallbackIfNeeded(const Disman::ConfigPtr &config);
 
-        void cloneScreens(KScreen::OutputList &connectedOutputs);
-        void laptop(KScreen::OutputList &connectedOutputs);
-        void singleOutput(KScreen::OutputList &connectedOutputs);
-        void extendToRight(KScreen::OutputList &connectedOutputs);
+        void cloneScreens(Disman::OutputList &connectedOutputs);
+        void laptop(Disman::OutputList &connectedOutputs);
+        void singleOutput(Disman::OutputList &connectedOutputs);
+        void extendToRight(Disman::OutputList &connectedOutputs);
 
-        KScreen::ModePtr bestModeForSize(const KScreen::ModeList& modes, const QSize &size);
-        KScreen::ModePtr bestModeForOutput(const KScreen::OutputPtr &output);
-        qreal bestScaleForOutput(const KScreen::OutputPtr &output);
+        Disman::ModePtr bestModeForSize(const Disman::ModeList& modes, const QSize &size);
+        Disman::ModePtr bestModeForOutput(const Disman::OutputPtr &output);
+        qreal bestScaleForOutput(const Disman::OutputPtr &output);
 
-        KScreen::OutputPtr biggestOutput(const KScreen::OutputList &connectedOutputs);
-        KScreen::OutputPtr embeddedOutput(const KScreen::OutputList &connectedOutputs);
-        void disableAllDisconnectedOutputs(const KScreen::OutputList &connectedOutputs);
+        Disman::OutputPtr biggestOutput(const Disman::OutputList &connectedOutputs);
+        Disman::OutputPtr embeddedOutput(const Disman::OutputList &connectedOutputs);
+        void disableAllDisconnectedOutputs(const Disman::OutputList &connectedOutputs);
 
         bool isLaptop() const;
         bool isLidClosed() const;
@@ -87,7 +87,7 @@ class Generator : public QObject
         bool m_forceNotLaptop;
         bool m_forceDocked;
 
-        KScreen::ConfigPtr m_currentConfig;
+        Disman::ConfigPtr m_currentConfig;
 
         static Generator* instance;
 };

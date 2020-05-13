@@ -16,8 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #pragma once
 
-#include <kscreen/config.h>
-#include <kscreen/output.h>
+#include <disman/config.h>
+#include <disman/output.h>
 
 #include <QAbstractListModel>
 #include <QPoint>
@@ -60,7 +60,7 @@ public:
                  const QVariant &value,
                  int role = Qt::EditRole) override;
 
-    void add(const KScreen::OutputPtr &output);
+    void add(const Disman::OutputPtr &output);
     void remove(int outputId);
 
     /**
@@ -88,7 +88,7 @@ private:
             , pos(output.pos)
         {}
         Output(Output &&) noexcept = default;
-        Output(KScreen::OutputPtr _ptr, const QPoint &_pos)
+        Output(Disman::OutputPtr _ptr, const QPoint &_pos)
             : ptr(_ptr)
             , pos(_pos)
         {}
@@ -100,7 +100,7 @@ private:
         }
         Output &operator=(Output &&) noexcept = default;
 
-        KScreen::OutputPtr ptr;
+        Disman::OutputPtr ptr;
         QPoint pos;
         QPoint posReset = QPoint(-1, -1);
     };
@@ -124,24 +124,24 @@ private:
 
     bool setResolution(int outputIndex, int resIndex);
     bool setRefreshRate(int outputIndex, int refIndex);
-    bool setRotation(int outputIndex, KScreen::Output::Rotation rotation);
+    bool setRotation(int outputIndex, Disman::Output::Rotation rotation);
     bool setAutoRotate(int outputIndex, bool value);
     bool setAutoRotateOnlyInTabletMode(int outputIndex, bool value);
 
-    int resolutionIndex(const KScreen::OutputPtr &output) const;
-    int refreshRateIndex(const KScreen::OutputPtr &output) const;
-    QVariantList resolutionsStrings(const KScreen::OutputPtr &output) const;
-    QVector<QSize> resolutions(const KScreen::OutputPtr &output) const;
-    QVector<float> refreshRates(const KScreen::OutputPtr &output) const;
+    int resolutionIndex(const Disman::OutputPtr &output) const;
+    int refreshRateIndex(const Disman::OutputPtr &output) const;
+    QVariantList resolutionsStrings(const Disman::OutputPtr &output) const;
+    QVector<QSize> resolutions(const Disman::OutputPtr &output) const;
+    QVector<float> refreshRates(const Disman::OutputPtr &output) const;
 
     bool positionable(const Output &output) const;
 
-    QStringList replicationSourceModel(const KScreen::OutputPtr &output) const;
+    QStringList replicationSourceModel(const Disman::OutputPtr &output) const;
     bool setReplicationSourceIndex(int outputIndex, int sourceIndex);
     int replicationSourceIndex(int outputIndex) const;
     int replicationSourceId(const Output &output) const;
 
-    QVariantList replicasModel(const KScreen::OutputPtr &output) const;
+    QVariantList replicasModel(const Disman::OutputPtr &output) const;
 
     QVector<Output> m_outputs;
 

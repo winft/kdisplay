@@ -18,7 +18,7 @@
  *************************************************************************************/
 
 #include "device.h"
-#include "kscreen_daemon_debug.h"
+#include "kdisplay_daemon_debug.h"
 #include "kded/freedesktop_interface.h"
 
 
@@ -51,8 +51,8 @@ Device::Device(QObject* parent)
                                                               QDBusConnection::systemBus(),
                                                               this);
     if (!m_freedesktop->isValid()) {
-        qCWarning(KSCREEN_KDED) << "UPower not available, lid detection won't work";
-        qCDebug(KSCREEN_KDED) << m_freedesktop->lastError().message();
+        qCWarning(KDISPLAY_KDED) << "UPower not available, lid detection won't work";
+        qCDebug(KDISPLAY_KDED) << m_freedesktop->lastError().message();
     } else {
         QDBusConnection::systemBus().connect(QStringLiteral("org.freedesktop.UPower"),
                                              QStringLiteral("/org/freedesktop/UPower"),
@@ -73,8 +73,8 @@ Device::Device(QObject* parent)
         connect(m_suspendSession, SIGNAL(aboutToSuspend()),
                 this, SIGNAL(aboutToSuspend()));
     } else {
-        qCWarning(KSCREEN_KDED) << "PowerDevil SuspendSession action not available!";
-        qCDebug(KSCREEN_KDED) << m_suspendSession->lastError().message();
+        qCWarning(KDISPLAY_KDED) << "PowerDevil SuspendSession action not available!";
+        qCDebug(KDISPLAY_KDED) << m_suspendSession->lastError().message();
     }
 
     fetchIsLaptop();
@@ -130,7 +130,7 @@ void Device::isLaptopFetched(QDBusPendingCallWatcher* watcher)
 {
     const QDBusPendingReply<QVariant> reply = *watcher;
     if (reply.isError()) {
-        qCDebug(KSCREEN_KDED) << "Couldn't get if the device is a laptop: " << reply.error().message();
+        qCDebug(KDISPLAY_KDED) << "Couldn't get if the device is a laptop: " << reply.error().message();
         return;
     }
 
@@ -156,7 +156,7 @@ void Device::isLidClosedFetched(QDBusPendingCallWatcher* watcher)
 {
     const QDBusPendingReply<QVariant> reply = *watcher;
     if (reply.isError()) {
-        qCDebug(KSCREEN_KDED) << "Couldn't get if the laptop has the lid closed: " << reply.error().message();
+        qCDebug(KDISPLAY_KDED) << "Couldn't get if the laptop has the lid closed: " << reply.error().message();
         return;
     }
 

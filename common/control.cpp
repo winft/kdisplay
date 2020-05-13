@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QJsonDocument>
 #include <QDir>
 
-#include <kscreen/config.h>
-#include <kscreen/output.h>
+#include <disman/config.h>
+#include <disman/output.h>
 
 QString Control::s_dirName = QStringLiteral("control/");
 
@@ -68,11 +68,11 @@ bool Control::writeFile()
     QFile file(path);
     if (!file.open(QIODevice::WriteOnly)) {
         // TODO: logging category?
-//        qCWarning(KSCREEN_COMMON) << "Failed to open config control file for writing! " << file.errorString();
+//        qCWarning(KDISPLAY_COMMON) << "Failed to open config control file for writing! " << file.errorString();
         return false;
     }
     file.write(QJsonDocument::fromVariant(infoMap).toJson());
-//    qCDebug(KSCREEN_COMMON) << "Control saved on: " << file.fileName();
+//    qCDebug(KDISPLAY_COMMON) << "Control saved on: " << file.fileName();
     return true;
 }
 
@@ -121,7 +121,7 @@ Control::OutputRetention Control::convertVariantToOutputRetention(QVariant varia
     return OutputRetention::Undefined;
 }
 
-ControlConfig::ControlConfig(KScreen::ConfigPtr config, QObject *parent)
+ControlConfig::ControlConfig(Disman::ConfigPtr config, QObject *parent)
     : Control(parent)
     , m_config(config)
 {
@@ -136,7 +136,7 @@ ControlConfig::ControlConfig(KScreen::ConfigPtr config, QObject *parent)
     QStringList allIds;
     const auto outputs = config->outputs();
     allIds.reserve(outputs.count());
-    for (const KScreen::OutputPtr &output : outputs) {
+    for (const Disman::OutputPtr &output : outputs) {
         const auto outputId = output->hashMd5();
         if (allIds.contains(outputId) && !m_duplicateOutputIds.contains(outputId)) {
             m_duplicateOutputIds << outputId;
@@ -215,7 +215,7 @@ bool ControlConfig::infoIsOutput(const QVariantMap &info, const QString &outputI
     return true;
 }
 
-Control::OutputRetention ControlConfig::getOutputRetention(const KScreen::OutputPtr &output) const
+Control::OutputRetention ControlConfig::getOutputRetention(const Disman::OutputPtr &output) const
 {
     return getOutputRetention(output->hashMd5(), output->name());
 }
@@ -249,7 +249,7 @@ QVariantMap createOutputInfo(const QString &outputId, const QString &outputName)
     return outputInfo;
 }
 
-void ControlConfig::setOutputRetention(const KScreen::OutputPtr &output, OutputRetention value)
+void ControlConfig::setOutputRetention(const Disman::OutputPtr &output, OutputRetention value)
 {
     setOutputRetention(output->hashMd5(), output->name(), value);
 }
@@ -277,7 +277,7 @@ void ControlConfig::setOutputRetention(const QString &outputId, const QString &o
     setOutputs(outputsInfo);
 }
 
-qreal ControlConfig::getScale(const KScreen::OutputPtr &output) const
+qreal ControlConfig::getScale(const Disman::OutputPtr &output) const
 {
     return getScale(output->hashMd5(), output->name());
 }
@@ -305,7 +305,7 @@ qreal ControlConfig::getScale(const QString &outputId, const QString &outputName
      return -1;
  }
 
-void ControlConfig::setScale(const KScreen::OutputPtr &output, qreal value)
+void ControlConfig::setScale(const Disman::OutputPtr &output, qreal value)
 {
     setScale(output->hashMd5(), output->name(), value);
 }
@@ -343,7 +343,7 @@ void ControlConfig::setScale(const QString &outputId, const QString &outputName,
     setOutputScale();
 }
 
-bool ControlConfig::getAutoRotate(const KScreen::OutputPtr &output) const
+bool ControlConfig::getAutoRotate(const Disman::OutputPtr &output) const
 {
     return getAutoRotate(output->hashMd5(), output->name());
 }
@@ -371,7 +371,7 @@ bool ControlConfig::getAutoRotate(const QString &outputId, const QString &output
     return true;
 }
 
-void ControlConfig::setAutoRotate(const KScreen::OutputPtr &output, bool value)
+void ControlConfig::setAutoRotate(const Disman::OutputPtr &output, bool value)
 {
     setAutoRotate(output->hashMd5(), output->name(), value);
 }
@@ -409,7 +409,7 @@ void ControlConfig::setAutoRotate(const QString &outputId, const QString &output
     setOutputAutoRotate();
 }
 
-bool ControlConfig::getAutoRotateOnlyInTabletMode(const KScreen::OutputPtr &output) const
+bool ControlConfig::getAutoRotateOnlyInTabletMode(const Disman::OutputPtr &output) const
 {
     return getAutoRotateOnlyInTabletMode(output->hashMd5(), output->name());
 }
@@ -438,7 +438,7 @@ bool ControlConfig::getAutoRotateOnlyInTabletMode(const QString &outputId,
     return true;
 }
 
-void ControlConfig::setAutoRotateOnlyInTabletMode(const KScreen::OutputPtr &output, bool value)
+void ControlConfig::setAutoRotateOnlyInTabletMode(const Disman::OutputPtr &output, bool value)
 {
     setAutoRotateOnlyInTabletMode(output->hashMd5(), output->name(), value);
 }
@@ -477,12 +477,12 @@ void ControlConfig::setAutoRotateOnlyInTabletMode(const QString &outputId,
 }
 
 
-KScreen::OutputPtr ControlConfig::getReplicationSource(const KScreen::OutputPtr &output) const
+Disman::OutputPtr ControlConfig::getReplicationSource(const Disman::OutputPtr &output) const
 {
     return getReplicationSource(output->hashMd5(), output->name());
 }
 
-KScreen::OutputPtr ControlConfig::getReplicationSource(const QString &outputId,
+Disman::OutputPtr ControlConfig::getReplicationSource(const QString &outputId,
                                                        const QString &outputName) const
 {
     const QVariantList outputsInfo = getOutputs();
@@ -511,14 +511,14 @@ KScreen::OutputPtr ControlConfig::getReplicationSource(const QString &outputId,
     return nullptr;
 }
 
-void ControlConfig::setReplicationSource(const KScreen::OutputPtr &output,
-                                         const KScreen::OutputPtr &source)
+void ControlConfig::setReplicationSource(const Disman::OutputPtr &output,
+                                         const Disman::OutputPtr &source)
 {
     setReplicationSource(output->hashMd5(), output->name(), source);
 }
 
 void ControlConfig::setReplicationSource(const QString &outputId, const QString &outputName,
-                                         const KScreen::OutputPtr &source)
+                                         const Disman::OutputPtr &source)
 {
     QList<QVariant>::iterator it;
     QVariantList outputsInfo = getOutputs();
@@ -568,7 +568,7 @@ ControlOutput* ControlConfig::getOutputControl(const QString &outputId,
     return nullptr;
 }
 
-ControlOutput::ControlOutput(KScreen::OutputPtr output, QObject *parent)
+ControlOutput::ControlOutput(Disman::OutputPtr output, QObject *parent)
     : Control(parent)
     , m_output(output)
 {

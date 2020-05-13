@@ -16,29 +16,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "config_handler.h"
 
-#include "kcm_screen_debug.h"
+#include "kcm_kdisplay_debug.h"
 #include "output_model.h"
 
-#include <kscreen/configmonitor.h>
-#include <kscreen/getconfigoperation.h>
-#include <kscreen/output.h>
+#include <disman/configmonitor.h>
+#include <disman/getconfigoperation.h>
+#include <disman/output.h>
 
 #include <QRect>
 
-using namespace KScreen;
+using namespace Disman;
 
 ConfigHandler::ConfigHandler(QObject *parent)
     : QObject(parent)
 {
 }
 
-void ConfigHandler::setConfig(KScreen::ConfigPtr config)
+void ConfigHandler::setConfig(Disman::ConfigPtr config)
 {
     m_config = config;
     m_initialConfig = m_config->clone();
     m_initialControl.reset(new ControlConfig(m_initialConfig));
 
-    KScreen::ConfigMonitor::instance()->addConfig(m_config);
+    Disman::ConfigMonitor::instance()->addConfig(m_config);
     m_control.reset(new ControlConfig(config));
 
     m_outputs = new OutputModel(this);
@@ -47,7 +47,7 @@ void ConfigHandler::setConfig(KScreen::ConfigPtr config)
     connect(m_outputs, &OutputModel::sizeChanged,
             this, &ConfigHandler::checkScreenNormalization);
 
-    for (const KScreen::OutputPtr &output : config->outputs()) {
+    for (const Disman::OutputPtr &output : config->outputs()) {
         initOutput(output);
     }
     m_lastNormalizedScreenSize = screenSize();
@@ -61,17 +61,17 @@ void ConfigHandler::setConfig(KScreen::ConfigPtr config)
                 checkNeedsSave();
                 Q_EMIT changed();
     });
-    connect(m_config.data(), &KScreen::Config::outputAdded,
+    connect(m_config.data(), &Disman::Config::outputAdded,
             this, [this]() { Q_EMIT outputConnect(true); });
-    connect(m_config.data(), &KScreen::Config::outputRemoved,
+    connect(m_config.data(), &Disman::Config::outputRemoved,
             this, [this]() { Q_EMIT outputConnect(false); });
-    connect(m_config.data(), &KScreen::Config::primaryOutputChanged,
+    connect(m_config.data(), &Disman::Config::primaryOutputChanged,
             this, &ConfigHandler::primaryOutputChanged);
 
     Q_EMIT outputModelChanged();
 }
 
-void ConfigHandler::resetScale(const KScreen::OutputPtr &output)
+void ConfigHandler::resetScale(const Disman::OutputPtr &output)
 {
     // Load scale control (either not set, same or windowing system does not transmit scale).
     const qreal scale = m_control->getScale(output);
@@ -86,13 +86,13 @@ void ConfigHandler::resetScale(const KScreen::OutputPtr &output)
     }
 }
 
-void ConfigHandler::initOutput(const KScreen::OutputPtr &output)
+void ConfigHandler::initOutput(const Disman::OutputPtr &output)
 {
     if (output->isConnected()) {
         resetScale(output);
         m_outputs->add(output);
     }
-    connect(output.data(), &KScreen::Output::isConnectedChanged,
+    connect(output.data(), &Disman::Output::isConnectedChanged,
             this, [this, output]() {
         Q_EMIT outputConnect(output->isConnected());
     });
@@ -118,7 +118,7 @@ void ConfigHandler::updateInitialData()
 void ConfigHandler::checkNeedsSave()
 {
     if (m_config->supportedFeatures() &
-            KScreen::Config::Feature::PrimaryDisplay) {
+            Disman::Config::Feature::PrimaryDisplay) {
         if (m_config->primaryOutput() && m_initialConfig->primaryOutput()) {
             if (m_config->primaryOutput()->hashMd5() !=
                     m_initialConfig->primaryOutput()->hashMd5() ) {
@@ -224,7 +224,7 @@ void ConfigHandler::primaryOutputSelected(int index)
     // TODO
 }
 
-void ConfigHandler::primaryOutputChanged(const KScreen::OutputPtr &output)
+void ConfigHandler::primaryOutputChanged(const Disman::OutputPtr &output)
 {
     Q_UNUSED(output)
 
@@ -289,43 +289,43 @@ void ConfigHandler::setRetention(int retention)
     Q_EMIT changed();
 }
 
-qreal ConfigHandler::scale(const KScreen::OutputPtr &output) const
+qreal ConfigHandler::scale(const Disman::OutputPtr &output) const
 {
     return m_control->getScale(output);
 }
 
-void ConfigHandler::setScale(KScreen::OutputPtr &output, qreal scale)
+void ConfigHandler::setScale(Disman::OutputPtr &output, qreal scale)
 {
     m_control->setScale(output, scale);
 }
 
-KScreen::OutputPtr ConfigHandler::replicationSource(const KScreen::OutputPtr &output) const
+Disman::OutputPtr ConfigHandler::replicationSource(const Disman::OutputPtr &output) const
 {
     return m_control->getReplicationSource(output);
 }
 
-void ConfigHandler::setReplicationSource(KScreen::OutputPtr &output,
-                                         const KScreen::OutputPtr &source)
+void ConfigHandler::setReplicationSource(Disman::OutputPtr &output,
+                                         const Disman::OutputPtr &source)
 {
     m_control->setReplicationSource(output, source);
 }
 
-bool ConfigHandler::autoRotate(const KScreen::OutputPtr &output) const
+bool ConfigHandler::autoRotate(const Disman::OutputPtr &output) const
 {
     return m_control->getAutoRotate(output);
 }
 
-void ConfigHandler::setAutoRotate(KScreen::OutputPtr &output, bool autoRotate)
+void ConfigHandler::setAutoRotate(Disman::OutputPtr &output, bool autoRotate)
 {
     m_control->setAutoRotate(output, autoRotate);
 }
 
-bool ConfigHandler::autoRotateOnlyInTabletMode(const KScreen::OutputPtr &output) const
+bool ConfigHandler::autoRotateOnlyInTabletMode(const Disman::OutputPtr &output) const
 {
     return m_control->getAutoRotateOnlyInTabletMode(output);
 }
 
-void ConfigHandler::setAutoRotateOnlyInTabletMode(KScreen::OutputPtr &output, bool value)
+void ConfigHandler::setAutoRotateOnlyInTabletMode(Disman::OutputPtr &output, bool value)
 {
     m_control->setAutoRotateOnlyInTabletMode(output, value);
 }

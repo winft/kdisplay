@@ -18,17 +18,17 @@
 
 #include "osdmanager.h"
 #include "osd.h"
-#include "kscreen_daemon_debug.h"
+#include "kdisplay_daemon_debug.h"
 
-#include <KScreen/Config>
-#include <KScreen/GetConfigOperation>
-#include <KScreen/Output>
+#include <Disman/Config>
+#include <Disman/GetConfigOperation>
+#include <Disman/Output>
 
 #include <QDBusConnection>
 
 #include <QQmlEngine>
 
-namespace KScreen {
+namespace Disman {
 
 class OsdActionImpl : public OsdAction
 {
@@ -51,8 +51,8 @@ OsdManager::OsdManager(QObject *parent)
     : QObject(parent)
     , m_cleanupTimer(new QTimer(this))
 {
-    qmlRegisterSingletonType<KScreen::OsdAction>("org.kde.KScreen", 1, 0, "OsdAction", [](QQmlEngine *, QJSEngine *) -> QObject* {
-        return new KScreen::OsdAction();
+    qmlRegisterSingletonType<Disman::OsdAction>("org.kwinft.kdisplay", 1, 0, "OsdAction", [](QQmlEngine *, QJSEngine *) -> QObject* {
+        return new Disman::OsdAction();
     });
 
     // free up memory when the osd hasn't been used for more than 1 minute
@@ -61,9 +61,9 @@ OsdManager::OsdManager(QObject *parent)
     connect(m_cleanupTimer, &QTimer::timeout, this, [this]() {
         hideOsd();
     });
-    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.kscreen.osdService"));
-    if (!QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/kscreen/osdService"), this, QDBusConnection::ExportAllSlots)) {
-        qCWarning(KSCREEN_KDED) << "Failed to registerObject";
+    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kwinft.kdisplay.osdService"));
+    if (!QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kwinft/kdisplay/osdService"), this, QDBusConnection::ExportAllSlots)) {
+        qCWarning(KDISPLAY_KDED) << "Failed to registerObject";
     }
 }
 
@@ -79,25 +79,25 @@ OsdManager::~OsdManager()
 
 void OsdManager::showOutputIdentifiers()
 {
-    connect(new KScreen::GetConfigOperation(), &KScreen::GetConfigOperation::finished,
+    connect(new Disman::GetConfigOperation(), &Disman::GetConfigOperation::finished,
             this, &OsdManager::slotIdentifyOutputs);
 }
 
-void OsdManager::slotIdentifyOutputs(KScreen::ConfigOperation *op)
+void OsdManager::slotIdentifyOutputs(Disman::ConfigOperation *op)
 {
     if (op->hasError()) {
         return;
     }
 
-    const KScreen::ConfigPtr config = qobject_cast<KScreen::GetConfigOperation*>(op)->config();
+    const Disman::ConfigPtr config = qobject_cast<Disman::GetConfigOperation*>(op)->config();
 
-    Q_FOREACH (const KScreen::OutputPtr &output, config->outputs()) {
+    Q_FOREACH (const Disman::OutputPtr &output, config->outputs()) {
         if (!output->isConnected() || !output->isEnabled() || !output->currentMode()) {
             continue;
         }
         auto osd = m_osds.value(output->name());
         if (!osd) {
-            osd = new KScreen::Osd(output, this);
+            osd = new Disman::Osd(output, this);
             m_osds.insert(output->name(), osd);
         }
         osd->showOutputIdentifier(output);
@@ -109,21 +109,21 @@ void OsdManager::showOsd(const QString& icon, const QString& text)
 {
     hideOsd();
 
-    connect(new KScreen::GetConfigOperation(), &KScreen::GetConfigOperation::finished,
-        this, [this, icon, text] (KScreen::ConfigOperation *op) {
+    connect(new Disman::GetConfigOperation(), &Disman::GetConfigOperation::finished,
+        this, [this, icon, text] (Disman::ConfigOperation *op) {
             if (op->hasError()) {
                 return;
             }
 
-            const KScreen::ConfigPtr config = qobject_cast<KScreen::GetConfigOperation*>(op)->config();
+            const Disman::ConfigPtr config = qobject_cast<Disman::GetConfigOperation*>(op)->config();
 
-            Q_FOREACH (const KScreen::OutputPtr &output, config->outputs()) {
+            Q_FOREACH (const Disman::OutputPtr &output, config->outputs()) {
                 if (!output->isConnected() || !output->isEnabled() || !output->currentMode()) {
                     continue;
                 }
                 auto osd = m_osds.value(output->name());
                 if (!osd) {
-                    osd = new KScreen::Osd(output, this);
+                    osd = new Disman::Osd(output, this);
                     m_osds.insert(output->name(), osd);
                 }
                 osd->showGenericOsd(icon, text);
@@ -144,23 +144,23 @@ OsdAction *OsdManager::showActionSelector()
                     osd->hideOsd();
                 }
             });
-    connect(new KScreen::GetConfigOperation(), &KScreen::GetConfigOperation::finished,
-        this, [this, action](const KScreen::ConfigOperation *op) {
+    connect(new Disman::GetConfigOperation(), &Disman::GetConfigOperation::finished,
+        this, [this, action](const Disman::ConfigOperation *op) {
             if (op->hasError()) {
-                qCWarning(KSCREEN_KDED) << op->errorString();
+                qCWarning(KDISPLAY_KDED) << op->errorString();
                 return;
             }
 
             // Show selector on all enabled screens
             const auto outputs = op->config()->outputs();
-            KScreen::OutputPtr osdOutput;
+            Disman::OutputPtr osdOutput;
             for (const auto &output : outputs) {
                 if (!output->isConnected() || !output->isEnabled() || !output->currentMode()) {
                     continue;
                 }
 
                 // Prefer laptop screen
-                if (output->type() == KScreen::Output::Panel) {
+                if (output->type() == Disman::Output::Panel) {
                     osdOutput = output;
                     break;
                 }
@@ -186,11 +186,11 @@ OsdAction *OsdManager::showActionSelector()
                 return;
             }
 
-            KScreen::Osd* osd = nullptr;
+            Disman::Osd* osd = nullptr;
             if (m_osds.contains(osdOutput->name())) {
                 osd = m_osds.value(osdOutput->name());
             } else {
-                osd = new KScreen::Osd(osdOutput, this);
+                osd = new Disman::Osd(osdOutput, this);
                 m_osds.insert(osdOutput->name(), osd);
             }
             action->setOsd(osd);

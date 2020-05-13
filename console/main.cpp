@@ -25,17 +25,17 @@
 #include <KAboutData>
 #include <KLocalizedString>
 
-#include <kscreen/getconfigoperation.h>
-#include <kscreen/config.h>
+#include <disman/getconfigoperation.h>
+#include <disman/config.h>
 
 #include "console.h"
 
 using namespace std;
 
-void configReceived(KScreen::ConfigOperation *op)
+void configReceived(Disman::ConfigOperation *op)
 {
 
-    const KScreen::ConfigPtr config = qobject_cast<KScreen::GetConfigOperation*>(op)->config();
+    const Disman::ConfigPtr config = qobject_cast<Disman::GetConfigOperation*>(op)->config();
 
     const QString command = op->property("command").toString();
     const qint64 msecs = QDateTime::currentMSecsSinceEpoch() - op->property("start").toLongLong();
@@ -85,22 +85,24 @@ int main (int argc, char *argv[])
     dup2(1, 2);
 
     QGuiApplication app(argc, argv);
-    KAboutData aboutData(QStringLiteral("kscreen-console"), i18n("KScreen Console"), QStringLiteral("1.0"), i18n("KScreen Console"),
-    KAboutLicense::GPL, i18n("(c) 2012 KScreen Team"));
+    KAboutData aboutData(QStringLiteral("kdisplay-console"), i18n("KDisplay Console"), QStringLiteral("1.0"), i18n("KDisplay Console"),
+    KAboutLicense::GPL, i18n("(c) 2020"));
     KAboutData::setApplicationData(aboutData);
 
-    aboutData.addAuthor(i18n("Alejandro Fiestas Olivares"), i18n("Maintainer"), QStringLiteral("afiestas@kde.org"),
+    aboutData.addAuthor(i18n("Roman Gilg"), i18n("Maintainer"), QStringLiteral("subdiff@gmail.com"),
+        QStringLiteral("https://subdiff.org"));
+    aboutData.addAuthor(i18n("Alejandro Fiestas Olivares"), i18n("Developer"), QStringLiteral("afiestas@kde.org"),
         QStringLiteral("http://www.afiestas.org/"));
 
     QCommandLineParser parser;
     parser.setApplicationDescription(
-        i18n("KScreen Console is a CLI tool to query KScreen status\n\n"
+        i18n("KDisplay Console is a CLI tool to query KDisplay status\n\n"
              "Commands:\n"
              "  bug             Show information needed for a bug report\n"
-             "  config          Show KScreen config files\n"
+             "  config          Show KDisplay config files\n"
              "  outputs         Show output information\n"
              "  monitor         Monitor for changes\n"
-             "  json            Show current KScreen config"));
+             "  json            Show current KDisplay config"));
     parser.addHelpOption();
     parser.addPositionalArgument(QStringLiteral("command"), i18n("Command to execute"),
                                  QStringLiteral("bug|config|outputs|monitor|json"));
@@ -115,11 +117,11 @@ int main (int argc, char *argv[])
 
     qDebug() << "START: Requesting Config";
 
-    KScreen::GetConfigOperation *op = new KScreen::GetConfigOperation();
+    auto op = new Disman::GetConfigOperation();
     op->setProperty("command", command);
     op->setProperty("start", QDateTime::currentMSecsSinceEpoch());
-    QObject::connect(op, &KScreen::GetConfigOperation::finished,
-                     [&](KScreen::ConfigOperation *op) {
+    QObject::connect(op, &Disman::GetConfigOperation::finished,
+                     [&](Disman::ConfigOperation *op) {
                           configReceived(op);
                       });
 
