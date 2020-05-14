@@ -1,0 +1,81 @@
+stages:
+  - Compliance
+  - Build
+
+variables:
+  IMAGE_BASE: ${CI_REGISTRY}/kwinft/ci-images/archlinux/kwinft-base
+
+workflow:
+  rules:
+    - when: always
+
+
+Message lint:
+  stage: Compliance
+  image: node:latest
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      when: always
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: never
+    - when: always
+  variables:
+    UPSTREAM: https://${CI_REGISTRY_USER}:${CI_REGISTRY_PASSWORD}@${CI_SERVER_HOST}/kwinft/kdisplay.git
+  script:
+    - if [ -n "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" ];
+      then export COMPARE_BRANCH=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME; else export COMPARE_BRANCH=master; fi
+    - "echo Branch to compare: $COMPARE_BRANCH"
+    - yarn global add @commitlint/cli
+    - yarn add conventional-changelog-conventionalcommits
+    - git remote add _upstream $UPSTREAM || git remote set-url _upstream $UPSTREAM
+    - git fetch -q _upstream $COMPARE_BRANCH
+    - commitlint --verbose --config=ci/commitlint.config.js --from=_upstream/$COMPARE_BRANCH
+  cache:
+    paths:
+      - node_modules/
+
+
+.common-master: &common-master
+  image: ${IMAGE_BASE}-master:latest
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^Plasma\//'
+      when: never
+    - when: on_success
+
+.common-stable: &common-stable
+  image: ${IMAGE_BASE}-stable:latest
+  rules:
+    - if: '$CI_COMMIT_BRANCH !~ /^Plasma\//'
+      when: never
+    - when: on_success
+
+
+.common-build: &common-build
+  stage: Build
+  script:
+    # For now we build Disman beforehand.
+    - mkdir -p disman-bench/build && cd disman-bench
+    - git clone https://gitlab.com/kwinft/disman.git src
+    - cd build
+    - cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr ../src
+    - make -j$(nproc)
+    - make install -j$(nproc)
+    - cd ../..
+    # Build of KDisplay
+    - mkdir ci-build && cd ci-build
+    - cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr ../
+    - make -j$(nproc)
+    - make install -j$(nproc)
+  artifacts:
+    paths:
+      - disman-bench/build
+      - ci-build
+    expire_in: 1 week
+
+Master build:
+  <<: *common-build
+  <<: *common-master
+
+Stable build:
+  <<: *common-build
+  <<: *common-stable
