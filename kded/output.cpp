@@ -50,11 +50,13 @@ void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMa
 {
     output->setRotation(static_cast<Disman::Output::Rotation>(info.value(QStringLiteral("rotation"), 1).toInt()));
 
-    bool scaleOk;
-    const qreal scale = info.value(QStringLiteral("scale"), 1.).toDouble(&scaleOk);
-    if (scaleOk) {
-        output->setScale(scale);
-    }
+    // TODO: Disabled, since we use control files now. That is just a reminder. Remove at some point
+    //       when everything is proven to work.
+//    bool scaleOk;
+//    const qreal scale = info.value(QStringLiteral("scale"), 1.).toDouble(&scaleOk);
+//    if (scaleOk) {
+//        output->setScale(scale);
+//    }
 
     const QVariantMap modeInfo = info[QStringLiteral("mode")].toMap();
     const QVariantMap modeSize = modeInfo[QStringLiteral("size")].toMap();
@@ -377,6 +379,7 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList &outputs
                 readInGlobalPartFromInfo(output, QVariantMap());
             }
         }
+        output->setScale(control.getScale(output));
     }
 
     for (Disman::OutputPtr output : outputs) {
@@ -416,8 +419,10 @@ bool Output::writeGlobalPart(const Disman::OutputPtr &output, QVariantMap &info,
     info[QStringLiteral("metadata")] = metadata(output);
     info[QStringLiteral("rotation")] = output->rotation();
 
-    // Round scale to four digits
-    info[QStringLiteral("scale")] = int(output->scale() * 10000 + 0.5) / 10000.;
+    // TODO: Disabled, since we use control files now. That is just a reminder. Remove at some point
+    //       when everything is proven to work.
+//    // Round scale to four digits
+//    info[QStringLiteral("scale")] = int(output->scale() * 10000 + 0.5) / 10000.;
 
     QVariantMap modeInfo;
     float refreshRate = -1.;
