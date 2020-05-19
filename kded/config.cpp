@@ -180,7 +180,7 @@ std::unique_ptr<Config> Config::readFile(const QString &fileName)
             continue;
         }
 
-        const QRect geom = output->geometry();
+        auto const geom = output->geometry();
         if (geom.x() + geom.width() > screenSize.width()) {
             screenSize.setWidth(geom.x() + geom.width());
         }
@@ -260,8 +260,8 @@ bool Config::writeFile(const QString &filePath)
             }
 
             QVariantMap pos;
-            pos[QStringLiteral("x")] = out->pos().x();
-            pos[QStringLiteral("y")] = out->pos().y();
+            pos[QStringLiteral("x")] = out->position().x();
+            pos[QStringLiteral("y")] = out->position().y();
             info[QStringLiteral("pos")] = pos;
         };
         setOutputConfigInfo(output->isEnabled() ? output : oldOutput);

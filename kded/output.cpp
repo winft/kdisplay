@@ -161,12 +161,12 @@ bool Output::updateOrientation(Disman::OutputPtr &output,
 // TODO: move this into the Layouter class.
 void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList &outputsInfo)
 {
-    typedef QPair<int, QPoint> Out;
+    using Out = QPair<int, QPointF>;
 
     Disman::OutputList outputs = config->outputs();
     QVector<Out> sortedOutputs; // <id, pos>
     for (const Disman::OutputPtr &output : outputs) {
-        sortedOutputs.append(Out(output->id(), output->pos()));
+        sortedOutputs.append(Out(output->id(), output->position()));
     }
 
     // go from left to right, top to bottom
@@ -241,8 +241,8 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList &outpu
             continue;
         }
 
-        const QRect prevGeo = prevPtr->geometry();
-        const QRect curGeo = curPtr->geometry();
+        auto const prevGeo = prevPtr->geometry();
+        auto const curGeo = curPtr->geometry();
 
         // the old difference between previous and current output read from the config file
         const int xInfoDiff = curInfoGeo.x() - (prevInfoGeo.x() + prevInfoGeo.width());
@@ -303,7 +303,7 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList &outpu
 
         const int x = xDiff == xInfoDiff ? curGeo.x() : xCorrected;
         const int y = yDiff == yInfoDiff ? curGeo.y() : yCorrected;
-        curPtr->setPos(QPoint(x, y));
+        curPtr->setPosition(QPoint(x, y));
     }
 }
 
@@ -311,7 +311,7 @@ void Output::readIn(Disman::OutputPtr output, const QVariantMap &info, Control::
 {
     const QVariantMap posInfo = info[QStringLiteral("pos")].toMap();
     QPoint point(posInfo[QStringLiteral("x")].toInt(), posInfo[QStringLiteral("y")].toInt());
-    output->setPos(point);
+    output->setPosition(point);
     output->setPrimary(info[QStringLiteral("primary")].toBool());
     output->setEnabled(info[QStringLiteral("enabled")].toBool());
 
@@ -383,13 +383,8 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList &outputs
     }
 
     for (Disman::OutputPtr output : outputs) {
-        auto replicationSource = control.getReplicationSource(output);
-        if (replicationSource) {
-            output->setPos(replicationSource->pos());
-            output->setLogicalSize(replicationSource->logicalSize());
-        } else {
-            output->setLogicalSize(QSizeF());
-        }
+        auto source = control.getReplicationSource(output);
+        output->setReplicationSource(source ? source->id() : 0);
     }
 
     // TODO: this does not work at the moment with logical size replication. Deactivate for now.
