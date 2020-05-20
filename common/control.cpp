@@ -125,6 +125,11 @@ ControlConfig::ControlConfig(Disman::ConfigPtr config, QObject *parent)
     : Control(parent)
     , m_config(config)
 {
+    if (!config) {
+        // TODO: Should we just require that config is not null instead? Config autotest expects
+        //       to allow null for some reason though.
+        return;
+    }
 //    qDebug() << "Looking for control file:" << config->connectedOutputsHash();
     readFile();
 
