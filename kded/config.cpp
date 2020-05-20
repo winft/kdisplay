@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <disman/config.h>
 #include <disman/output.h>
 
-QString Config::s_fixedConfigFileName = QStringLiteral("fixed-config");
+QString Config::s_fixedConfigFileName = QStringLiteral("fixed-config.json");
 QString Config::s_configsDirName = QStringLiteral("configs/");
 
 QString Config::configsDirPath()
@@ -45,12 +45,27 @@ Config::Config(Disman::ConfigPtr config, QObject *parent)
 {
 }
 
-QString Config::filePath()
+QString Config::createPath(const QString& fileName)
 {
     if (!QDir().mkpath(configsDirPath())) {
         return QString();
     }
-    return configsDirPath() % id();
+    return path(fileName);
+}
+
+QString Config::path(const QString& fileName) const
+{
+    return configsDirPath() + fileName;
+}
+
+QString Config::fileName() const
+{
+    return id() % QStringLiteral(".json");
+}
+
+QString Config::openLidFileName() const
+{
+    return id() % QStringLiteral("_lidOpened.json");
 }
 
 QString Config::id() const
@@ -121,32 +136,32 @@ void Config::setAutoRotate(bool value)
 
 bool Config::fileExists() const
 {
-    return (QFile::exists(configsDirPath() % id()) || QFile::exists(configsDirPath() % s_fixedConfigFileName));
+    return QFile::exists(path(fileName())) || QFile::exists(path(s_fixedConfigFileName));
 }
 
 std::unique_ptr<Config> Config::readFile()
 {
     if (Device::self()->isLaptop() && !Device::self()->isLidClosed()) {
         // We may look for a config that has been set when the lid was closed, Bug: 353029
-        const QString lidOpenedFilePath(filePath() % QStringLiteral("_lidOpened"));
-        const QFile srcFile(lidOpenedFilePath);
+        auto const openLidFilePath = path(openLidFileName());
+        const QFile srcFile(openLidFilePath);
 
         if (srcFile.exists()) {
-            QFile::remove(filePath());
-            if (QFile::copy(lidOpenedFilePath, filePath())) {
-                QFile::remove(lidOpenedFilePath);
+            auto const normalFilePath = path(fileName());
+            QFile::remove(normalFilePath);
+            if (QFile::copy(openLidFilePath, normalFilePath)) {
+                QFile::remove(openLidFilePath);
                 qCDebug(KDISPLAY_KDED) << "Restored lid opened config to" << id();
             }
         }
     }
-    return readFile(id());
+    return readFile(fileName());
 }
 
 std::unique_ptr<Config> Config::readOpenLidFile()
 {
-    const QString openLidFile = id() % QStringLiteral("_lidOpened");
-    auto config = readFile(openLidFile);
-    QFile::remove(configsDirPath() % openLidFile);
+    auto config = readFile(openLidFileName());
+    QFile::remove(path(openLidFileName()));
     return config;
 }
 
@@ -159,11 +174,11 @@ std::unique_ptr<Config> Config::readFile(const QString &fileName)
     config->setValidityFlags(m_validityFlags);
 
     QFile file;
-    if (QFile::exists(configsDirPath() % s_fixedConfigFileName)) {
-        file.setFileName(configsDirPath() % s_fixedConfigFileName);
+    if (QFile::exists(path(s_fixedConfigFileName))) {
+        file.setFileName(path(s_fixedConfigFileName));
         qCDebug(KDISPLAY_KDED) << "found a fixed config, will use " << file.fileName();
     } else {
-        file.setFileName(configsDirPath() % fileName);
+        file.setFileName(path(fileName));
     }
     if (!file.open(QIODevice::ReadOnly)) {
         qCDebug(KDISPLAY_KDED) << "failed to open file" << file.fileName();
@@ -215,12 +230,12 @@ bool Config::canBeApplied(Disman::ConfigPtr config) const
 
 bool Config::writeFile()
 {
-    return writeFile(filePath());
+    return writeFile(createPath(fileName()));
 }
 
 bool Config::writeOpenLidFile()
 {
-    return writeFile(filePath() % QStringLiteral("_lidOpened"));
+    return writeFile(createPath(openLidFileName()));
 }
 
 bool Config::writeFile(const QString &filePath)
@@ -273,6 +288,14 @@ bool Config::writeFile(const QString &filePath)
                     Control::OutputRetention::Individual) {
             // try to update global output data
             Output::writeGlobal(output);
+
+            // TODO: set some calculated scale in case control file not available
+//            if (!m_control->getScale(output)) {
+//                auto modeSize = output->enforcedModeSize();
+//                auto logicalSize = output->geometry().size();
+//                auto scale = logicalSize.width() > 0 ? modeSize.width() / logicalSize.width() : 1;
+//                m_control->setScale(output, scale);
+//            }
         }
 
         outputList.append(info);

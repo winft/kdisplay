@@ -460,8 +460,9 @@ void TestConfig::testMoveConfig()
     QCOMPARE(output2->isPrimary(), true);
 
     // Check if both files exist
-    const QString closedPath = Config::configsDirPath() % configWrapper->id();
-    const QString openedPath = closedPath % QStringLiteral("_lidOpened");
+    const QString basePath = Config::configsDirPath() + configWrapper->id();
+    const QString closedPath = basePath + QStringLiteral(".json");
+    const QString openedPath = basePath + QStringLiteral("_lidOpened.json");
 
     QFile openCfg(openedPath);
     QFile closedCfg(closedPath);

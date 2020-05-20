@@ -40,7 +40,8 @@ public:
                                   QOrientationReading::Orientation orientation);
 
 private:
-    static QString globalFileName(const QString &hash);
+    static QString path(const QString& hash);
+    static QString createPath(const QString& hash);
     static QVariantMap getGlobalData(Disman::OutputPtr output);
 
     static void readIn(Disman::OutputPtr output, const QVariantMap &info, Control::OutputRetention retention);

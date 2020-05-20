@@ -37,13 +37,17 @@ QString Output::dirPath()
     return Globals::dirPath() % s_dirName;
 }
 
-QString Output::globalFileName(const QString &hash)
+QString Output::path(const QString& hash)
 {
-    const auto dir = dirPath();
-    if (!QDir().mkpath(dir)) {
+    return dirPath() + hash + QStringLiteral(".json");
+}
+
+QString Output::createPath(const QString& hash)
+{
+    if (!QDir().mkpath(dirPath())) {
         return QString();
     }
-    return dir % hash;
+    return path(hash);
 }
 
 void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMap &info)
@@ -100,7 +104,7 @@ void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMa
 
 QVariantMap Output::getGlobalData(Disman::OutputPtr output)
 {
-    QFile file(globalFileName(output->hashMd5()));
+    QFile file(path(output->hashMd5()));
     if (!file.open(QIODevice::ReadOnly)) {
         qCDebug(KDISPLAY_KDED) << "Failed to open file" << file.fileName();
         return QVariantMap();
@@ -454,7 +458,7 @@ void Output::writeGlobal(const Disman::OutputPtr &output)
         return;
     }
 
-    QFile file(globalFileName(output->hashMd5()));
+    QFile file(createPath(output->hashMd5()));
     if (!file.open(QIODevice::WriteOnly)) {
         qCWarning(KDISPLAY_KDED) << "Failed to open global output file for writing! " << file.errorString();
         return;

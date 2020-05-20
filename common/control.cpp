@@ -94,7 +94,7 @@ void Control::readFile()
 
 QString Control::filePathFromHash(const QString &hash) const
 {
-    return dirPath() % hash;
+    return dirPath() % hash % QStringLiteral(".json");
 }
 
 QVariantMap& Control::info()
