@@ -171,7 +171,9 @@ std::unique_ptr<Config> Config::readFile(const QString &fileName)
     }
 
     QJsonDocument parser;
-    QVariantList outputs = parser.fromJson(file.readAll()).toVariant().toList();
+    QVariantMap info = parser.fromJson(file.readAll()).toVariant().toMap();
+    QVariantList outputs = info[QStringLiteral("outputs")].toList();
+
     Output::readInOutputs(config->data(), outputs);
 
     QSize screenSize;
@@ -276,12 +278,15 @@ bool Config::writeFile(const QString &filePath)
         outputList.append(info);
     }
 
+    QVariantMap info;
+    info[QStringLiteral("outputs")] = outputList;
+
     QFile file(filePath);
     if (!file.open(QIODevice::WriteOnly)) {
         qCWarning(KDISPLAY_KDED) << "Failed to open config file for writing! " << file.errorString();
         return false;
     }
-    file.write(QJsonDocument::fromVariant(outputList).toJson());
+    file.write(QJsonDocument::fromVariant(info).toJson());
     qCDebug(KDISPLAY_KDED) << "Config saved on: " << file.fileName();
 
     return true;
