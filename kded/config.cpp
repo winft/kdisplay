@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <disman/output.h>
 
 QString Config::s_fixedConfigFileName = QStringLiteral("fixed-config");
-QString Config::s_configsDirName = QStringLiteral("" /*"configs/"*/); // TODO: KDE6 - move these files into the subfolder
+QString Config::s_configsDirName = QStringLiteral("configs/");
 
 QString Config::configsDirPath()
 {
