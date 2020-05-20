@@ -401,6 +401,8 @@ void KDisplayDaemon::lidClosedChanged(bool lidIsClosed)
         // use applyConfig() and see what we can do ...
         if (auto openCfg = m_monitoredConfig->readOpenLidFile()) {
             doApplyConfig(std::move(openCfg));
+        } else {
+            applyConfig();
         }
     }
 }
