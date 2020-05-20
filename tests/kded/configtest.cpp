@@ -29,6 +29,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <memory>
 
+struct TestPathGuard
+{
+    TestPathGuard()
+    {
+        // TODO: this should setup of the control directory.
+        QStandardPaths::setTestModeEnabled(true);
+        path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) % QStringLiteral("/kdisplay/");
+        Globals::setDirPath(path);
+    }
+    ~TestPathGuard()
+    {
+        QVERIFY(!path.isEmpty());
+        QVERIFY(QDir(path).removeRecursively());
+    }
+
+    QString path;
+};
+
 class TestConfig : public QObject
 {
     Q_OBJECT
@@ -410,10 +428,8 @@ void TestConfig::testMoveConfig()
     auto config = configWrapper->data();
     QVERIFY(config);
 
-    // Make sure we don't write into TEST_DATA
-    QStandardPaths::setTestModeEnabled(true);
-    Globals::setDirPath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) % QStringLiteral("/kdisplay/"));
-    // TODO: this needs setup of the control directory
+    // Make sure we don't write into TEST_DATA.
+    auto guard = TestPathGuard();
 
     // Basic assumptions for the remainder of our tests, this is the situation where the lid is opened
     QCOMPARE(config->connectedOutputs().count(), 2);
@@ -475,17 +491,7 @@ void TestConfig::testMoveConfig()
 
     // Make sure we don't screw up when there's no _lidOpened config
     configWrapper = configWrapper->readOpenLidFile();
-    config = configWrapper->data();
-
-    output = config->connectedOutputs().first();
-    QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
-    QCOMPARE(output->isEnabled(), true);
-    QCOMPARE(output->isPrimary(), true);
-
-    output2 = config->connectedOutputs().last();
-    QCOMPARE(output2->name(), QLatin1String("OUTPUT-2"));
-    QCOMPARE(output2->isEnabled(), true);
-    QCOMPARE(output2->isPrimary(), false);
+    QVERIFY(!configWrapper);
 }
 
 void TestConfig::testFixedConfig()
@@ -496,12 +502,12 @@ void TestConfig::testFixedConfig()
     auto config = configWrapper->data();
     QVERIFY(config);
 
-    // Make sure we don't write into TEST_DATA
-    QStandardPaths::setTestModeEnabled(true);
-    Globals::setDirPath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) % QStringLiteral("/kdisplay/"));
-    // TODO: this needs setup of the control directory
+    // Make sure we don't write into TEST_DATA.
+    auto guard = TestPathGuard();
 
     const QString fixedCfgPath = Config::configsDirPath() % Config::s_fixedConfigFileName;
+    QVERIFY(QDir().mkpath(Config::configsDirPath()));
+
     // save config as the current one, this is the config we don't want restored, and which we'll overwrite
     configWrapper->writeFile(fixedCfgPath);
 
