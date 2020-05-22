@@ -62,7 +62,8 @@ OutputIdentifier::OutputIdentifier(Disman::ConfigPtr config, QObject *parent)
             continue;
         }
 
-        QSize deviceSize, logicalSize;
+        QSize deviceSize;
+        QSizeF logicalSize;
         if (output->isHorizontal()) {
             deviceSize = mode->size();
         } else {
@@ -70,13 +71,13 @@ OutputIdentifier::OutputIdentifier(Disman::ConfigPtr config, QObject *parent)
         }
         if (config->supportedFeatures() & Disman::Config::Feature::PerOutputScaling) {
             // Scale adjustment is not needed on Wayland, we use logical size.
-            logicalSize = output->logicalSize().toSize();
+            logicalSize = output->geometry().size();
         } else {
             logicalSize = deviceSize / view->effectiveDevicePixelRatio();
         }
         rootObj->setProperty("outputName", Utils::outputName(output));
         rootObj->setProperty("modeName", Utils::sizeToString(deviceSize));
-        view->setProperty("screenSize", QRect(output->pos(), logicalSize));
+        view->setProperty("screenSize", QRectF(output->position(), logicalSize).toRect());
         m_views << view;
     }
 

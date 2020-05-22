@@ -62,7 +62,7 @@ private:
     void updatePosition();
 
     Disman::OutputPtr m_output;
-    QRect m_outputGeometry;
+    QRectF m_outputGeometry;
     KDeclarative::QmlObject *m_osdObject = nullptr;
     KDeclarative::QmlObject *m_osdActionSelector = nullptr;
     QTimer *m_osdTimer = nullptr;

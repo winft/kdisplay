@@ -207,15 +207,15 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
     switch (action) {
     case Generator::ExtendToLeft: {
         qCDebug(KDISPLAY_KDED) << "Extend to left";
-        external->setPos(QPoint(0,0));
+        external->setPosition(QPointF(0,0));
         external->setEnabled(true);
         const Disman::ModePtr extMode = bestModeForOutput(external);
         Q_ASSERT(extMode);
         external->setCurrentModeId(extMode->id());
 
         Q_ASSERT(external->currentMode()); // we must have a mode now
-        const QSize size = external->geometry().size();
-        embedded->setPos(QPoint(size.width(), 0));
+        auto const size = external->geometry().size();
+        embedded->setPosition(QPointF(size.width(), 0));
         embedded->setEnabled(true);
         embedded->setPrimary(true);
         const Disman::ModePtr embeddedMode = bestModeForOutput(embedded);
@@ -238,7 +238,7 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
     }
     case Generator::TurnOffExternal: {
         qCDebug(KDISPLAY_KDED) << "Turn off external screen";
-        embedded->setPos(QPoint(0,0));
+        embedded->setPosition(QPointF(0,0));
         embedded->setEnabled(true);
         embedded->setPrimary(true);
         const Disman::ModePtr embeddedMode = bestModeForOutput(embedded);
@@ -251,7 +251,7 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
     }
     case Generator::ExtendToRight: {
         qCDebug(KDISPLAY_KDED) << "Extend to the right";
-        embedded->setPos(QPoint(0,0));
+        embedded->setPosition(QPointF(0,0));
         embedded->setEnabled(true);
         embedded->setPrimary(true);
         const Disman::ModePtr embeddedMode = bestModeForOutput(embedded);
@@ -260,8 +260,8 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
 
 
         Q_ASSERT(embedded->currentMode()); // we must have a mode now
-        const QSize size = embedded->geometry().size();
-        external->setPos(QPoint(size.width(), 0));
+        auto const size = embedded->geometry().size();
+        external->setPosition(QPointF(size.width(), 0));
         external->setEnabled(true);
         external->setPrimary(false);
         const Disman::ModePtr extMode = bestModeForOutput(external);
@@ -320,7 +320,7 @@ void Generator::cloneScreens(Disman::OutputList &connectedOutputs)
                 continue;
             }
             output->setEnabled(true);
-            output->setPos(QPoint(0, 0));
+            output->setPosition(QPointF(0, 0));
             const Disman::ModePtr mode = biggestMode(output->modes());
             Q_ASSERT(mode);
             output->setCurrentModeId(mode->id());
@@ -344,7 +344,7 @@ void Generator::cloneScreens(Disman::OutputList &connectedOutputs)
         bestMode = bestModeForSize(output->modes(), biggestSize);
         Q_ASSERT(bestMode); // we resolved this mode previously, so it better works
         output->setEnabled(true);
-        output->setPos(QPoint(0, 0));
+        output->setPosition(QPointF(0, 0));
         output->setCurrentModeId(bestMode->id());
     }
 }
@@ -366,7 +366,7 @@ void Generator::singleOutput(Disman::OutputList &connectedOutputs)
     output->setCurrentModeId(bestMode->id());
     output->setEnabled(true);
     output->setPrimary(true);
-    output->setPos(QPoint(0,0));
+    output->setPosition(QPointF(0,0));
 }
 
 void Generator::laptop(Disman::OutputList &connectedOutputs)
@@ -412,7 +412,7 @@ void Generator::laptop(Disman::OutputList &connectedOutputs)
         const Disman::ModePtr bestMode = bestModeForOutput(external);
         Q_ASSERT(bestMode);
         external->setCurrentModeId(bestMode->id());
-        external->setPos(QPoint(0, 0));
+        external->setPosition(QPointF(0, 0));
 
         return;
     }
@@ -428,19 +428,19 @@ void Generator::laptop(Disman::OutputList &connectedOutputs)
 
     qCDebug(KDISPLAY_KDED) << "Lid is open";
     //If lid is open, laptop screen should be primary
-    embedded->setPos(QPoint(0,0));
+    embedded->setPosition(QPointF(0,0));
     embedded->setPrimary(true);
     embedded->setEnabled(true);
     const Disman::ModePtr embeddedMode = bestModeForOutput(embedded);
     Q_ASSERT(embeddedMode);
     embedded->setCurrentModeId(embeddedMode->id());
 
-    int globalWidth = embedded->geometry().width();
+    double globalWidth = embedded->geometry().width();
     Disman::OutputPtr biggest = biggestOutput(connectedOutputs);
     Q_ASSERT(biggest);
     connectedOutputs.remove(biggest->id());
 
-    biggest->setPos(QPoint(globalWidth, 0));
+    biggest->setPosition(QPointF(globalWidth, 0));
     biggest->setEnabled(true);
     biggest->setPrimary(false);
     const Disman::ModePtr mode = bestModeForOutput(biggest);
@@ -450,7 +450,7 @@ void Generator::laptop(Disman::OutputList &connectedOutputs)
     Q_FOREACH(Disman::OutputPtr output, connectedOutputs) {
         output->setEnabled(true);
         output->setPrimary(false);
-        output->setPos(QPoint(globalWidth, 0));
+        output->setPosition(QPointF(globalWidth, 0));
         const Disman::ModePtr mode = bestModeForOutput(output);
         Q_ASSERT(mode);
         output->setCurrentModeId(mode->id());
@@ -480,17 +480,17 @@ void Generator::extendToRight(Disman::OutputList &connectedOutputs)
 
     biggest->setEnabled(true);
     biggest->setPrimary(true);
-    biggest->setPos(QPoint(0,0));
+    biggest->setPosition(QPointF(0,0));
     const Disman::ModePtr mode = bestModeForOutput(biggest);
     Q_ASSERT(mode);
     biggest->setCurrentModeId(mode->id());
 
-    int globalWidth = biggest->geometry().width();
+    double globalWidth = biggest->geometry().width();
 
     Q_FOREACH(Disman::OutputPtr output, connectedOutputs) {
         output->setEnabled(true);
         output->setPrimary(false);
-        output->setPos(QPoint(globalWidth, 0));
+        output->setPosition(QPointF(globalWidth, 0));
         const Disman::ModePtr mode = bestModeForOutput(output);
         Q_ASSERT(mode);
         output->setCurrentModeId(mode->id());

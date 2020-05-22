@@ -204,22 +204,22 @@ void OutputModel::add(const Disman::OutputPtr &output)
 
     int i = 0;
     while (i < m_outputs.size()) {
-        const QPoint pos = m_outputs[i].ptr->pos();
-        if (output->pos().x() < pos.x()) {
+        auto const pos = m_outputs[i].ptr->position();
+        if (output->position().x() < pos.x()) {
             break;
         }
-        if (output->pos().x() == pos.x() &&
-                output->pos().y() < pos.y()) {
+        if (output->position().x() == pos.x() &&
+                output->position().y() < pos.y()) {
             break;
         }
         i++;
     }
     // Set the initial non-normalized position to be the normalized
     // position plus the current delta.
-    QPoint pos = output->pos();
+    auto pos = output->position();
     if (!m_outputs.isEmpty()) {
-        const QPoint delta = m_outputs[0].pos - m_outputs[0].ptr->pos();
-        pos = output->pos() + delta;
+        auto const delta = m_outputs[0].pos - m_outputs[0].ptr->position();
+        pos = output->position() + delta;
     }
     m_outputs.insert(i, Output(output, pos));
 
@@ -264,12 +264,12 @@ void OutputModel::resetPosition(const Output &output)
             if (out.ptr->id() == output.ptr->id()) {
                 continue;
             }
-            if (out.ptr->geometry().right() > output.ptr->pos().x()) {
-                output.ptr->setPos(out.ptr->geometry().topRight());
+            if (out.ptr->geometry().right() > output.ptr->position().x()) {
+                output.ptr->setPosition(out.ptr->geometry().topRight());
             }
         }
     } else {
-        output.ptr->setPos(/*output.ptr->pos() - */output.posReset);
+        output.ptr->setPosition(/*output.ptr->position() - */output.posReset);
     }
 }
 
@@ -289,7 +289,7 @@ bool OutputModel::setEnabled(int outputIndex, bool enable)
         setResolution(outputIndex, resolutionIndex(output.ptr));
         reposition();
     } else {
-        output.posReset = output.ptr->pos();
+        output.posReset = output.ptr->position();
     }
 
     QModelIndex index = createIndex(outputIndex, 0);
@@ -606,7 +606,6 @@ bool OutputModel::setReplicationSourceIndex(int outputIndex, int sourceIndex)
             return false;
         }
         m_config->setReplicationSource(output.ptr, nullptr);
-        output.ptr->setLogicalSize(QSizeF());
         resetPosition(output);
     } else {
         const auto source = m_outputs[sourceIndex].ptr;
@@ -615,9 +614,8 @@ bool OutputModel::setReplicationSourceIndex(int outputIndex, int sourceIndex)
             return false;
         }
         m_config->setReplicationSource(output.ptr, source);
-        output.posReset = output.ptr->pos();
-        output.ptr->setPos(source->pos());
-        output.ptr->setLogicalSize(source->logicalSize());
+        output.posReset = output.ptr->position();
+        output.ptr->setPosition(source->position());
     }
 
     reposition();
@@ -696,8 +694,8 @@ void OutputModel::reposition()
     // Find first valid output.
     for (const auto &out : m_outputs) {
         if (positionable(out)) {
-            x = out.ptr->pos().x();
-            y = out.ptr->pos().y();
+            x = out.ptr->position().x();
+            y = out.ptr->position().y();
             break;
         }
     }
@@ -706,7 +704,7 @@ void OutputModel::reposition()
         if (!positionable(m_outputs[i])) {
             continue;
         }
-        const QPoint &cmp = m_outputs[i].ptr->pos();
+        auto const &cmp = m_outputs[i].ptr->position();
 
         if (cmp.x() < x) {
             x = cmp.x();
@@ -722,7 +720,7 @@ void OutputModel::reposition()
 
     for (int i = 0; i < m_outputs.size(); i++) {
         auto &out = m_outputs[i];
-        out.ptr->setPos(out.ptr->pos() - QPoint(x, y));
+        out.ptr->setPosition(out.ptr->position() - QPoint(x, y));
         QModelIndex index = createIndex(i, 0);
         Q_EMIT dataChanged(index, index, {NormalizedPositionRole});
     }
@@ -747,7 +745,7 @@ QPoint OutputModel::originDelta() const
         if (!positionable(m_outputs[i])) {
             continue;
         }
-        const QPoint &cmp = m_outputs[i].pos;
+        auto const &cmp = m_outputs[i].pos;
 
         if (cmp.x() < x) {
             x = cmp.x();
@@ -767,9 +765,9 @@ void OutputModel::updatePositions()
         if (!positionable(out)) {
             continue;
         }
-        const QPoint set = out.pos - delta;
-        if (out.ptr->pos() != set) {
-            out.ptr->setPos(set);
+        auto const set = out.pos - delta;
+        if (out.ptr->position() != set) {
+            out.ptr->setPosition(set);
             QModelIndex index = createIndex(i, 0);
             Q_EMIT dataChanged(index, index, {NormalizedPositionRole});
         }
@@ -781,8 +779,8 @@ void OutputModel::updateOrder()
 {
     auto order = m_outputs;
     std::sort(order.begin(), order.end(), [](const Output &a, const Output &b) {
-        const int xDiff = b.ptr->pos().x() - a.ptr->pos().x();
-        const int yDiff = b.ptr->pos().y() - a.ptr->pos().y();
+        const int xDiff = b.ptr->position().x() - a.ptr->position().x();
+        const int yDiff = b.ptr->position().y() - a.ptr->position().y();
         if (xDiff > 0) {
             return true;
         }
@@ -819,7 +817,7 @@ bool OutputModel::normalizePositions()
     bool changed = false;
     for (int i = 0; i < m_outputs.size(); i++) {
         auto &output = m_outputs[i];
-        if (output.pos == output.ptr->pos()) {
+        if (output.pos == output.ptr->position()) {
             continue;
         }
         if (!positionable(output)) {
@@ -827,7 +825,7 @@ bool OutputModel::normalizePositions()
         }
         changed = true;
         auto index = createIndex(i, 0);
-        output.pos = output.ptr->pos();
+        output.pos = output.ptr->position();
         Q_EMIT dataChanged(index, index, {PositionRole});
     }
     return changed;
@@ -841,7 +839,7 @@ bool OutputModel::positionsNormalized() const
 
 const int s_snapArea = 80;
 
-bool isVerticalClose(const QRect &rect1, const QRect &rect2)
+bool isVerticalClose(const QRectF &rect1, const QRectF &rect2)
 {
     if (rect2.top() - rect1.bottom() > s_snapArea ) {
         return false;
@@ -852,8 +850,8 @@ bool isVerticalClose(const QRect &rect1, const QRect &rect2)
     return true;
 }
 
-bool snapToRight(const QRect &target,
-                              const QSize &size,
+bool snapToRight(const QRectF &target,
+                              const QSizeF &size,
                               QPoint &dest)
 {
     if (qAbs(target.right() - dest.x()) < s_snapArea) {
@@ -869,8 +867,8 @@ bool snapToRight(const QRect &target,
     return false;
 }
 
-bool snapToLeft(const QRect &target,
-                             const QSize &size,
+bool snapToLeft(const QRectF &target,
+                             const QSizeF &size,
                              QPoint &dest)
 {
     if (qAbs(target.left() - dest.x()) < s_snapArea) {
@@ -886,8 +884,8 @@ bool snapToLeft(const QRect &target,
     return false;
 }
 
-bool snapToMiddle(const QRect &target,
-                               const QSize &size,
+bool snapToMiddle(const QRectF &target,
+                               const QSizeF &size,
                                QPoint &dest)
 {
     const int outputMid = dest.y() + size.height() / 2;
@@ -900,8 +898,8 @@ bool snapToMiddle(const QRect &target,
     return false;
 }
 
-bool snapToTop(const QRect &target,
-                            const QSize &size,
+bool snapToTop(const QRectF &target,
+                            const QSizeF &size,
                             QPoint &dest)
 {
     if (qAbs(target.top() - dest.y()) < s_snapArea) {
@@ -917,8 +915,8 @@ bool snapToTop(const QRect &target,
     return false;
 }
 
-bool snapToBottom(const QRect &target,
-                               const QSize &size,
+bool snapToBottom(const QRectF &target,
+                               const QSizeF &size,
                                QPoint &dest)
 {
     if (qAbs(target.bottom() - dest.y()) < s_snapArea) {
@@ -934,8 +932,8 @@ bool snapToBottom(const QRect &target,
     return false;
 }
 
-bool snapVertical(const QRect &target,
-                               const QSize &size,
+bool snapVertical(const QRectF &target,
+                               const QSizeF &size,
                                QPoint &dest)
 {
     if (snapToMiddle(target, size, dest)) {
@@ -952,7 +950,7 @@ bool snapVertical(const QRect &target,
 
 void OutputModel::snap(const Output &output, QPoint &dest)
 {
-    const QSize size = output.ptr->geometry().size();
+    auto const size = output.ptr->geometry().size();
     for (const Output &out : m_outputs) {
         if (out.ptr->id() == output.ptr->id()) {
             // Can not snap to itself.
@@ -962,9 +960,9 @@ void OutputModel::snap(const Output &output, QPoint &dest)
             continue;
         }
 
-        const QRect target(out.pos, out.ptr->geometry().size());
+        auto const target = QRectF(out.pos, out.ptr->geometry().size());
 
-        if (!isVerticalClose(target, QRect(dest, size))) {
+        if (!isVerticalClose(target, QRectF(dest, size))) {
             continue;
         }
 
