@@ -135,7 +135,8 @@ void KCMKDisplay::doSave(bool force)
                 << "	Mode:"
                 << (mode ? mode->name() : QStringLiteral("unknown"))
                 << "@" << (mode ? mode->refreshRate() : 0.0) << "Hz" << "\n"
-                << "    Position:" << output->pos().x() << "x" << output->pos().y() << "\n"
+                << "    Position:" << output->position().x()
+                                   << "x" << output->position().y() << "\n"
                 << "    Scale:" << (perOutputScaling() ? QString::number(output->scale()) :
                                                          QStringLiteral("global")) << "\n"
                 << "    Replicates:" << (output->replicationSource() == 0 ? "no" : "yes");

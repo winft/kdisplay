@@ -97,11 +97,11 @@ void Console::printConfig()
         qDebug() << "Enabled: " << output->isEnabled();
         qDebug() << "Primary: " << output->isPrimary();
         qDebug() << "Rotation: " << output->rotation();
-        qDebug() << "Pos: " << output->pos();
+        qDebug() << "Pos: " << output->position();
         qDebug() << "MMSize: " << output->sizeMm();
         qDebug() << "FollowPreferredMode: " << output->followPreferredMode();
         if (output->currentMode()) {
-            qDebug() << "Size: " << output->size();
+            qDebug() << "Size: " << output->enforcedModeSize();
         }
         qDebug() << "Scale: " << output->scale();
         if (output->clones().isEmpty()) {

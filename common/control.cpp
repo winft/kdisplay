@@ -94,7 +94,7 @@ void Control::readFile()
 
 QString Control::filePathFromHash(const QString &hash) const
 {
-    return dirPath() % hash;
+    return dirPath() % hash % QStringLiteral(".json");
 }
 
 QVariantMap& Control::info()
@@ -125,6 +125,11 @@ ControlConfig::ControlConfig(Disman::ConfigPtr config, QObject *parent)
     : Control(parent)
     , m_config(config)
 {
+    if (!config) {
+        // TODO: Should we just require that config is not null instead? Config autotest expects
+        //       to allow null for some reason though.
+        return;
+    }
 //    qDebug() << "Looking for control file:" << config->connectedOutputsHash();
     readFile();
 
@@ -293,7 +298,7 @@ qreal ControlConfig::getScale(const QString &outputId, const QString &outputName
                 continue;
             }
             const auto val = info[QStringLiteral("scale")];
-            return val.canConvert<qreal>() ? val.toReal() : -1;
+            return val.canConvert<qreal>() ? val.toReal() : 1;
         }
     }
     // Retention is global or info for output not in config control file.
@@ -302,7 +307,7 @@ qreal ControlConfig::getScale(const QString &outputId, const QString &outputName
     }
 
     // Info for output not found.
-     return -1;
+     return 1;
  }
 
 void ControlConfig::setScale(const Disman::OutputPtr &output, qreal value)
@@ -601,7 +606,7 @@ QString ControlOutput::filePath() const
 qreal ControlOutput::getScale() const
 {
     const auto val = constInfo()[QStringLiteral("scale")];
-    return val.canConvert<qreal>() ? val.toReal() : -1;
+    return val.canConvert<qreal>() ? val.toReal() : 1;
 }
 
 void ControlOutput::setScale(qreal value)

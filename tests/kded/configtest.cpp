@@ -29,6 +29,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <memory>
 
+struct TestPathGuard
+{
+    TestPathGuard()
+    {
+        // TODO: this should setup of the control directory.
+        QStandardPaths::setTestModeEnabled(true);
+        path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) % QStringLiteral("/kdisplay/");
+        Globals::setDirPath(path);
+    }
+    ~TestPathGuard()
+    {
+        QVERIFY(!path.isEmpty());
+        QVERIFY(QDir(path).removeRecursively());
+    }
+
+    QString path;
+};
+
 class TestConfig : public QObject
 {
     Q_OBJECT
@@ -76,7 +94,7 @@ std::unique_ptr<Config> TestConfig::createConfig(bool output1Connected, bool out
     Disman::OutputPtr output1 = Disman::OutputPtr::create();
     output1->setId(1);
     output1->setName(QStringLiteral("OUTPUT-1"));
-    output1->setPos(QPoint(0, 0));
+    output1->setPosition(QPoint(0, 0));
     output1->setConnected(output1Connected);
     output1->setEnabled(output1Connected);
     if (output1Connected) {
@@ -86,7 +104,7 @@ std::unique_ptr<Config> TestConfig::createConfig(bool output1Connected, bool out
     Disman::OutputPtr output2 = Disman::OutputPtr::create();
     output2->setId(2);
     output2->setName(QStringLiteral("OUTPUT-2"));
-    output2->setPos(QPoint(0, 0));
+    output2->setPosition(QPoint(0, 0));
     output2->setConnected(output2Connected);
     if (output2Connected) {
         output2->setModes(modes);
@@ -127,7 +145,7 @@ void TestConfig::testSimpleConfig()
     QCOMPARE(output->currentMode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
-    QCOMPARE(output->pos(), QPoint(0, 0));
+    QCOMPARE(output->position(), QPoint(0, 0));
     QCOMPARE(output->isPrimary(), true);
 
     auto screen = config->screen();
@@ -150,7 +168,7 @@ void TestConfig::testTwoScreenConfig()
     QCOMPARE(output->currentMode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
-    QCOMPARE(output->pos(), QPoint(0, 0));
+    QCOMPARE(output->position(), QPoint(0, 0));
     QCOMPARE(output->isPrimary(), true);
 
     output = config->connectedOutputs().last();
@@ -159,7 +177,7 @@ void TestConfig::testTwoScreenConfig()
     QCOMPARE(output->currentMode()->size(), QSize(1280, 1024));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
-    QCOMPARE(output->pos(), QPoint(1920, 0));
+    QCOMPARE(output->position(), QPoint(1920, 0));
     QCOMPARE(output->isPrimary(), false);
 
     auto screen = config->screen();
@@ -182,7 +200,7 @@ void TestConfig::testRotatedScreenConfig()
     QCOMPARE(output->currentMode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
-    QCOMPARE(output->pos(), QPoint(0, 0));
+    QCOMPARE(output->position(), QPoint(0, 0));
     QCOMPARE(output->isPrimary(), true);
 
     output = config->connectedOutputs().last();
@@ -191,7 +209,7 @@ void TestConfig::testRotatedScreenConfig()
     QCOMPARE(output->currentMode()->size(), QSize(1280, 1024));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::Left);
-    QCOMPARE(output->pos(), QPoint(1920, 0));
+    QCOMPARE(output->position(), QPoint(1920, 0));
     QCOMPARE(output->isPrimary(), false);
 
     auto screen = config->screen();
@@ -214,7 +232,7 @@ void TestConfig::testDisabledScreenConfig()
     QCOMPARE(output->currentMode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
-    QCOMPARE(output->pos(), QPoint(0, 0));
+    QCOMPARE(output->position(), QPoint(0, 0));
     QCOMPARE(output->isPrimary(), true);
 
     output = config->connectedOutputs().last();
@@ -312,7 +330,7 @@ void TestConfig::testIdenticalOutputs()
     output1->setId(1);
     output1->setEdid(data);
     output1->setName(QStringLiteral("DisplayPort-0"));
-    output1->setPos(QPoint(0, 0));
+    output1->setPosition(QPoint(0, 0));
     output1->setConnected(true);
     output1->setEnabled(false);
     output1->setModes(modes);
@@ -321,7 +339,7 @@ void TestConfig::testIdenticalOutputs()
     output2->setId(2);
     output2->setEdid(data);
     output2->setName(QStringLiteral("DisplayPort-1"));
-    output2->setPos(QPoint(0, 0));
+    output2->setPosition(QPoint(0, 0));
     output2->setConnected(true);
     output2->setEnabled(false);
     output2->setModes(modes);
@@ -330,7 +348,7 @@ void TestConfig::testIdenticalOutputs()
     output3->setId(3);
     output3->setEdid(data);
     output3->setName(QStringLiteral("DisplayPort-2"));
-    output3->setPos(QPoint(0, 0));
+    output3->setPosition(QPoint(0, 0));
     output3->setConnected(true);
     output3->setEnabled(false);
     output3->setModes(modes);
@@ -339,7 +357,7 @@ void TestConfig::testIdenticalOutputs()
     output6->setId(6);
     output6->setEdid(data);
     output6->setName(QStringLiteral("DVI-0"));
-    output6->setPos(QPoint(0, 0));
+    output6->setPosition(QPoint(0, 0));
     output6->setConnected(true);
     output6->setEnabled(false);
     output6->setModes(modes);
@@ -348,7 +366,7 @@ void TestConfig::testIdenticalOutputs()
     output4->setId(4);
     output4->setEdid(data);
     output4->setName(QStringLiteral("DisplayPort-3"));
-    output4->setPos(QPoint(0, 0));
+    output4->setPosition(QPoint(0, 0));
     output4->setConnected(true);
     output4->setEnabled(false);
     output4->setModes(modes);
@@ -357,7 +375,7 @@ void TestConfig::testIdenticalOutputs()
     output5->setId(5);
     output5->setEdid(data);
     output5->setName(QStringLiteral("DVI-1"));
-    output5->setPos(QPoint(0, 0));
+    output5->setPosition(QPoint(0, 0));
     output5->setConnected(true);
     output5->setEnabled(false);
     output5->setModes(modes);
@@ -390,7 +408,7 @@ void TestConfig::testIdenticalOutputs()
     Q_FOREACH (auto output, config2->connectedOutputs()) {
         QVERIFY(positions.keys().contains(output->name()));
         QVERIFY(output->name() != output->hash());
-        QCOMPARE(positions[output->name()], output->pos());
+        QCOMPARE(positions[output->name()], output->position());
         QCOMPARE(output->currentMode()->size(), QSize(1920, 1080));
         QCOMPARE(output->currentMode()->refreshRate(), 60.0);
         QVERIFY(output->isEnabled());
@@ -410,10 +428,8 @@ void TestConfig::testMoveConfig()
     auto config = configWrapper->data();
     QVERIFY(config);
 
-    // Make sure we don't write into TEST_DATA
-    QStandardPaths::setTestModeEnabled(true);
-    Globals::setDirPath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) % QStringLiteral("/kdisplay/"));
-    // TODO: this needs setup of the control directory
+    // Make sure we don't write into TEST_DATA.
+    auto guard = TestPathGuard();
 
     // Basic assumptions for the remainder of our tests, this is the situation where the lid is opened
     QCOMPARE(config->connectedOutputs().count(), 2);
@@ -444,8 +460,9 @@ void TestConfig::testMoveConfig()
     QCOMPARE(output2->isPrimary(), true);
 
     // Check if both files exist
-    const QString closedPath = Config::configsDirPath() % configWrapper->id();
-    const QString openedPath = closedPath % QStringLiteral("_lidOpened");
+    const QString basePath = Config::configsDirPath() + configWrapper->id();
+    const QString closedPath = basePath + QStringLiteral(".json");
+    const QString openedPath = basePath + QStringLiteral("_lidOpened.json");
 
     QFile openCfg(openedPath);
     QFile closedCfg(closedPath);
@@ -475,17 +492,7 @@ void TestConfig::testMoveConfig()
 
     // Make sure we don't screw up when there's no _lidOpened config
     configWrapper = configWrapper->readOpenLidFile();
-    config = configWrapper->data();
-
-    output = config->connectedOutputs().first();
-    QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
-    QCOMPARE(output->isEnabled(), true);
-    QCOMPARE(output->isPrimary(), true);
-
-    output2 = config->connectedOutputs().last();
-    QCOMPARE(output2->name(), QLatin1String("OUTPUT-2"));
-    QCOMPARE(output2->isEnabled(), true);
-    QCOMPARE(output2->isPrimary(), false);
+    QVERIFY(!configWrapper);
 }
 
 void TestConfig::testFixedConfig()
@@ -496,12 +503,12 @@ void TestConfig::testFixedConfig()
     auto config = configWrapper->data();
     QVERIFY(config);
 
-    // Make sure we don't write into TEST_DATA
-    QStandardPaths::setTestModeEnabled(true);
-    Globals::setDirPath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) % QStringLiteral("/kdisplay/"));
-    // TODO: this needs setup of the control directory
+    // Make sure we don't write into TEST_DATA.
+    auto guard = TestPathGuard();
 
     const QString fixedCfgPath = Config::configsDirPath() % Config::s_fixedConfigFileName;
+    QVERIFY(QDir().mkpath(Config::configsDirPath()));
+
     // save config as the current one, this is the config we don't want restored, and which we'll overwrite
     configWrapper->writeFile(fixedCfgPath);
 

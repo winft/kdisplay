@@ -37,24 +37,30 @@ QString Output::dirPath()
     return Globals::dirPath() % s_dirName;
 }
 
-QString Output::globalFileName(const QString &hash)
+QString Output::path(const QString& hash)
 {
-    const auto dir = dirPath();
-    if (!QDir().mkpath(dir)) {
+    return dirPath() + hash + QStringLiteral(".json");
+}
+
+QString Output::createPath(const QString& hash)
+{
+    if (!QDir().mkpath(dirPath())) {
         return QString();
     }
-    return dir % hash;
+    return path(hash);
 }
 
 void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMap &info)
 {
     output->setRotation(static_cast<Disman::Output::Rotation>(info.value(QStringLiteral("rotation"), 1).toInt()));
 
-    bool scaleOk;
-    const qreal scale = info.value(QStringLiteral("scale"), 1.).toDouble(&scaleOk);
-    if (scaleOk) {
-        output->setScale(scale);
-    }
+    // TODO: Disabled, since we use control files now. That is just a reminder. Remove at some point
+    //       when everything is proven to work.
+//    bool scaleOk;
+//    const qreal scale = info.value(QStringLiteral("scale"), 1.).toDouble(&scaleOk);
+//    if (scaleOk) {
+//        output->setScale(scale);
+//    }
 
     const QVariantMap modeInfo = info[QStringLiteral("mode")].toMap();
     const QVariantMap modeSize = modeInfo[QStringLiteral("size")].toMap();
@@ -98,7 +104,7 @@ void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMa
 
 QVariantMap Output::getGlobalData(Disman::OutputPtr output)
 {
-    QFile file(globalFileName(output->hashMd5()));
+    QFile file(path(output->hashMd5()));
     if (!file.open(QIODevice::ReadOnly)) {
         qCDebug(KDISPLAY_KDED) << "Failed to open file" << file.fileName();
         return QVariantMap();
@@ -159,12 +165,12 @@ bool Output::updateOrientation(Disman::OutputPtr &output,
 // TODO: move this into the Layouter class.
 void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList &outputsInfo)
 {
-    typedef QPair<int, QPoint> Out;
+    using Out = QPair<int, QPointF>;
 
     Disman::OutputList outputs = config->outputs();
     QVector<Out> sortedOutputs; // <id, pos>
     for (const Disman::OutputPtr &output : outputs) {
-        sortedOutputs.append(Out(output->id(), output->pos()));
+        sortedOutputs.append(Out(output->id(), output->position()));
     }
 
     // go from left to right, top to bottom
@@ -239,8 +245,8 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList &outpu
             continue;
         }
 
-        const QRect prevGeo = prevPtr->geometry();
-        const QRect curGeo = curPtr->geometry();
+        auto const prevGeo = prevPtr->geometry();
+        auto const curGeo = curPtr->geometry();
 
         // the old difference between previous and current output read from the config file
         const int xInfoDiff = curInfoGeo.x() - (prevInfoGeo.x() + prevInfoGeo.width());
@@ -301,7 +307,7 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList &outpu
 
         const int x = xDiff == xInfoDiff ? curGeo.x() : xCorrected;
         const int y = yDiff == yInfoDiff ? curGeo.y() : yCorrected;
-        curPtr->setPos(QPoint(x, y));
+        curPtr->setPosition(QPoint(x, y));
     }
 }
 
@@ -309,7 +315,7 @@ void Output::readIn(Disman::OutputPtr output, const QVariantMap &info, Control::
 {
     const QVariantMap posInfo = info[QStringLiteral("pos")].toMap();
     QPoint point(posInfo[QStringLiteral("x")].toInt(), posInfo[QStringLiteral("y")].toInt());
-    output->setPos(point);
+    output->setPosition(point);
     output->setPrimary(info[QStringLiteral("primary")].toBool());
     output->setEnabled(info[QStringLiteral("enabled")].toBool());
 
@@ -377,16 +383,12 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList &outputs
                 readInGlobalPartFromInfo(output, QVariantMap());
             }
         }
+        output->setScale(control.getScale(output));
     }
 
     for (Disman::OutputPtr output : outputs) {
-        auto replicationSource = control.getReplicationSource(output);
-        if (replicationSource) {
-            output->setPos(replicationSource->pos());
-            output->setLogicalSize(replicationSource->logicalSize());
-        } else {
-            output->setLogicalSize(QSizeF());
-        }
+        auto source = control.getReplicationSource(output);
+        output->setReplicationSource(source ? source->id() : 0);
     }
 
     // TODO: this does not work at the moment with logical size replication. Deactivate for now.
@@ -416,8 +418,10 @@ bool Output::writeGlobalPart(const Disman::OutputPtr &output, QVariantMap &info,
     info[QStringLiteral("metadata")] = metadata(output);
     info[QStringLiteral("rotation")] = output->rotation();
 
-    // Round scale to four digits
-    info[QStringLiteral("scale")] = int(output->scale() * 10000 + 0.5) / 10000.;
+    // TODO: Disabled, since we use control files now. That is just a reminder. Remove at some point
+    //       when everything is proven to work.
+//    // Round scale to four digits
+//    info[QStringLiteral("scale")] = int(output->scale() * 10000 + 0.5) / 10000.;
 
     QVariantMap modeInfo;
     float refreshRate = -1.;
@@ -454,7 +458,7 @@ void Output::writeGlobal(const Disman::OutputPtr &output)
         return;
     }
 
-    QFile file(globalFileName(output->hashMd5()));
+    QFile file(createPath(output->hashMd5()));
     if (!file.open(QIODevice::WriteOnly)) {
         qCWarning(KDISPLAY_KDED) << "Failed to open global output file for writing! " << file.errorString();
         return;

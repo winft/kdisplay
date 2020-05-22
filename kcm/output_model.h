@@ -88,7 +88,7 @@ private:
             , pos(output.pos)
         {}
         Output(Output &&) noexcept = default;
-        Output(Disman::OutputPtr _ptr, const QPoint &_pos)
+        Output(Disman::OutputPtr _ptr, const QPointF &_pos)
             : ptr(_ptr)
             , pos(_pos)
         {}
@@ -101,8 +101,8 @@ private:
         Output &operator=(Output &&) noexcept = default;
 
         Disman::OutputPtr ptr;
-        QPoint pos;
-        QPoint posReset = QPoint(-1, -1);
+        QPointF pos;
+        QPointF posReset = QPointF(-1, -1);
     };
 
     void roleChanged(int outputId, OutputRoles role);

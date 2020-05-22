@@ -401,6 +401,8 @@ void KDisplayDaemon::lidClosedChanged(bool lidIsClosed)
         // use applyConfig() and see what we can do ...
         if (auto openCfg = m_monitoredConfig->readOpenLidFile()) {
             doApplyConfig(std::move(openCfg));
+        } else {
+            applyConfig();
         }
     }
 }
@@ -495,8 +497,9 @@ void KDisplayDaemon::setMonitorForChanges(bool enabled)
 
 void KDisplayDaemon::disableOutput(Disman::OutputPtr &output)
 {
-    const QRect geom = output->geometry();
-    qCDebug(KDISPLAY_KDED) << "Laptop geometry:" << geom << output->pos() << (output->currentMode() ? output->currentMode()->size() : QSize());
+    auto const geom = output->geometry();
+    qCDebug(KDISPLAY_KDED) << "Laptop geometry:" << geom << output->position()
+                           << (output->currentMode() ? output->currentMode()->size() : QSize());
 
     // Move all outputs right from the @p output to left
     for (Disman::OutputPtr &otherOutput : m_monitoredConfig->data()->outputs()) {
@@ -504,12 +507,13 @@ void KDisplayDaemon::disableOutput(Disman::OutputPtr &output)
             continue;
         }
 
-        QPoint otherPos = otherOutput->pos();
+        auto otherPos = otherOutput->position();
         if (otherPos.x() >= geom.right() && otherPos.y() >= geom.top() && otherPos.y() <= geom.bottom()) {
             otherPos.setX(otherPos.x() - geom.width());
         }
-        qCDebug(KDISPLAY_KDED) << "Moving" << otherOutput->name() << "from" << otherOutput->pos() << "to" << otherPos;
-        otherOutput->setPos(otherPos);
+        qCDebug(KDISPLAY_KDED) << "Moving" << otherOutput->name()
+                               << "from" << otherOutput->position() << "to" << otherPos;
+        otherOutput->setPosition(otherPos);
     }
 
     // Disable the output

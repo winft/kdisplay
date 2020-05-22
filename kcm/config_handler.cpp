@@ -149,7 +149,7 @@ void ConfigHandler::checkNeedsSave()
             if (output->isEnabled()) {
                 needsSave |= output->currentModeId() !=
                                 initialOutput->currentModeId()
-                             || output->pos() != initialOutput->pos()
+                             || output->position() != initialOutput->position()
                              || output->scale() != initialOutput->scale()
                              || output->rotation() != initialOutput->rotation()
                              || output->replicationSource() != initialOutput->replicationSource()
