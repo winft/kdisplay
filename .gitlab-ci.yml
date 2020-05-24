@@ -53,11 +53,19 @@ Message lint:
 
 .common-build: &common-build
   stage: Build
+  artifacts:
+    paths:
+      - disman-bench
+      - ci-build
+    expire_in: 1 week
+
+Master build:
+  <<: *common-build
+  <<: *common-master
   script:
     # For now we build Disman beforehand.
-    # TODO: Needs adaption for stable builds!
     - mkdir -p disman-bench/build && cd disman-bench
-    - git clone https://gitlab.com/kwinft/disman.git src
+    - git clone --branch master https://gitlab.com/kwinft/disman.git src
     - cd build
     - cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr ../src
     - make -j$(nproc)
@@ -68,19 +76,28 @@ Message lint:
     - cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr ../
     - make -j$(nproc)
     - make install -j$(nproc)
-  artifacts:
-    paths:
-      - disman-bench
-      - ci-build
-    expire_in: 1 week
-
-Master build:
-  <<: *common-build
-  <<: *common-master
 
 Stable build:
   <<: *common-build
   <<: *common-stable
+  script:
+    # For now we build Disman beforehand.
+    - mkdir -p disman-bench/build && cd disman-bench
+    - PLASMA_VERSION=${CI_COMMIT_BRANCH}
+    - if [ -z "${PLASMA_VERSION}" ];
+      then PLASMA_VERSION=$(echo "${CI_COMMIT_TAG}" | sed -e 's,kdisplay@\([^\.]*\.[^\.]*\)\..*,Plasma/\1,g'); fi
+    - echo $PLASMA_VERSION
+    - git clone --branch ${PLASMA_VERSION} https://gitlab.com/kwinft/disman.git src
+    - cd build
+    - cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr ../src
+    - make -j$(nproc)
+    - make install -j$(nproc)
+    - cd ../..
+    # Build of KDisplay
+    - mkdir ci-build && cd ci-build
+    - cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr ../
+    - make -j$(nproc)
+    - make install -j$(nproc)
 
 
 .common-test: &common-test
