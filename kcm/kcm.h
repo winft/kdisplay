@@ -32,33 +32,25 @@ class KCMKDisplay : public KQuickAddons::ConfigModule
 {
     Q_OBJECT
 
-    Q_PROPERTY(OutputModel *outputModel READ outputModel
-               NOTIFY outputModelChanged)
-    Q_PROPERTY(bool backendReady READ backendReady
-               NOTIFY backendReadyChanged)
-    Q_PROPERTY(bool screenNormalized READ screenNormalized
-               NOTIFY screenNormalizedChanged)
-    Q_PROPERTY(bool perOutputScaling READ perOutputScaling
-               NOTIFY perOutputScalingChanged)
-    Q_PROPERTY(bool primaryOutputSupported READ primaryOutputSupported
-               NOTIFY primaryOutputSupportedChanged)
-    Q_PROPERTY(bool outputReplicationSupported READ outputReplicationSupported
-               NOTIFY outputReplicationSupportedChanged)
-    Q_PROPERTY(qreal globalScale READ globalScale WRITE setGlobalScale
-               NOTIFY globalScaleChanged)
-    Q_PROPERTY(int outputRetention READ outputRetention WRITE setOutputRetention
-               NOTIFY outputRetentionChanged)
-    Q_PROPERTY(bool autoRotationSupported READ autoRotationSupported
-               NOTIFY autoRotationSupportedChanged)
-    Q_PROPERTY(bool orientationSensorAvailable READ orientationSensorAvailable
-               NOTIFY orientationSensorAvailableChanged)
-    Q_PROPERTY(bool tabletModeAvailable READ tabletModeAvailable
-               NOTIFY tabletModeAvailableChanged)
-
+    Q_PROPERTY(OutputModel* outputModel READ outputModel NOTIFY outputModelChanged)
+    Q_PROPERTY(bool backendReady READ backendReady NOTIFY backendReadyChanged)
+    Q_PROPERTY(bool screenNormalized READ screenNormalized NOTIFY screenNormalizedChanged)
+    Q_PROPERTY(bool perOutputScaling READ perOutputScaling NOTIFY perOutputScalingChanged)
+    Q_PROPERTY(bool primaryOutputSupported READ primaryOutputSupported NOTIFY
+                   primaryOutputSupportedChanged)
+    Q_PROPERTY(bool outputReplicationSupported READ outputReplicationSupported NOTIFY
+                   outputReplicationSupportedChanged)
+    Q_PROPERTY(qreal globalScale READ globalScale WRITE setGlobalScale NOTIFY globalScaleChanged)
+    Q_PROPERTY(int outputRetention READ outputRetention WRITE setOutputRetention NOTIFY
+                   outputRetentionChanged)
+    Q_PROPERTY(
+        bool autoRotationSupported READ autoRotationSupported NOTIFY autoRotationSupportedChanged)
+    Q_PROPERTY(bool orientationSensorAvailable READ orientationSensorAvailable NOTIFY
+                   orientationSensorAvailableChanged)
+    Q_PROPERTY(bool tabletModeAvailable READ tabletModeAvailable NOTIFY tabletModeAvailableChanged)
 
 public:
-    explicit KCMKDisplay (QObject *parent = nullptr,
-                         const QVariantList &args = QVariantList());
+    explicit KCMKDisplay(QObject* parent = nullptr, const QVariantList& args = QVariantList());
     ~KCMKDisplay() override = default;
 
     void load() override;
@@ -117,16 +109,16 @@ private:
     void fetchGlobalScale();
     void writeGlobalScale();
 
-    void configReady(Disman::ConfigOperation *op);
+    void configReady(Disman::ConfigOperation* op);
     void continueNeedsSaveCheck(bool needs);
 
     std::unique_ptr<OutputIdentifier> m_outputIdentifier;
     std::unique_ptr<ConfigHandler> m_config;
-    OrientationSensor *m_orientationSensor;
+    OrientationSensor* m_orientationSensor;
     bool m_backendReady = false;
     bool m_screenNormalized = true;
     double m_globalScale = 1.;
     double m_initialGlobalScale = 1.;
 
-    QTimer *m_loadCompressor;
+    QTimer* m_loadCompressor;
 };

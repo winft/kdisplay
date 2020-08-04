@@ -18,30 +18,23 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-
 #pragma once
 
 #include <QObject>
 #include <QString>
 #include <QVector>
 
-namespace Disman {
+namespace Disman
+{
 
 class OsdAction : public QObject
 {
     Q_OBJECT
 public:
-    enum Action {
-        NoAction,
-        SwitchToExternal,
-        SwitchToInternal,
-        Clone,
-        ExtendLeft,
-        ExtendRight
-    };
+    enum Action { NoAction, SwitchToExternal, SwitchToInternal, Clone, ExtendLeft, ExtendRight };
     Q_ENUM(Action)
 
-    explicit OsdAction(QObject *parent = nullptr);
+    explicit OsdAction(QObject* parent = nullptr);
 
     Q_INVOKABLE QVector<int> actionOrder() const;
     Q_INVOKABLE QString actionLabel(Action action) const;
@@ -49,7 +42,6 @@ public:
 
 Q_SIGNALS:
     void selected(Action action);
-
 };
 
 } // namespace Disman

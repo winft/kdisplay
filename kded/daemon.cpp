@@ -23,42 +23,46 @@
 
 #include "../common/orientation_sensor.h"
 #include "config.h"
-#include "generator.h"
 #include "device.h"
-#include "kdisplayadaptor.h"
+#include "generator.h"
 #include "kdisplay_daemon_debug.h"
+#include "kdisplayadaptor.h"
 #include "osdmanager.h"
 
-#include <disman/log.h>
-#include <disman/output.h>
 #include <disman/configmonitor.h>
 #include <disman/getconfigoperation.h>
+#include <disman/log.h>
+#include <disman/output.h>
 #include <disman/setconfigoperation.h>
 
-#include <KLocalizedString>
 #include <KActionCollection>
-#include <KPluginFactory>
 #include <KGlobalAccel>
+#include <KLocalizedString>
+#include <KPluginFactory>
 
-#include <QTimer>
 #include <QAction>
 #include <QOrientationReading>
 #include <QShortcut>
+#include <QTimer>
 
 K_PLUGIN_CLASS_WITH_JSON(KDisplayDaemon, "kdisplay.json")
 
-KDisplayDaemon::KDisplayDaemon(QObject* parent, const QList< QVariant >& )
- : KDEDModule(parent)
- , m_monitoring(false)
- , m_changeCompressor(new QTimer(this))
- , m_saveTimer(nullptr)
- , m_lidClosedTimer(new QTimer(this))
- , m_orientationSensor(new OrientationSensor(this))
+KDisplayDaemon::KDisplayDaemon(QObject* parent, const QList<QVariant>&)
+    : KDEDModule(parent)
+    , m_monitoring(false)
+    , m_changeCompressor(new QTimer(this))
+    , m_saveTimer(nullptr)
+    , m_lidClosedTimer(new QTimer(this))
+    , m_orientationSensor(new OrientationSensor(this))
 {
-    connect(m_orientationSensor, &OrientationSensor::availableChanged,
-            this, &KDisplayDaemon::updateOrientation);
-    connect(m_orientationSensor, &OrientationSensor::valueChanged,
-            this, &KDisplayDaemon::updateOrientation);
+    connect(m_orientationSensor,
+            &OrientationSensor::availableChanged,
+            this,
+            &KDisplayDaemon::updateOrientation);
+    connect(m_orientationSensor,
+            &OrientationSensor::valueChanged,
+            this,
+            &KDisplayDaemon::updateOrientation);
 
     Disman::Log::instance();
     QMetaObject::invokeMethod(this, "getInitialConfig", Qt::QueuedConnection);
@@ -66,19 +70,24 @@ KDisplayDaemon::KDisplayDaemon(QObject* parent, const QList< QVariant >& )
 
 void KDisplayDaemon::getInitialConfig()
 {
-    connect(new Disman::GetConfigOperation, &Disman::GetConfigOperation::finished,
-            this, [this](Disman::ConfigOperation* op) {
-        if (op->hasError()) {
-            return;
-        }
+    connect(new Disman::GetConfigOperation,
+            &Disman::GetConfigOperation::finished,
+            this,
+            [this](Disman::ConfigOperation* op) {
+                if (op->hasError()) {
+                    return;
+                }
 
-        m_monitoredConfig = std::unique_ptr<Config>(new Config(qobject_cast<Disman::GetConfigOperation*>(op)->config()));
-        m_monitoredConfig->setValidityFlags(Disman::Config::ValidityFlag::RequireAtLeastOneEnabledScreen);
-        qCDebug(KDISPLAY_KDED) << "Config" << m_monitoredConfig->data().data() << "is ready";
-        Disman::ConfigMonitor::instance()->addConfig(m_monitoredConfig->data());
+                m_monitoredConfig = std::unique_ptr<Config>(
+                    new Config(qobject_cast<Disman::GetConfigOperation*>(op)->config()));
+                m_monitoredConfig->setValidityFlags(
+                    Disman::Config::ValidityFlag::RequireAtLeastOneEnabledScreen);
+                qCDebug(KDISPLAY_KDED)
+                    << "Config" << m_monitoredConfig->data().data() << "is ready";
+                Disman::ConfigMonitor::instance()->addConfig(m_monitoredConfig->data());
 
-        init();
-    });
+                init();
+            });
 }
 
 KDisplayDaemon::~KDisplayDaemon()
@@ -89,9 +98,9 @@ KDisplayDaemon::~KDisplayDaemon()
 
 void KDisplayDaemon::init()
 {
-    KActionCollection *coll = new KActionCollection(this);
+    KActionCollection* coll = new KActionCollection(this);
     QAction* action = coll->addAction(QStringLiteral("display"));
-    action->setText(i18n("Switch Display" ));
+    action->setText(i18n("Switch Display"));
     QList<QKeySequence> switchDisplayShortcuts({Qt::Key_Display, Qt::MetaModifier + Qt::Key_P});
     KGlobalAccel::self()->setGlobalShortcut(action, switchDisplayShortcuts);
     connect(action, &QAction::triggered, this, &KDisplayDaemon::displayButton);
@@ -109,20 +118,21 @@ void KDisplayDaemon::init()
     connect(m_lidClosedTimer, &QTimer::timeout, this, &KDisplayDaemon::lidClosedTimeout);
 
     connect(Device::self(), &Device::lidClosedChanged, this, &KDisplayDaemon::lidClosedChanged);
-    connect(Device::self(), &Device::resumingFromSuspend, this,
-            [&]() {
-                Disman::Log::instance()->setContext(QStringLiteral("resuming"));
-                qCDebug(KDISPLAY_KDED) << "Resumed from suspend, checking for screen changes";
-                // We don't care about the result, we just want to force the backend
-                // to query XRandR so that it will detect possible changes that happened
-                // while the computer was suspended, and will emit the change events.
-                new Disman::GetConfigOperation(Disman::GetConfigOperation::NoEDID, this);
-            });
-    connect(Device::self(), &Device::aboutToSuspend, this,
-            [&]() {
-                qCDebug(KDISPLAY_KDED) << "System is going to suspend, won't be changing config (waited for " << (m_lidClosedTimer->interval() - m_lidClosedTimer->remainingTime()) << "ms)";
-                m_lidClosedTimer->stop();
-            });
+    connect(Device::self(), &Device::resumingFromSuspend, this, [&]() {
+        Disman::Log::instance()->setContext(QStringLiteral("resuming"));
+        qCDebug(KDISPLAY_KDED) << "Resumed from suspend, checking for screen changes";
+        // We don't care about the result, we just want to force the backend
+        // to query XRandR so that it will detect possible changes that happened
+        // while the computer was suspended, and will emit the change events.
+        new Disman::GetConfigOperation(Disman::GetConfigOperation::NoEDID, this);
+    });
+    connect(
+        Device::self(), &Device::aboutToSuspend, this, [&]() {
+            qCDebug(KDISPLAY_KDED)
+                << "System is going to suspend, won't be changing config (waited for "
+                << (m_lidClosedTimer->interval() - m_lidClosedTimer->remainingTime()) << "ms)";
+            m_lidClosedTimer->stop();
+        });
 
     connect(Generator::self(), &Generator::ready, this, [this] {
         applyConfig();
@@ -140,7 +150,7 @@ void KDisplayDaemon::updateOrientation()
     }
     const auto features = m_monitoredConfig->data()->supportedFeatures();
     if (!features.testFlag(Disman::Config::Feature::AutoRotation)
-          || !features.testFlag(Disman::Config::Feature::TabletMode) ) {
+        || !features.testFlag(Disman::Config::Feature::TabletMode)) {
         return;
     }
 
@@ -153,8 +163,8 @@ void KDisplayDaemon::updateOrientation()
         // Orientation sensor went off. Do not change current orientation.
         return;
     }
-    if (orientation == QOrientationReading::FaceUp ||
-               orientation == QOrientationReading::FaceDown) {
+    if (orientation == QOrientationReading::FaceUp
+        || orientation == QOrientationReading::FaceDown) {
         // We currently don't do anything with FaceUp/FaceDown, but in the future we could use them
         // to shut off and switch on again a display when display is facing downwards/upwards.
         return;
@@ -185,7 +195,7 @@ void KDisplayDaemon::doApplyConfig(std::unique_ptr<Config> config)
     m_orientationSensor->setEnabled(m_monitoredConfig->autoRotationRequested());
 
     connect(m_monitoredConfig.get(), &Config::controlChanged, this, [this]() {
-            m_orientationSensor->setEnabled(m_monitoredConfig->autoRotationRequested());
+        m_orientationSensor->setEnabled(m_monitoredConfig->autoRotationRequested());
         updateOrientation();
     });
 
@@ -199,16 +209,17 @@ void KDisplayDaemon::refreshConfig()
     Disman::ConfigMonitor::instance()->addConfig(m_monitoredConfig->data());
 
     connect(new Disman::SetConfigOperation(m_monitoredConfig->data()),
-                &Disman::SetConfigOperation::finished,
-            this, [this]() {
-        qCDebug(KDISPLAY_KDED) << "Config applied";
-        if (m_configDirty) {
-            // Config changed in the meantime again, apply.
-            doApplyConfig(m_monitoredConfig->data());
-        } else {
-            setMonitorForChanges(true);
-        }
-    });
+            &Disman::SetConfigOperation::finished,
+            this,
+            [this]() {
+                qCDebug(KDISPLAY_KDED) << "Config applied";
+                if (m_configDirty) {
+                    // Config changed in the meantime again, apply.
+                    doApplyConfig(m_monitoredConfig->data());
+                } else {
+                    setMonitorForChanges(true);
+                }
+            });
 }
 
 void KDisplayDaemon::applyConfig()
@@ -234,13 +245,14 @@ void KDisplayDaemon::applyKnownConfig()
     }
 }
 
-void KDisplayDaemon::applyLayoutPreset(const QString &presetName)
+void KDisplayDaemon::applyLayoutPreset(const QString& presetName)
 {
     const QMetaEnum actionEnum = QMetaEnum::fromType<Disman::OsdAction::Action>();
     Q_ASSERT(actionEnum.isValid());
 
     bool ok;
-    auto action = static_cast<Disman::OsdAction::Action>(actionEnum.keyToValue(qPrintable(presetName), &ok));
+    auto action = static_cast<Disman::OsdAction::Action>(
+        actionEnum.keyToValue(qPrintable(presetName), &ok));
     if (!ok) {
         qCWarning(KDISPLAY_KDED) << "Cannot apply unknown screen layout preset named" << presetName;
         return;
@@ -261,7 +273,6 @@ void KDisplayDaemon::setAutoRotate(bool value)
     m_monitoredConfig->setAutoRotate(value);
     m_orientationSensor->setEnabled(value);
 }
-
 
 void KDisplayDaemon::applyOsdAction(Disman::OsdAction::Action action)
 {
@@ -302,8 +313,7 @@ void KDisplayDaemon::applyIdealConfig()
     if (showOsd) {
         qCDebug(KDISPLAY_KDED) << "Getting ideal config from user via OSD...";
         auto action = m_osdManager->showActionSelector();
-        connect(action, &Disman::OsdAction::selected,
-                this, &KDisplayDaemon::applyOsdAction);
+        connect(action, &Disman::OsdAction::selected, this, &KDisplayDaemon::applyOsdAction);
     } else {
         m_osdManager->hideOsd();
     }
@@ -316,9 +326,13 @@ void KDisplayDaemon::configChanged()
 
     // Modes may have changed, fix-up current mode id
     bool changed = false;
-    Q_FOREACH(const Disman::OutputPtr &output, m_monitoredConfig->data()->outputs()) {
-        if (output->isConnected() && output->isEnabled() && (output->currentMode().isNull() || (output->followPreferredMode() && output->currentModeId() != output->preferredModeId()))) {
-            qCDebug(KDISPLAY_KDED) << "Current mode was" << output->currentModeId() << ", setting preferred mode" << output->preferredModeId();
+    Q_FOREACH (const Disman::OutputPtr& output, m_monitoredConfig->data()->outputs()) {
+        if (output->isConnected() && output->isEnabled()
+            && (output->currentMode().isNull()
+                || (output->followPreferredMode()
+                    && output->currentModeId() != output->preferredModeId()))) {
+            qCDebug(KDISPLAY_KDED) << "Current mode was" << output->currentModeId()
+                                   << ", setting preferred mode" << output->preferredModeId();
             output->setCurrentModeId(output->preferredModeId());
             changed = true;
         }
@@ -348,19 +362,18 @@ void KDisplayDaemon::saveCurrentConfig()
         m_monitoredConfig->writeFile();
         m_monitoredConfig->log();
     } else {
-        qCWarning(KDISPLAY_KDED) << "Config does not have at least one screen enabled, WILL NOT save this config, this is not what user wants.";
+        qCWarning(KDISPLAY_KDED) << "Config does not have at least one screen enabled, WILL NOT "
+                                    "save this config, this is not what user wants.";
         m_monitoredConfig->log();
     }
 }
 
-void KDisplayDaemon::showOsd(const QString &icon, const QString &text)
+void KDisplayDaemon::showOsd(const QString& icon, const QString& text)
 {
-    QDBusMessage msg = QDBusMessage::createMethodCall(
-        QLatin1String("org.kde.plasmashell"),
-        QLatin1String("/org/kde/osdService"),
-        QLatin1String("org.kde.osdService"),
-        QLatin1String("showText")
-    );
+    QDBusMessage msg = QDBusMessage::createMethodCall(QLatin1String("org.kde.plasmashell"),
+                                                      QLatin1String("/org/kde/osdService"),
+                                                      QLatin1String("org.kde.osdService"),
+                                                      QLatin1String("showText"));
     msg << icon << text;
     QDBusConnection::sessionBus().asyncCall(msg);
 }
@@ -375,8 +388,7 @@ void KDisplayDaemon::displayButton()
     qCDebug(KDISPLAY_KDED) << "displayBtn triggered";
 
     auto action = m_osdManager->showActionSelector();
-    connect(action, &Disman::OsdAction::selected,
-            this, &KDisplayDaemon::applyOsdAction);
+    connect(action, &Disman::OsdAction::selected, this, &KDisplayDaemon::applyOsdAction);
 }
 
 void KDisplayDaemon::lidClosedChanged(bool lidIsClosed)
@@ -421,8 +433,9 @@ void KDisplayDaemon::lidClosedTimeout()
     // what's the configured action for lid events, but there's no API to do that
     // and I'm not parsing PowerDevil's configs...
 
-    qCDebug(KDISPLAY_KDED) << "Lid closed without system going to suspend -> turning off the screen";
-    for (Disman::OutputPtr &output : m_monitoredConfig->data()->outputs()) {
+    qCDebug(KDISPLAY_KDED)
+        << "Lid closed without system going to suspend -> turning off the screen";
+    for (Disman::OutputPtr& output : m_monitoredConfig->data()->outputs()) {
         if (output->type() == Disman::Output::Panel) {
             if (output->isConnected() && output->isEnabled()) {
                 // Save the current config with opened lid, just so that we know
@@ -436,14 +449,13 @@ void KDisplayDaemon::lidClosedTimeout()
     }
 }
 
-
 void KDisplayDaemon::outputConnectedChanged()
 {
     if (!m_changeCompressor->isActive()) {
         m_changeCompressor->start();
     }
 
-    Disman::Output *output = qobject_cast<Disman::Output*>(sender());
+    Disman::Output* output = qobject_cast<Disman::Output*>(sender());
     qCDebug(KDISPLAY_KDED) << "outputConnectedChanged():" << output->name();
 
     if (output->isConnected()) {
@@ -458,23 +470,32 @@ void KDisplayDaemon::outputConnectedChanged()
 void KDisplayDaemon::monitorConnectedChange()
 {
     Disman::OutputList outputs = m_monitoredConfig->data()->outputs();
-    Q_FOREACH(const Disman::OutputPtr &output, outputs) {
-        connect(output.data(), &Disman::Output::isConnectedChanged,
-                this, &KDisplayDaemon::outputConnectedChanged,
+    Q_FOREACH (const Disman::OutputPtr& output, outputs) {
+        connect(output.data(),
+                &Disman::Output::isConnectedChanged,
+                this,
+                &KDisplayDaemon::outputConnectedChanged,
                 Qt::UniqueConnection);
     }
-    connect(m_monitoredConfig->data().data(), &Disman::Config::outputAdded, this,
-        [this] (const Disman::OutputPtr output) {
+    connect(
+        m_monitoredConfig->data().data(),
+        &Disman::Config::outputAdded,
+        this,
+        [this](const Disman::OutputPtr output) {
             if (output->isConnected()) {
                 m_changeCompressor->start();
             }
-            connect(output.data(), &Disman::Output::isConnectedChanged,
-                    this, &KDisplayDaemon::outputConnectedChanged,
+            connect(output.data(),
+                    &Disman::Output::isConnectedChanged,
+                    this,
+                    &KDisplayDaemon::outputConnectedChanged,
                     Qt::UniqueConnection);
-        }, Qt::UniqueConnection
-    );
-    connect(m_monitoredConfig->data().data(), &Disman::Config::outputRemoved,
-            this, &KDisplayDaemon::applyConfig,
+        },
+        Qt::UniqueConnection);
+    connect(m_monitoredConfig->data().data(),
+            &Disman::Config::outputRemoved,
+            this,
+            &KDisplayDaemon::applyConfig,
             static_cast<Qt::ConnectionType>(Qt::QueuedConnection | Qt::UniqueConnection));
 }
 
@@ -487,38 +508,43 @@ void KDisplayDaemon::setMonitorForChanges(bool enabled)
     qCDebug(KDISPLAY_KDED) << "Monitor for changes: " << enabled;
     m_monitoring = enabled;
     if (m_monitoring) {
-        connect(Disman::ConfigMonitor::instance(), &Disman::ConfigMonitor::configurationChanged,
-                this, &KDisplayDaemon::configChanged, Qt::UniqueConnection);
+        connect(Disman::ConfigMonitor::instance(),
+                &Disman::ConfigMonitor::configurationChanged,
+                this,
+                &KDisplayDaemon::configChanged,
+                Qt::UniqueConnection);
     } else {
-        disconnect(Disman::ConfigMonitor::instance(), &Disman::ConfigMonitor::configurationChanged,
-                   this, &KDisplayDaemon::configChanged);
+        disconnect(Disman::ConfigMonitor::instance(),
+                   &Disman::ConfigMonitor::configurationChanged,
+                   this,
+                   &KDisplayDaemon::configChanged);
     }
 }
 
-void KDisplayDaemon::disableOutput(Disman::OutputPtr &output)
+void KDisplayDaemon::disableOutput(Disman::OutputPtr& output)
 {
     auto const geom = output->geometry();
     qCDebug(KDISPLAY_KDED) << "Laptop geometry:" << geom << output->position()
                            << (output->currentMode() ? output->currentMode()->size() : QSize());
 
     // Move all outputs right from the @p output to left
-    for (Disman::OutputPtr &otherOutput : m_monitoredConfig->data()->outputs()) {
+    for (Disman::OutputPtr& otherOutput : m_monitoredConfig->data()->outputs()) {
         if (otherOutput == output || !otherOutput->isConnected() || !otherOutput->isEnabled()) {
             continue;
         }
 
         auto otherPos = otherOutput->position();
-        if (otherPos.x() >= geom.right() && otherPos.y() >= geom.top() && otherPos.y() <= geom.bottom()) {
+        if (otherPos.x() >= geom.right() && otherPos.y() >= geom.top()
+            && otherPos.y() <= geom.bottom()) {
             otherPos.setX(otherPos.x() - geom.width());
         }
-        qCDebug(KDISPLAY_KDED) << "Moving" << otherOutput->name()
-                               << "from" << otherOutput->position() << "to" << otherPos;
+        qCDebug(KDISPLAY_KDED) << "Moving" << otherOutput->name() << "from"
+                               << otherOutput->position() << "to" << otherPos;
         otherOutput->setPosition(otherPos);
     }
 
     // Disable the output
     output->setEnabled(false);
 }
-
 
 #include "daemon.moc"

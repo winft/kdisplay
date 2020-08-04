@@ -15,24 +15,22 @@
  *  along with this program; if not, write to the Free Software                      *
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA   *
  *************************************************************************************/
-
 #include "console.h"
 
 #include <QDebug>
 #include <QDir>
-#include <QTextStream>
-#include <QStandardPaths>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QStandardPaths>
+#include <QTextStream>
 
-#include <disman/types.h>
 #include <disman/config.h>
-#include <disman/output.h>
-#include <disman/mode.h>
 #include <disman/configmonitor.h>
 #include <disman/edid.h>
 #include <disman/getconfigoperation.h>
-
+#include <disman/mode.h>
+#include <disman/output.h>
+#include <disman/types.h>
 
 static QTextStream cout(stdout);
 
@@ -41,13 +39,13 @@ namespace Disman
 namespace ConfigSerializer
 {
 // Exported private symbol in configserializer_p.h in Disman
-extern QJsonObject serializeConfig(const Disman::ConfigPtr &config);
+extern QJsonObject serializeConfig(const Disman::ConfigPtr& config);
 }
 }
 
 using namespace Disman;
 
-Console::Console(const ConfigPtr &config)
+Console::Console(const ConfigPtr& config)
     : QObject()
     , m_config(config)
 {
@@ -55,7 +53,6 @@ Console::Console(const ConfigPtr &config)
 
 Console::~Console()
 {
-
 }
 
 void Console::printConfig()
@@ -69,15 +66,13 @@ void Console::printConfig()
         return;
     }
 
-    connect(m_config.data(), &Config::primaryOutputChanged,
-            [&](const OutputPtr &output) {
-                if (output) {
-                    qDebug() << "New primary output: "
-                             << output->id() << output->name();
-                } else {
-                    qDebug() << "No primary output.";
-                }
-            });
+    connect(m_config.data(), &Config::primaryOutputChanged, [&](const OutputPtr& output) {
+        if (output) {
+            qDebug() << "New primary output: " << output->id() << output->name();
+        } else {
+            qDebug() << "No primary output.";
+        }
+    });
 
     qDebug() << "Screen:";
     qDebug() << "\tmaxSize:" << m_config->screen()->maxSize();
@@ -85,7 +80,7 @@ void Console::printConfig()
     qDebug() << "\tcurrentSize:" << m_config->screen()->currentSize();
 
     OutputList outputs = m_config->outputs();
-    Q_FOREACH(const OutputPtr &output, outputs) {
+    Q_FOREACH (const OutputPtr& output, outputs) {
         qDebug() << "\n-----------------------------------------------------\n";
         qDebug() << "Id: " << output->id();
         qDebug() << "Name: " << output->name();
@@ -105,7 +100,8 @@ void Console::printConfig()
         }
         qDebug() << "Scale: " << output->scale();
         if (output->clones().isEmpty()) {
-            qDebug() << "Clones: " << "None";
+            qDebug() << "Clones: "
+                     << "None";
         } else {
             qDebug() << "Clones: " << output->clones().count();
         }
@@ -115,8 +111,9 @@ void Console::printConfig()
         qDebug() << "Modes: ";
 
         ModeList modes = output->modes();
-        Q_FOREACH(const ModePtr &mode, modes) {
-            qDebug() << "\t" << mode->id() << "  " << mode->name() << " " << mode->size() << " " << mode->refreshRate();
+        Q_FOREACH (const ModePtr& mode, modes) {
+            qDebug() << "\t" << mode->id() << "  " << mode->name() << " " << mode->size() << " "
+                     << mode->refreshRate();
         }
 
         Edid* edid = output->edid();
@@ -144,37 +141,36 @@ void Console::printConfig()
 QString Console::typetoString(const Output::Type& type) const
 {
     switch (type) {
-        case Output::Unknown:
-            return QStringLiteral("Unknown");
-        case Output::Panel:
-            return QStringLiteral("Panel (Laptop)");
-        case Output::VGA:
-            return QStringLiteral("VGA");
-        case Output::DVI:
-            return QStringLiteral("DVI");
-        case Output::DVII:
-            return QStringLiteral("DVI-I");
-        case Output::DVIA:
-            return QStringLiteral("DVI-A");
-        case Output::DVID:
-            return QStringLiteral("DVI-D");
-        case Output::HDMI:
-            return QStringLiteral("HDMI");
-        case Output::TV:
-            return QStringLiteral("TV");
-        case Output::TVComposite:
-            return QStringLiteral("TV-Composite");
-        case Output::TVSVideo:
-            return QStringLiteral("TV-SVideo");
-        case Output::TVComponent:
-            return QStringLiteral("TV-Component");
-        case Output::TVSCART:
-            return QStringLiteral("TV-SCART");
-        case Output::TVC4:
-            return QStringLiteral("TV-C4");
-        case Output::DisplayPort:
-            return QStringLiteral("DisplayPort");
-
+    case Output::Unknown:
+        return QStringLiteral("Unknown");
+    case Output::Panel:
+        return QStringLiteral("Panel (Laptop)");
+    case Output::VGA:
+        return QStringLiteral("VGA");
+    case Output::DVI:
+        return QStringLiteral("DVI");
+    case Output::DVII:
+        return QStringLiteral("DVI-I");
+    case Output::DVIA:
+        return QStringLiteral("DVI-A");
+    case Output::DVID:
+        return QStringLiteral("DVI-D");
+    case Output::HDMI:
+        return QStringLiteral("HDMI");
+    case Output::TV:
+        return QStringLiteral("TV");
+    case Output::TVComposite:
+        return QStringLiteral("TV-Composite");
+    case Output::TVSVideo:
+        return QStringLiteral("TV-SVideo");
+    case Output::TVComponent:
+        return QStringLiteral("TV-Component");
+    case Output::TVSCART:
+        return QStringLiteral("TV-SCART");
+    case Output::TVC4:
+        return QStringLiteral("TV-C4");
+    case Output::DisplayPort:
+        return QStringLiteral("DisplayPort");
     };
     return QStringLiteral("Invalid Type") + QString::number(type);
 }
@@ -187,7 +183,8 @@ void Console::printJSONConfig()
 
 void Console::printSerializations()
 {
-    QString path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QLatin1String("/kdisplay/");
+    QString path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
+        + QLatin1String("/kdisplay/");
     qDebug() << "Configs in: " << path;
 
     QDir dir(path);
@@ -195,14 +192,15 @@ void Console::printSerializations()
     qDebug() << "Number of files: " << files.count() << endl;
 
     QJsonDocument parser;
-    Q_FOREACH(const QString fileName, files) {
+    Q_FOREACH (const QString fileName, files) {
         QJsonParseError error;
         qDebug() << fileName;
         QFile file(path + QLatin1Char('/') + fileName);
         file.open(QFile::ReadOnly);
         QVariant data = parser.fromJson(file.readAll(), &error);
         if (error.error != QJsonParseError::NoError) {
-            qDebug() << "    " << "can't parse file";
+            qDebug() << "    "
+                     << "can't parse file";
             qDebug() << "    " << error.errorString();
             continue;
         }
@@ -219,5 +217,8 @@ void Console::monitor()
 void Console::monitorAndPrint()
 {
     monitor();
-    connect(ConfigMonitor::instance(), &ConfigMonitor::configurationChanged, this, &Console::printConfig);
+    connect(ConfigMonitor::instance(),
+            &ConfigMonitor::configurationChanged,
+            this,
+            &Console::printConfig);
 }

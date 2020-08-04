@@ -20,7 +20,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 #pragma once
 
 #include <Plasma/Applet>
@@ -34,19 +33,14 @@ class KDisplayApplet : public Plasma::Applet
     /**
      * The number of currently connected (not necessarily enabled) outputs
      */
-    Q_PROPERTY(int connectedOutputCount READ connectedOutputCount NOTIFY connectedOutputCountChanged)
+    Q_PROPERTY(
+        int connectedOutputCount READ connectedOutputCount NOTIFY connectedOutputCountChanged)
 
 public:
-    explicit KDisplayApplet(QObject *parent, const QVariantList &data);
+    explicit KDisplayApplet(QObject* parent, const QVariantList& data);
     ~KDisplayApplet() override;
 
-    enum Action {
-        SwitchToExternal,
-        SwitchToInternal,
-        Clone,
-        ExtendLeft,
-        ExtendRight
-    };
+    enum Action { SwitchToExternal, SwitchToInternal, Clone, ExtendLeft, ExtendRight };
     Q_ENUM(Action)
 
     void init() override;
@@ -63,5 +57,4 @@ private:
 
     Disman::ConfigPtr m_screenConfiguration;
     int m_connectedOutputCount = 0;
-
 };

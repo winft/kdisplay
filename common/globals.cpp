@@ -21,14 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Globals
 {
 
-QString s_dirPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) %
-                                                     QStringLiteral("/kdisplay/");
+QString s_dirPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
+    % QStringLiteral("/kdisplay/");
 
-QString dirPath() {
+QString dirPath()
+{
     return s_dirPath;
 }
 
-void setDirPath(const QString &path)
+void setDirPath(const QString& path)
 {
     s_dirPath = path;
     if (!s_dirPath.endsWith(QLatin1Char('/'))) {

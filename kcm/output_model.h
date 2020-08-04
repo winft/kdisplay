@@ -50,17 +50,14 @@ public:
         ReplicasModelRole
     };
 
-    explicit OutputModel (ConfigHandler *configHandler);
+    explicit OutputModel(ConfigHandler* configHandler);
     ~OutputModel() override = default;
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    QVariant data(const QModelIndex &index,
-                  int role = Qt::DisplayRole) const override;
-    bool setData(const QModelIndex &index,
-                 const QVariant &value,
-                 int role = Qt::EditRole) override;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
 
-    void add(const Disman::OutputPtr &output);
+    void add(const Disman::OutputPtr& output);
     void remove(int outputId);
 
     /**
@@ -82,23 +79,28 @@ protected:
 
 private:
     struct Output {
-        Output() {}
-        Output(const Output &output)
+        Output()
+        {
+        }
+        Output(const Output& output)
             : ptr(output.ptr)
             , pos(output.pos)
-        {}
-        Output(Output &&) noexcept = default;
-        Output(Disman::OutputPtr _ptr, const QPointF &_pos)
+        {
+        }
+        Output(Output&&) noexcept = default;
+        Output(Disman::OutputPtr _ptr, const QPointF& _pos)
             : ptr(_ptr)
             , pos(_pos)
-        {}
-        Output &operator=(const Output &output) {
+        {
+        }
+        Output& operator=(const Output& output)
+        {
             ptr = output.ptr;
             pos = output.pos;
             posReset = QPoint(-1, -1);
             return *this;
         }
-        Output &operator=(Output &&) noexcept = default;
+        Output& operator=(Output&&) noexcept = default;
 
         Disman::OutputPtr ptr;
         QPointF pos;
@@ -107,7 +109,7 @@ private:
 
     void roleChanged(int outputId, OutputRoles role);
 
-    void resetPosition(const Output &output);
+    void resetPosition(const Output& output);
     void reposition();
     void updatePositions();
     void updateOrder();
@@ -118,7 +120,7 @@ private:
      * @param output the moved output
      * @param dest the desired destination to be adjusted by snapping
      */
-    void snap(const Output &output, QPoint &dest);
+    void snap(const Output& output, QPoint& dest);
 
     bool setEnabled(int outputIndex, bool enable);
 
@@ -128,22 +130,22 @@ private:
     bool setAutoRotate(int outputIndex, bool value);
     bool setAutoRotateOnlyInTabletMode(int outputIndex, bool value);
 
-    int resolutionIndex(const Disman::OutputPtr &output) const;
-    int refreshRateIndex(const Disman::OutputPtr &output) const;
-    QVariantList resolutionsStrings(const Disman::OutputPtr &output) const;
-    QVector<QSize> resolutions(const Disman::OutputPtr &output) const;
-    QVector<float> refreshRates(const Disman::OutputPtr &output) const;
+    int resolutionIndex(const Disman::OutputPtr& output) const;
+    int refreshRateIndex(const Disman::OutputPtr& output) const;
+    QVariantList resolutionsStrings(const Disman::OutputPtr& output) const;
+    QVector<QSize> resolutions(const Disman::OutputPtr& output) const;
+    QVector<float> refreshRates(const Disman::OutputPtr& output) const;
 
-    bool positionable(const Output &output) const;
+    bool positionable(const Output& output) const;
 
-    QStringList replicationSourceModel(const Disman::OutputPtr &output) const;
+    QStringList replicationSourceModel(const Disman::OutputPtr& output) const;
     bool setReplicationSourceIndex(int outputIndex, int sourceIndex);
     int replicationSourceIndex(int outputIndex) const;
-    int replicationSourceId(const Output &output) const;
+    int replicationSourceId(const Output& output) const;
 
-    QVariantList replicasModel(const Disman::OutputPtr &output) const;
+    QVariantList replicasModel(const Disman::OutputPtr& output) const;
 
     QVector<Output> m_outputs;
 
-    ConfigHandler *m_config;
+    ConfigHandler* m_config;
 };

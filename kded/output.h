@@ -28,15 +28,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class Output
 {
 public:
-    static void readInOutputs(Disman::ConfigPtr config, const QVariantList &outputsInfo);
+    static void readInOutputs(Disman::ConfigPtr config, const QVariantList& outputsInfo);
 
-    static void writeGlobal(const Disman::OutputPtr &output);
-    static bool writeGlobalPart(const Disman::OutputPtr &output, QVariantMap &info,
-                                const Disman::OutputPtr &fallback);
+    static void writeGlobal(const Disman::OutputPtr& output);
+    static bool writeGlobalPart(const Disman::OutputPtr& output,
+                                QVariantMap& info,
+                                const Disman::OutputPtr& fallback);
 
     static QString dirPath();
 
-    static bool updateOrientation(Disman::OutputPtr &output,
+    static bool updateOrientation(Disman::OutputPtr& output,
                                   QOrientationReading::Orientation orientation);
 
 private:
@@ -44,14 +45,15 @@ private:
     static QString createPath(const QString& hash);
     static QVariantMap getGlobalData(Disman::OutputPtr output);
 
-    static void readIn(Disman::OutputPtr output, const QVariantMap &info, Control::OutputRetention retention);
+    static void
+    readIn(Disman::OutputPtr output, const QVariantMap& info, Control::OutputRetention retention);
     static bool readInGlobal(Disman::OutputPtr output);
-    static void readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMap &info);
+    static void readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMap& info);
     /*
      * When a global output value (scale, rotation) is changed we might
      * need to reposition the outputs when another config is read.
      */
-    static void adjustPositions(Disman::ConfigPtr config, const QVariantList &outputsInfo);
+    static void adjustPositions(Disman::ConfigPtr config, const QVariantList& outputsInfo);
 
     static QString s_dirName;
 };

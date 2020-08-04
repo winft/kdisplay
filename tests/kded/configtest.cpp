@@ -18,24 +18,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../kded/config.h"
 #include "../../common/globals.h"
 
-#include <QtTest>
 #include <QObject>
+#include <QtTest>
 
 #include <Disman/Config>
 #include <Disman/EDID>
-#include <Disman/Screen>
 #include <Disman/Mode>
 #include <Disman/Output>
+#include <Disman/Screen>
 
 #include <memory>
 
-struct TestPathGuard
-{
+struct TestPathGuard {
     TestPathGuard()
     {
         // TODO: this should setup of the control directory.
         QStandardPaths::setTestModeEnabled(true);
-        path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) % QStringLiteral("/kdisplay/");
+        path = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
+            % QStringLiteral("/kdisplay/");
         Globals::setDirPath(path);
     }
     ~TestPathGuard()
@@ -79,10 +79,11 @@ std::unique_ptr<Config> TestConfig::createConfig(bool output1Connected, bool out
     screen->setMaxSize(QSize(32768, 32768));
     screen->setMinSize(QSize(8, 8));
 
-    QList<QSize> sizes({ QSize(320, 240), QSize(640, 480), QSize(1024, 768), QSize(1280, 1024), QSize(1920, 1280) });
+    QList<QSize> sizes(
+        {QSize(320, 240), QSize(640, 480), QSize(1024, 768), QSize(1280, 1024), QSize(1920, 1280)});
     Disman::ModeList modes;
     for (int i = 0; i < sizes.count(); ++i) {
-        const QSize &size = sizes[i];
+        const QSize& size = sizes[i];
         Disman::ModePtr mode = Disman::ModePtr::create();
         mode->setId(QStringLiteral("MODE-%1").arg(i));
         mode->setName(QStringLiteral("%1x%2").arg(size.width()).arg(size.height()));
@@ -309,10 +310,14 @@ void TestConfig::testIdenticalOutputs()
     screen->setMaxSize(QSize(32768, 32768));
     screen->setMinSize(QSize(8, 8));
 
-    QList<QSize> sizes({ QSize(640, 480), QSize(1024, 768), QSize(1920, 1080), QSize(1280, 1024), QSize(1920, 1280) });
+    QList<QSize> sizes({QSize(640, 480),
+                        QSize(1024, 768),
+                        QSize(1920, 1080),
+                        QSize(1280, 1024),
+                        QSize(1920, 1280)});
     Disman::ModeList modes;
     for (int i = 0; i < sizes.count(); ++i) {
-        const QSize &size = sizes[i];
+        const QSize& size = sizes[i];
         Disman::ModePtr mode = Disman::ModePtr::create();
         mode->setId(QStringLiteral("MODE-%1").arg(i));
         mode->setName(QStringLiteral("%1x%2").arg(size.width()).arg(size.height()));
@@ -321,7 +326,13 @@ void TestConfig::testIdenticalOutputs()
         modes.insert(mode->id(), mode);
     }
     // This one is important, the output id in the config file is a hash of it
-    QByteArray data = QByteArray::fromBase64("AP///////wAQrBbwTExLQQ4WAQOANCB46h7Frk80sSYOUFSlSwCBgKlA0QBxTwEBAQEBAQEBKDyAoHCwI0AwIDYABkQhAAAaAAAA/wBGNTI1TTI0NUFLTEwKAAAA/ABERUxMIFUyNDEwCiAgAAAA/QA4TB5REQAKICAgICAgAToCAynxUJAFBAMCBxYBHxITFCAVEQYjCQcHZwMMABAAOC2DAQAA4wUDAQI6gBhxOC1AWCxFAAZEIQAAHgEdgBhxHBYgWCwlAAZEIQAAngEdAHJR0B4gbihVAAZEIQAAHowK0Iog4C0QED6WAAZEIQAAGAAAAAAAAAAAAAAAAAAAPg==");
+    QByteArray data = QByteArray::fromBase64(
+        "AP///////"
+        "wAQrBbwTExLQQ4WAQOANCB46h7Frk80sSYOUFSlSwCBgKlA0QBxTwEBAQEBAQEBKDyAoHCwI0AwIDYABkQhAAAaAAA"
+        "A/wBGNTI1TTI0NUFLTEwKAAAA/ABERUxMIFUyNDEwCiAgAAAA/"
+        "QA4TB5REQAKICAgICAgAToCAynxUJAFBAMCBxYBHxITFCAVEQYjCQcHZwMMABAAOC2DAQAA4wUDAQI6gBhxOC1AWCx"
+        "FAAZEIQAAHgEdgBhxHBYgWCwlAAZEIQAAngEdAHJR0B4gbihVAAZEIQAAHowK0Iog4C0QED6WAAZEIQAAGAAAAAAAA"
+        "AAAAAAAAAAAPg==");
 
     // When setting up the outputs, make sure they're not added in alphabetical order
     // or in the same order of the config file, as that makes the tests accidentally pass
@@ -431,7 +442,8 @@ void TestConfig::testMoveConfig()
     // Make sure we don't write into TEST_DATA.
     auto guard = TestPathGuard();
 
-    // Basic assumptions for the remainder of our tests, this is the situation where the lid is opened
+    // Basic assumptions for the remainder of our tests, this is the situation where the lid is
+    // opened
     QCOMPARE(config->connectedOutputs().count(), 2);
 
     auto output = config->connectedOutputs().first();
@@ -452,7 +464,8 @@ void TestConfig::testMoveConfig()
     output->setPrimary(false);
     output2->setPrimary(true);
 
-    // save config as the current one, this is the config we don't want restored, and which we'll overwrite
+    // save config as the current one, this is the config we don't want restored, and which we'll
+    // overwrite
     configWrapper->writeFile();
 
     QCOMPARE(output->isEnabled(), false);
@@ -509,14 +522,14 @@ void TestConfig::testFixedConfig()
     const QString fixedCfgPath = Config::configsDirPath() % Config::s_fixedConfigFileName;
     QVERIFY(QDir().mkpath(Config::configsDirPath()));
 
-    // save config as the current one, this is the config we don't want restored, and which we'll overwrite
+    // save config as the current one, this is the config we don't want restored, and which we'll
+    // overwrite
     configWrapper->writeFile(fixedCfgPath);
 
     // Check if both files exist
     QFile fixedCfg(fixedCfgPath);
     QVERIFY(fixedCfg.exists());
 }
-
 
 QTEST_MAIN(TestConfig)
 

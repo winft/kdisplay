@@ -15,7 +15,6 @@
  *  along with this program; if not, write to the Free Software                      *
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA   *
  *************************************************************************************/
-
 #ifndef KDED_DEVICE_H
 #define KDED_DEVICE_H
 
@@ -27,7 +26,7 @@ class OrgFreedesktopDBusPropertiesInterface;
 
 class Device : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 public:
     static Device* self();
     static void destroy();
@@ -64,8 +63,8 @@ private:
 
     static Device* m_instance;
 
-    OrgFreedesktopDBusPropertiesInterface *m_freedesktop;
-    QDBusInterface *m_suspendSession;
+    OrgFreedesktopDBusPropertiesInterface* m_freedesktop;
+    QDBusInterface* m_suspendSession;
 };
 
-#endif //KDED_DEVICE_H
+#endif // KDED_DEVICE_H

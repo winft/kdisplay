@@ -15,7 +15,6 @@
  *  along with this program; if not, write to the Free Software                      *
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA   *
  *************************************************************************************/
-
 #include "generator.h"
 #include "device.h"
 #include "kdisplay_daemon_debug.h"
@@ -26,19 +25,20 @@
 #if defined(QT_NO_DEBUG)
 #define ASSERT_OUTPUTS(outputs)
 #else
-#define ASSERT_OUTPUTS(outputs) \
-    while(true) { \
-        Q_ASSERT(!outputs.isEmpty()); \
-        Q_FOREACH (const Disman::OutputPtr &output, outputs) { \
-            Q_ASSERT(output); \
-            Q_ASSERT(output->isConnected()); \
-        } break; \
+#define ASSERT_OUTPUTS(outputs)                                                                    \
+    while (true) {                                                                                 \
+        Q_ASSERT(!outputs.isEmpty());                                                              \
+        Q_FOREACH (const Disman::OutputPtr& output, outputs) {                                     \
+            Q_ASSERT(output);                                                                      \
+            Q_ASSERT(output->isConnected());                                                       \
+        }                                                                                          \
+        break;                                                                                     \
     }
 #endif
 
 Generator* Generator::instance = nullptr;
 
-bool operator<(const QSize &s1, const QSize &s2)
+bool operator<(const QSize& s1, const QSize& s2)
 {
     return s1.width() * s1.height() < s2.width() * s2.height();
 }
@@ -52,11 +52,11 @@ Generator* Generator::self()
 }
 
 Generator::Generator()
-   : QObject()
-   , m_forceLaptop(false)
-   , m_forceLidClosed(false)
-   , m_forceNotLaptop(false)
-   , m_forceDocked(false)
+    : QObject()
+    , m_forceLaptop(false)
+    , m_forceLidClosed(false)
+    , m_forceNotLaptop(false)
+    , m_forceDocked(false)
 {
     connect(Device::self(), &Device::ready, this, &Generator::ready);
 }
@@ -71,17 +71,16 @@ Generator::~Generator()
 {
 }
 
-void Generator::setCurrentConfig(const Disman::ConfigPtr &currentConfig)
+void Generator::setCurrentConfig(const Disman::ConfigPtr& currentConfig)
 {
     m_currentConfig = currentConfig;
 }
 
-
-Disman::ConfigPtr Generator::idealConfig(const Disman::ConfigPtr &currentConfig)
+Disman::ConfigPtr Generator::idealConfig(const Disman::ConfigPtr& currentConfig)
 {
     Q_ASSERT(currentConfig);
 
-//     KDebug::Block idealBlock("Ideal Config");
+    //     KDebug::Block idealBlock("Ideal Config");
     Disman::ConfigPtr config = currentConfig->clone();
 
     disableAllDisconnectedOutputs(config->outputs());
@@ -93,10 +92,10 @@ Disman::ConfigPtr Generator::idealConfig(const Disman::ConfigPtr &currentConfig)
         return config;
     }
 
-    //the scale will generally be independent no matter where the output is
-    //scale will affect geometry, so do this first
+    // the scale will generally be independent no matter where the output is
+    // scale will affect geometry, so do this first
     if (config->supportedFeatures().testFlag(Disman::Config::Feature::PerOutputScaling)) {
-        for(auto output: qAsConst(connectedOutputs)) {
+        for (auto output : qAsConst(connectedOutputs)) {
             output->setScale(bestScaleForOutput(output));
         }
     }
@@ -117,13 +116,13 @@ Disman::ConfigPtr Generator::idealConfig(const Disman::ConfigPtr &currentConfig)
     return fallbackIfNeeded(config);
 }
 
-Disman::ConfigPtr Generator::fallbackIfNeeded(const Disman::ConfigPtr &config)
+Disman::ConfigPtr Generator::fallbackIfNeeded(const Disman::ConfigPtr& config)
 {
     qCDebug(KDISPLAY_KDED) << "fallbackIfNeeded()";
 
     Disman::ConfigPtr newConfig;
 
-    //If the ideal config can't be applied, try clonning
+    // If the ideal config can't be applied, try clonning
     if (!Disman::Config::canBeApplied(config)) {
         if (isLaptop()) {
             newConfig = displaySwitch(Generator::Clone); // Try to clone at our best
@@ -140,7 +139,7 @@ Disman::ConfigPtr Generator::fallbackIfNeeded(const Disman::ConfigPtr &config)
         newConfig = config;
     }
 
-    //If after trying to clone at our best, we fail... return current
+    // If after trying to clone at our best, we fail... return current
     if (!Disman::Config::canBeApplied(newConfig)) {
         qCDebug(KDISPLAY_KDED) << "Config cannot be applied";
         newConfig = config;
@@ -151,17 +150,16 @@ Disman::ConfigPtr Generator::fallbackIfNeeded(const Disman::ConfigPtr &config)
 
 Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
 {
-//     KDebug::Block switchBlock("Display Switch");
+    //     KDebug::Block switchBlock("Display Switch");
     Disman::ConfigPtr config = m_currentConfig;
     Q_ASSERT(config);
 
-
     Disman::OutputList connectedOutputs = config->connectedOutputs();
 
-    //the scale will generally be independent no matter where the output is
-    //scale will affect geometry, so do this first
+    // the scale will generally be independent no matter where the output is
+    // scale will affect geometry, so do this first
     if (config->supportedFeatures().testFlag(Disman::Config::Feature::PerOutputScaling)) {
-        for(auto output: qAsConst(connectedOutputs)) {
+        for (auto output : qAsConst(connectedOutputs)) {
             output->setScale(bestScaleForOutput(output));
         }
     }
@@ -207,7 +205,7 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
     switch (action) {
     case Generator::ExtendToLeft: {
         qCDebug(KDISPLAY_KDED) << "Extend to left";
-        external->setPosition(QPointF(0,0));
+        external->setPosition(QPointF(0, 0));
         external->setEnabled(true);
         const Disman::ModePtr extMode = bestModeForOutput(external);
         Q_ASSERT(extMode);
@@ -238,7 +236,7 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
     }
     case Generator::TurnOffExternal: {
         qCDebug(KDISPLAY_KDED) << "Turn off external screen";
-        embedded->setPosition(QPointF(0,0));
+        embedded->setPosition(QPointF(0, 0));
         embedded->setEnabled(true);
         embedded->setPrimary(true);
         const Disman::ModePtr embeddedMode = bestModeForOutput(embedded);
@@ -251,13 +249,12 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
     }
     case Generator::ExtendToRight: {
         qCDebug(KDISPLAY_KDED) << "Extend to the right";
-        embedded->setPosition(QPointF(0,0));
+        embedded->setPosition(QPointF(0, 0));
         embedded->setEnabled(true);
         embedded->setPrimary(true);
         const Disman::ModePtr embeddedMode = bestModeForOutput(embedded);
         Q_ASSERT(embeddedMode);
         embedded->setCurrentModeId(embeddedMode->id());
-
 
         Q_ASSERT(embedded->currentMode()); // we must have a mode now
         auto const size = embedded->geometry().size();
@@ -270,7 +267,7 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
 
         return config;
     }
-    case Generator::None: // just return config
+    case Generator::None:  // just return config
     case Generator::Clone: // handled above
         break;
     } // switch
@@ -278,12 +275,12 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
     return config;
 }
 
-uint qHash(const QSize &size)
+uint qHash(const QSize& size)
 {
     return size.width() * size.height();
 }
 
-void Generator::cloneScreens(Disman::OutputList &connectedOutputs)
+void Generator::cloneScreens(Disman::OutputList& connectedOutputs)
 {
     ASSERT_OUTPUTS(connectedOutputs);
     if (connectedOutputs.isEmpty()) {
@@ -291,11 +288,11 @@ void Generator::cloneScreens(Disman::OutputList &connectedOutputs)
     }
 
     QSet<QSize> commonSizes;
-    const QSize maxScreenSize  = m_currentConfig->screen()->maxSize();
+    const QSize maxScreenSize = m_currentConfig->screen()->maxSize();
 
-    Q_FOREACH(const Disman::OutputPtr &output, connectedOutputs) {
+    Q_FOREACH (const Disman::OutputPtr& output, connectedOutputs) {
         QSet<QSize> modeSizes;
-        Q_FOREACH(const Disman::ModePtr &mode, output->modes()) {
+        Q_FOREACH (const Disman::ModePtr& mode, output->modes()) {
             const QSize size = mode->size();
             if (size.width() > maxScreenSize.width() || size.height() > maxScreenSize.height()) {
                 continue;
@@ -303,7 +300,7 @@ void Generator::cloneScreens(Disman::OutputList &connectedOutputs)
             modeSizes.insert(mode->size());
         }
 
-        //If we have nothing to compare against
+        // If we have nothing to compare against
         if (commonSizes.isEmpty()) {
             commonSizes = modeSizes;
             continue;
@@ -313,9 +310,9 @@ void Generator::cloneScreens(Disman::OutputList &connectedOutputs)
     }
 
     qCDebug(KDISPLAY_KDED) << "Common sizes: " << commonSizes;
-    //fallback to biggestMode if no commonSizes have been found
+    // fallback to biggestMode if no commonSizes have been found
     if (commonSizes.isEmpty()) {
-        Q_FOREACH(Disman::OutputPtr output, connectedOutputs) {
+        Q_FOREACH (Disman::OutputPtr output, connectedOutputs) {
             if (output->modes().isEmpty()) {
                 continue;
             }
@@ -328,16 +325,15 @@ void Generator::cloneScreens(Disman::OutputList &connectedOutputs)
         return;
     }
 
-
-    //At this point, we know we have common sizes, let's get the biggest on
+    // At this point, we know we have common sizes, let's get the biggest on
     QList<QSize> commonSizeList = commonSizes.values();
     std::sort(commonSizeList.begin(), commonSizeList.end());
     const QSize biggestSize = commonSizeList.last();
 
-    //Finally, look for the mode with biggestSize and biggest refreshRate and set it
+    // Finally, look for the mode with biggestSize and biggest refreshRate and set it
     qCDebug(KDISPLAY_KDED) << "Biggest Size: " << biggestSize;
     Disman::ModePtr bestMode;
-    Q_FOREACH(Disman::OutputPtr output, connectedOutputs) {
+    Q_FOREACH (Disman::OutputPtr output, connectedOutputs) {
         if (output->modes().isEmpty()) {
             continue;
         }
@@ -349,7 +345,7 @@ void Generator::cloneScreens(Disman::OutputList &connectedOutputs)
     }
 }
 
-void Generator::singleOutput(Disman::OutputList &connectedOutputs)
+void Generator::singleOutput(Disman::OutputList& connectedOutputs)
 {
     ASSERT_OUTPUTS(connectedOutputs);
     if (connectedOutputs.isEmpty()) {
@@ -366,17 +362,17 @@ void Generator::singleOutput(Disman::OutputList &connectedOutputs)
     output->setCurrentModeId(bestMode->id());
     output->setEnabled(true);
     output->setPrimary(true);
-    output->setPosition(QPointF(0,0));
+    output->setPosition(QPointF(0, 0));
 }
 
-void Generator::laptop(Disman::OutputList &connectedOutputs)
+void Generator::laptop(Disman::OutputList& connectedOutputs)
 {
     ASSERT_OUTPUTS(connectedOutputs)
     if (connectedOutputs.isEmpty()) {
         return;
     }
 
-//     KDebug::Block laptopBlock("Laptop config");
+    //     KDebug::Block laptopBlock("Laptop config");
 
     Disman::OutputPtr embedded = embeddedOutput(connectedOutputs);
     /* Apparently older laptops use "VGA-*" as embedded output ID, so embeddedOutput()
@@ -427,8 +423,8 @@ void Generator::laptop(Disman::OutputList &connectedOutputs)
     }
 
     qCDebug(KDISPLAY_KDED) << "Lid is open";
-    //If lid is open, laptop screen should be primary
-    embedded->setPosition(QPointF(0,0));
+    // If lid is open, laptop screen should be primary
+    embedded->setPosition(QPointF(0, 0));
     embedded->setPrimary(true);
     embedded->setEnabled(true);
     const Disman::ModePtr embeddedMode = bestModeForOutput(embedded);
@@ -447,7 +443,7 @@ void Generator::laptop(Disman::OutputList &connectedOutputs)
     biggest->setCurrentModeId(mode->id());
 
     globalWidth += biggest->geometry().width();
-    Q_FOREACH(Disman::OutputPtr output, connectedOutputs) {
+    Q_FOREACH (Disman::OutputPtr output, connectedOutputs) {
         output->setEnabled(true);
         output->setPrimary(false);
         output->setPosition(QPointF(globalWidth, 0));
@@ -465,7 +461,7 @@ void Generator::laptop(Disman::OutputList &connectedOutputs)
     }
 }
 
-void Generator::extendToRight(Disman::OutputList &connectedOutputs)
+void Generator::extendToRight(Disman::OutputList& connectedOutputs)
 {
     ASSERT_OUTPUTS(connectedOutputs);
     if (connectedOutputs.isEmpty()) {
@@ -480,14 +476,14 @@ void Generator::extendToRight(Disman::OutputList &connectedOutputs)
 
     biggest->setEnabled(true);
     biggest->setPrimary(true);
-    biggest->setPosition(QPointF(0,0));
+    biggest->setPosition(QPointF(0, 0));
     const Disman::ModePtr mode = bestModeForOutput(biggest);
     Q_ASSERT(mode);
     biggest->setCurrentModeId(mode->id());
 
     double globalWidth = biggest->geometry().width();
 
-    Q_FOREACH(Disman::OutputPtr output, connectedOutputs) {
+    Q_FOREACH (Disman::OutputPtr output, connectedOutputs) {
         output->setEnabled(true);
         output->setPrimary(false);
         output->setPosition(QPointF(globalWidth, 0));
@@ -499,13 +495,13 @@ void Generator::extendToRight(Disman::OutputList &connectedOutputs)
     }
 }
 
-Disman::ModePtr Generator::biggestMode(const Disman::ModeList &modes)
+Disman::ModePtr Generator::biggestMode(const Disman::ModeList& modes)
 {
     Q_ASSERT(!modes.isEmpty());
 
     int modeArea, biggestArea = 0;
     Disman::ModePtr biggestMode;
-    Q_FOREACH(const Disman::ModePtr &mode, modes) {
+    Q_FOREACH (const Disman::ModePtr& mode, modes) {
         modeArea = mode->size().width() * mode->size().height();
         if (modeArea < biggestArea) {
             continue;
@@ -525,10 +521,10 @@ Disman::ModePtr Generator::biggestMode(const Disman::ModeList &modes)
     return biggestMode;
 }
 
-Disman::ModePtr Generator::bestModeForSize(const Disman::ModeList &modes, const QSize &size)
+Disman::ModePtr Generator::bestModeForSize(const Disman::ModeList& modes, const QSize& size)
 {
     Disman::ModePtr bestMode;
-    Q_FOREACH(const Disman::ModePtr &mode, modes) {
+    Q_FOREACH (const Disman::ModePtr& mode, modes) {
         if (mode->size() != size) {
             continue;
         }
@@ -546,23 +542,24 @@ Disman::ModePtr Generator::bestModeForSize(const Disman::ModeList &modes, const 
     return bestMode;
 }
 
-qreal Generator::bestScaleForOutput(const Disman::OutputPtr &output) {
-    //if we have no physical size, we can't determine the DPI properly. Fallback to scale 1
+qreal Generator::bestScaleForOutput(const Disman::OutputPtr& output)
+{
+    // if we have no physical size, we can't determine the DPI properly. Fallback to scale 1
     if (output->sizeMm().height() <= 0) {
         return 1.0;
     }
     const auto mode = bestModeForOutput(output);
     const qreal dpi = mode->size().height() / (output->sizeMm().height() / 25.4);
 
-    //if reported DPI is closer to two times normal DPI, followed by a sanity check of having the sort of vertical resolution
-    //you'd find in a high res screen
+    // if reported DPI is closer to two times normal DPI, followed by a sanity check of having the
+    // sort of vertical resolution you'd find in a high res screen
     if (dpi > 96 * 1.5 && mode->size().height() >= 1440) {
         return 2.0;
     }
     return 1.0;
 }
 
-Disman::ModePtr Generator::bestModeForOutput(const Disman::OutputPtr &output)
+Disman::ModePtr Generator::bestModeForOutput(const Disman::OutputPtr& output)
 {
     if (Disman::ModePtr outputMode = output->preferredMode()) {
         return outputMode;
@@ -571,14 +568,13 @@ Disman::ModePtr Generator::bestModeForOutput(const Disman::OutputPtr &output)
     return biggestMode(output->modes());
 }
 
-
-Disman::OutputPtr Generator::biggestOutput(const Disman::OutputList &outputs)
+Disman::OutputPtr Generator::biggestOutput(const Disman::OutputList& outputs)
 {
     ASSERT_OUTPUTS(outputs)
 
     int area, total = 0;
     Disman::OutputPtr biggest;
-    Q_FOREACH(const Disman::OutputPtr &output, outputs) {
+    Q_FOREACH (const Disman::OutputPtr& output, outputs) {
         const Disman::ModePtr mode = bestModeForOutput(output);
         if (!mode) {
             continue;
@@ -595,10 +591,10 @@ Disman::OutputPtr Generator::biggestOutput(const Disman::OutputList &outputs)
     return biggest;
 }
 
-void Generator::disableAllDisconnectedOutputs(const Disman::OutputList &outputs)
+void Generator::disableAllDisconnectedOutputs(const Disman::OutputList& outputs)
 {
-//     KDebug::Block disableBlock("Disabling disconnected screens");
-    Q_FOREACH(Disman::OutputPtr output, outputs) {
+    //     KDebug::Block disableBlock("Disabling disconnected screens");
+    Q_FOREACH (Disman::OutputPtr output, outputs) {
         if (!output->isConnected()) {
             qCDebug(KDISPLAY_KDED) << output->name() << " Disabled";
             output->setEnabled(false);
@@ -607,9 +603,9 @@ void Generator::disableAllDisconnectedOutputs(const Disman::OutputList &outputs)
     }
 }
 
-Disman::OutputPtr Generator::embeddedOutput(const Disman::OutputList &outputs)
+Disman::OutputPtr Generator::embeddedOutput(const Disman::OutputList& outputs)
 {
-    Q_FOREACH(const Disman::OutputPtr &output, outputs) {
+    Q_FOREACH (const Disman::OutputPtr& output, outputs) {
         if (output->type() != Disman::Output::Panel) {
             continue;
         }

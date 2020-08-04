@@ -17,18 +17,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "output.h"
 #include "config.h"
 
-#include "kdisplay_daemon_debug.h"
 #include "generator.h"
+#include "kdisplay_daemon_debug.h"
 
-#include <QStringList>
+#include <QDir>
 #include <QFile>
 #include <QJsonDocument>
-#include <QDir>
 #include <QLoggingCategory>
 #include <QRect>
+#include <QStringList>
 
-#include <disman/output.h>
 #include <disman/edid.h>
+#include <disman/output.h>
 
 QString Output::s_dirName = QStringLiteral("outputs/");
 
@@ -50,27 +50,30 @@ QString Output::createPath(const QString& hash)
     return path(hash);
 }
 
-void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMap &info)
+void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMap& info)
 {
-    output->setRotation(static_cast<Disman::Output::Rotation>(info.value(QStringLiteral("rotation"), 1).toInt()));
+    output->setRotation(
+        static_cast<Disman::Output::Rotation>(info.value(QStringLiteral("rotation"), 1).toInt()));
 
     // TODO: Disabled, since we use control files now. That is just a reminder. Remove at some point
     //       when everything is proven to work.
-//    bool scaleOk;
-//    const qreal scale = info.value(QStringLiteral("scale"), 1.).toDouble(&scaleOk);
-//    if (scaleOk) {
-//        output->setScale(scale);
-//    }
+    //    bool scaleOk;
+    //    const qreal scale = info.value(QStringLiteral("scale"), 1.).toDouble(&scaleOk);
+    //    if (scaleOk) {
+    //        output->setScale(scale);
+    //    }
 
     const QVariantMap modeInfo = info[QStringLiteral("mode")].toMap();
     const QVariantMap modeSize = modeInfo[QStringLiteral("size")].toMap();
-    const QSize size = QSize(modeSize[QStringLiteral("width")].toInt(), modeSize[QStringLiteral("height")].toInt());
+    const QSize size = QSize(modeSize[QStringLiteral("width")].toInt(),
+                             modeSize[QStringLiteral("height")].toInt());
 
-    qCDebug(KDISPLAY_KDED) << "Finding a mode for" << size << "@" << modeInfo[QStringLiteral("refresh")].toFloat();
+    qCDebug(KDISPLAY_KDED) << "Finding a mode for" << size << "@"
+                           << modeInfo[QStringLiteral("refresh")].toFloat();
 
     Disman::ModeList modes = output->modes();
     Disman::ModePtr matchingMode;
-    for(const Disman::ModePtr &mode : modes) {
+    for (const Disman::ModePtr& mode : modes) {
         if (mode->size() != size) {
             continue;
         }
@@ -78,23 +81,28 @@ void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMa
             continue;
         }
 
-        qCDebug(KDISPLAY_KDED) << "\tFound: " << mode->id() << " " << mode->size() << "@" << mode->refreshRate();
+        qCDebug(KDISPLAY_KDED) << "\tFound: " << mode->id() << " " << mode->size() << "@"
+                               << mode->refreshRate();
         matchingMode = mode;
         break;
     }
 
     if (!matchingMode) {
-        qCWarning(KDISPLAY_KDED) << "\tFailed to find a matching mode - this means that our config is corrupted"
-                                   "or a different device with the same serial number has been connected (very unlikely)."
-                                   "Falling back to preferred modes.";
+        qCWarning(KDISPLAY_KDED)
+            << "\tFailed to find a matching mode - this means that our config is corrupted"
+               "or a different device with the same serial number has been connected (very "
+               "unlikely)."
+               "Falling back to preferred modes.";
         matchingMode = output->preferredMode();
     }
     if (!matchingMode) {
-        qCWarning(KDISPLAY_KDED) << "\tFailed to get a preferred mode, falling back to biggest mode.";
+        qCWarning(KDISPLAY_KDED)
+            << "\tFailed to get a preferred mode, falling back to biggest mode.";
         matchingMode = Generator::biggestMode(modes);
     }
     if (!matchingMode) {
-        qCWarning(KDISPLAY_KDED) << "\tFailed to get biggest mode. Which means there are no modes. Turning off the screen.";
+        qCWarning(KDISPLAY_KDED) << "\tFailed to get biggest mode. Which means there are no modes. "
+                                    "Turning off the screen.";
         output->setEnabled(false);
         return;
     }
@@ -125,7 +133,7 @@ bool Output::readInGlobal(Disman::OutputPtr output)
 }
 
 Disman::Output::Rotation orientationToRotation(QOrientationReading::Orientation orientation,
-                                                Disman::Output::Rotation fallback)
+                                               Disman::Output::Rotation fallback)
 {
     using Orientation = QOrientationReading::Orientation;
 
@@ -147,7 +155,7 @@ Disman::Output::Rotation orientationToRotation(QOrientationReading::Orientation 
     }
 }
 
-bool Output::updateOrientation(Disman::OutputPtr &output,
+bool Output::updateOrientation(Disman::OutputPtr& output,
                                QOrientationReading::Orientation orientation)
 {
     if (output->type() != Disman::Output::Type::Panel) {
@@ -163,48 +171,46 @@ bool Output::updateOrientation(Disman::OutputPtr &output,
 }
 
 // TODO: move this into the Layouter class.
-void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList &outputsInfo)
+void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList& outputsInfo)
 {
     using Out = QPair<int, QPointF>;
 
     Disman::OutputList outputs = config->outputs();
     QVector<Out> sortedOutputs; // <id, pos>
-    for (const Disman::OutputPtr &output : outputs) {
+    for (const Disman::OutputPtr& output : outputs) {
         sortedOutputs.append(Out(output->id(), output->position()));
     }
 
     // go from left to right, top to bottom
-    std::sort(sortedOutputs.begin(), sortedOutputs.end(), [](const Out &o1, const Out &o2) {
+    std::sort(sortedOutputs.begin(), sortedOutputs.end(), [](const Out& o1, const Out& o2) {
         const int x1 = o1.second.x();
         const int x2 = o2.second.x();
         return x1 < x2 || (x1 == x2 && o1.second.y() < o2.second.y());
     });
 
     for (int cnt = 1; cnt < sortedOutputs.length(); cnt++) {
-        auto getOutputInfoProperties = [outputsInfo](Disman::OutputPtr output, QRect &geo) -> bool {
+        auto getOutputInfoProperties = [outputsInfo](Disman::OutputPtr output, QRect& geo) -> bool {
             if (!output) {
                 return false;
             }
             const auto hash = output->hash();
 
-            auto it = std::find_if(outputsInfo.begin(), outputsInfo.end(),
-                [hash](QVariant v) {
-                    const QVariantMap info = v.toMap();
-                    return info[QStringLiteral("id")].toString() == hash;
-                }
-            );
+            auto it = std::find_if(outputsInfo.begin(), outputsInfo.end(), [hash](QVariant v) {
+                const QVariantMap info = v.toMap();
+                return info[QStringLiteral("id")].toString() == hash;
+            });
             if (it == outputsInfo.end()) {
                 return false;
             }
 
-            auto isPortrait = [](const QVariant &info) {
+            auto isPortrait = [](const QVariant& info) {
                 bool ok;
                 const int rot = info.toInt(&ok);
                 if (!ok) {
                     return false;
                 }
-                return rot & Disman::Output::Rotation::Left ||
-                        rot & Disman::Output::Rotation::Right;
+                return rot & Disman::Output::Rotation::Left
+                    || rot & Disman::Output::Rotation::Right;
             };
 
             const QVariantMap outputInfo = it->toMap();
@@ -223,7 +229,8 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList &outpu
             if (scale <= 0) {
                 return false;
             }
-            const QPoint pos = QPoint(posInfo[QStringLiteral("x")].toInt(), posInfo[QStringLiteral("y")].toInt());
+            const QPoint pos = QPoint(posInfo[QStringLiteral("x")].toInt(),
+                                      posInfo[QStringLiteral("y")].toInt());
             QSize size = QSize(modeSize[QStringLiteral("width")].toInt() / scale,
                                modeSize[QStringLiteral("height")].toInt() / scale);
             if (portrait) {
@@ -239,8 +246,8 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList &outpu
         Disman::OutputPtr curPtr = outputs.find(sortedOutputs[cnt].first).value();
 
         QRect prevInfoGeo, curInfoGeo;
-        if (!getOutputInfoProperties(prevPtr, prevInfoGeo) ||
-                !getOutputInfoProperties(curPtr, curInfoGeo)) {
+        if (!getOutputInfoProperties(prevPtr, prevInfoGeo)
+            || !getOutputInfoProperties(curPtr, curInfoGeo)) {
             // no info found, nothing can be adjusted for the next output
             continue;
         }
@@ -253,23 +260,27 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList &outpu
 
         // the proposed new difference
         const int prevRight = prevGeo.x() + prevGeo.width();
-        const int xCorrected = prevRight + prevGeo.width() * xInfoDiff / (double)prevInfoGeo.width();
+        const int xCorrected
+            = prevRight + prevGeo.width() * xInfoDiff / (double)prevInfoGeo.width();
         const int xDiff = curGeo.x() - prevRight;
 
         // In the following calculate the y-correction. This is more involved since we
         // differentiate between overlapping and non-overlapping pairs and align either
         // top to top/bottom or bottom to top/bottom
-        const bool yOverlap = prevInfoGeo.y() + prevInfoGeo.height() > curInfoGeo.y() &&
-                prevInfoGeo.y() < curInfoGeo.y() + curInfoGeo.height();
+        const bool yOverlap = prevInfoGeo.y() + prevInfoGeo.height() > curInfoGeo.y()
+            && prevInfoGeo.y() < curInfoGeo.y() + curInfoGeo.height();
 
         // these values determine which horizontal edge of previous output we align with
         const int topToTopDiffAbs = qAbs(prevInfoGeo.y() - curInfoGeo.y());
         const int topToBottomDiffAbs = qAbs(prevInfoGeo.y() - curInfoGeo.y() - curInfoGeo.height());
-        const int bottomToBottomDiffAbs = qAbs(prevInfoGeo.y() + prevInfoGeo.height() - curInfoGeo.y() - curInfoGeo.height());
-        const int bottomToTopDiffAbs = qAbs(prevInfoGeo.y() + prevInfoGeo.height() - curInfoGeo.y());
+        const int bottomToBottomDiffAbs
+            = qAbs(prevInfoGeo.y() + prevInfoGeo.height() - curInfoGeo.y() - curInfoGeo.height());
+        const int bottomToTopDiffAbs
+            = qAbs(prevInfoGeo.y() + prevInfoGeo.height() - curInfoGeo.y());
 
-        const bool yTopAligned = (topToTopDiffAbs < bottomToBottomDiffAbs && topToTopDiffAbs <= bottomToTopDiffAbs) ||
-                topToBottomDiffAbs < bottomToBottomDiffAbs;
+        const bool yTopAligned
+            = (topToTopDiffAbs < bottomToBottomDiffAbs && topToTopDiffAbs <= bottomToTopDiffAbs)
+            || topToBottomDiffAbs < bottomToBottomDiffAbs;
 
         int yInfoDiff = curInfoGeo.y() - prevInfoGeo.y();
         int yDiff = curGeo.y() - prevGeo.y();
@@ -311,7 +322,9 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList &outpu
     }
 }
 
-void Output::readIn(Disman::OutputPtr output, const QVariantMap &info, Control::OutputRetention retention)
+void Output::readIn(Disman::OutputPtr output,
+                    const QVariantMap& info,
+                    Control::OutputRetention retention)
 {
     const QVariantMap posInfo = info[QStringLiteral("pos")].toMap();
     QPoint point(posInfo[QStringLiteral("x")].toInt(), posInfo[QStringLiteral("y")].toInt());
@@ -327,7 +340,7 @@ void Output::readIn(Disman::OutputPtr output, const QVariantMap &info, Control::
     readInGlobalPartFromInfo(output, info);
 }
 
-void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList &outputsInfo)
+void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputsInfo)
 {
     Disman::OutputList outputs = config->outputs();
     ControlConfig control(config);
@@ -335,16 +348,16 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList &outputs
     // to be able to tell apart multiple identical outputs, these need special treatment
     QStringList duplicateIds;
     {
-    QStringList allIds;
-    allIds.reserve(outputs.count());
-    for (const Disman::OutputPtr &output : outputs) {
-        const auto outputId = output->hash();
-        if (allIds.contains(outputId) && !duplicateIds.contains(outputId)) {
-            duplicateIds << outputId;
+        QStringList allIds;
+        allIds.reserve(outputs.count());
+        for (const Disman::OutputPtr& output : outputs) {
+            const auto outputId = output->hash();
+            if (allIds.contains(outputId) && !duplicateIds.contains(outputId)) {
+                duplicateIds << outputId;
+            }
+            allIds << outputId;
         }
-        allIds << outputId;
-    }
-    allIds.clear();
+        allIds.clear();
     }
 
     for (Disman::OutputPtr output : outputs) {
@@ -354,14 +367,15 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList &outputs
         }
         const auto outputId = output->hash();
         bool infoFound = false;
-        for (const auto &variantInfo : outputsInfo) {
+        for (const auto& variantInfo : outputsInfo) {
             const QVariantMap info = variantInfo.toMap();
             if (outputId != info[QStringLiteral("id")].toString()) {
                 continue;
             }
             if (!output->name().isEmpty() && duplicateIds.contains(outputId)) {
-                // We may have identical outputs connected, these will have the same id in the config
-                // in order to find the right one, also check the output's name (usually the connector)
+                // We may have identical outputs connected, these will have the same id in the
+                // config in order to find the right one, also check the output's name (usually the
+                // connector)
                 const auto metadata = info[QStringLiteral("metadata")].toMap();
                 const auto outputName = metadata[QStringLiteral("name")].toString();
                 if (output->name() != outputName) {
@@ -374,10 +388,13 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList &outputs
             break;
         }
         if (!infoFound) {
-            // no info in info for this output, try reading in global output info at least or set some default values
+            // no info in info for this output, try reading in global output info at least or set
+            // some default values
 
-            qCWarning(KDISPLAY_KDED) << "\tFailed to find a matching output in the current info data - this means that our info is corrupted"
-                                       "or a different device with the same serial number has been connected (very unlikely).";
+            qCWarning(KDISPLAY_KDED) << "\tFailed to find a matching output in the current info "
+                                        "data - this means that our info is corrupted"
+                                        "or a different device with the same serial number has "
+                                        "been connected (very unlikely).";
             if (!readInGlobal(output)) {
                 // set some default values instead
                 readInGlobalPartFromInfo(output, QVariantMap());
@@ -398,7 +415,7 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList &outputs
 #endif
 }
 
-static QVariantMap metadata(const Disman::OutputPtr &output)
+static QVariantMap metadata(const Disman::OutputPtr& output)
 {
     QVariantMap metadata;
     metadata[QStringLiteral("name")] = output->name();
@@ -410,8 +427,9 @@ static QVariantMap metadata(const Disman::OutputPtr &output)
     return metadata;
 }
 
-bool Output::writeGlobalPart(const Disman::OutputPtr &output, QVariantMap &info,
-                             const Disman::OutputPtr &fallback)
+bool Output::writeGlobalPart(const Disman::OutputPtr& output,
+                             QVariantMap& info,
+                             const Disman::OutputPtr& fallback)
 {
 
     info[QStringLiteral("id")] = output->hash();
@@ -420,8 +438,8 @@ bool Output::writeGlobalPart(const Disman::OutputPtr &output, QVariantMap &info,
 
     // TODO: Disabled, since we use control files now. That is just a reminder. Remove at some point
     //       when everything is proven to work.
-//    // Round scale to four digits
-//    info[QStringLiteral("scale")] = int(output->scale() * 10000 + 0.5) / 10000.;
+    //    // Round scale to four digits
+    //    info[QStringLiteral("scale")] = int(output->scale() * 10000 + 0.5) / 10000.;
 
     QVariantMap modeInfo;
     float refreshRate = -1.;
@@ -450,7 +468,7 @@ bool Output::writeGlobalPart(const Disman::OutputPtr &output, QVariantMap &info,
     return true;
 }
 
-void Output::writeGlobal(const Disman::OutputPtr &output)
+void Output::writeGlobal(const Disman::OutputPtr& output)
 {
     // get old values and subsequently override
     QVariantMap info = getGlobalData(output);
@@ -460,7 +478,8 @@ void Output::writeGlobal(const Disman::OutputPtr &output)
 
     QFile file(createPath(output->hashMd5()));
     if (!file.open(QIODevice::WriteOnly)) {
-        qCWarning(KDISPLAY_KDED) << "Failed to open global output file for writing! " << file.errorString();
+        qCWarning(KDISPLAY_KDED) << "Failed to open global output file for writing! "
+                                 << file.errorString();
         return;
     }
 

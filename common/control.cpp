@@ -17,17 +17,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "control.h"
 #include "globals.h"
 
+#include <QDir>
 #include <QFile>
 #include <QFileSystemWatcher>
 #include <QJsonDocument>
-#include <QDir>
 
 #include <disman/config.h>
 #include <disman/output.h>
 
 QString Control::s_dirName = QStringLiteral("control/");
 
-Control::Control(QObject *parent)
+Control::Control(QObject* parent)
     : QObject(parent)
 {
 }
@@ -68,11 +68,12 @@ bool Control::writeFile()
     QFile file(path);
     if (!file.open(QIODevice::WriteOnly)) {
         // TODO: logging category?
-//        qCWarning(KDISPLAY_COMMON) << "Failed to open config control file for writing! " << file.errorString();
+        //        qCWarning(KDISPLAY_COMMON) << "Failed to open config control file for writing! "
+        //        << file.errorString();
         return false;
     }
     file.write(QJsonDocument::fromVariant(infoMap).toJson());
-//    qCDebug(KDISPLAY_COMMON) << "Control saved on: " << file.fileName();
+    //    qCDebug(KDISPLAY_COMMON) << "Control saved on: " << file.fileName();
     return true;
 }
 
@@ -92,7 +93,7 @@ void Control::readFile()
     }
 }
 
-QString Control::filePathFromHash(const QString &hash) const
+QString Control::filePathFromHash(const QString& hash) const
 {
     return dirPath() % hash % QStringLiteral(".json");
 }
@@ -121,7 +122,7 @@ Control::OutputRetention Control::convertVariantToOutputRetention(QVariant varia
     return OutputRetention::Undefined;
 }
 
-ControlConfig::ControlConfig(Disman::ConfigPtr config, QObject *parent)
+ControlConfig::ControlConfig(Disman::ConfigPtr config, QObject* parent)
     : Control(parent)
     , m_config(config)
 {
@@ -130,7 +131,7 @@ ControlConfig::ControlConfig(Disman::ConfigPtr config, QObject *parent)
         //       to allow null for some reason though.
         return;
     }
-//    qDebug() << "Looking for control file:" << config->connectedOutputsHash();
+    //    qDebug() << "Looking for control file:" << config->connectedOutputsHash();
     readFile();
 
     // TODO: use a file watcher in case of changes to the control file while
@@ -141,7 +142,7 @@ ControlConfig::ControlConfig(Disman::ConfigPtr config, QObject *parent)
     QStringList allIds;
     const auto outputs = config->outputs();
     allIds.reserve(outputs.count());
-    for (const Disman::OutputPtr &output : outputs) {
+    for (const Disman::OutputPtr& output : outputs) {
         const auto outputId = output->hashMd5();
         if (allIds.contains(outputId) && !m_duplicateOutputIds.contains(outputId)) {
             m_duplicateOutputIds << outputId;
@@ -165,7 +166,7 @@ void ControlConfig::activateWatcher()
         // Watcher was already activated.
         return;
     }
-    for (auto *output : m_outputsControls) {
+    for (auto* output : m_outputsControls) {
         output->activateWatcher();
         connect(output, &ControlOutput::changed, this, &ControlConfig::changed);
     }
@@ -187,9 +188,9 @@ QString ControlConfig::filePath() const
 bool ControlConfig::writeFile()
 {
     bool success = true;
-    for (auto *outputControl : m_outputsControls) {
+    for (auto* outputControl : m_outputsControls) {
         if (getOutputRetention(outputControl->id(), outputControl->name())
-                == OutputRetention::Individual) {
+            == OutputRetention::Individual) {
             continue;
         }
         success &= outputControl->writeFile();
@@ -197,7 +198,9 @@ bool ControlConfig::writeFile()
     return success && Control::writeFile();
 }
 
-bool ControlConfig::infoIsOutput(const QVariantMap &info, const QString &outputId, const QString &outputName) const
+bool ControlConfig::infoIsOutput(const QVariantMap& info,
+                                 const QString& outputId,
+                                 const QString& outputName) const
 {
     const QString outputIdInfo = info[QStringLiteral("id")].toString();
     if (outputIdInfo.isEmpty()) {
@@ -220,15 +223,16 @@ bool ControlConfig::infoIsOutput(const QVariantMap &info, const QString &outputI
     return true;
 }
 
-Control::OutputRetention ControlConfig::getOutputRetention(const Disman::OutputPtr &output) const
+Control::OutputRetention ControlConfig::getOutputRetention(const Disman::OutputPtr& output) const
 {
     return getOutputRetention(output->hashMd5(), output->name());
 }
 
-Control::OutputRetention ControlConfig::getOutputRetention(const QString &outputId, const QString &outputName) const
+Control::OutputRetention ControlConfig::getOutputRetention(const QString& outputId,
+                                                           const QString& outputName) const
 {
     const QVariantList outputsInfo = getOutputs();
-    for (const auto &variantInfo : outputsInfo) {
+    for (const auto& variantInfo : outputsInfo) {
         const QVariantMap info = variantInfo.toMap();
         if (!infoIsOutput(info, outputId, outputName)) {
             continue;
@@ -239,14 +243,14 @@ Control::OutputRetention ControlConfig::getOutputRetention(const QString &output
     return OutputRetention::Undefined;
 }
 
-static QVariantMap metadata(const QString &outputName)
+static QVariantMap metadata(const QString& outputName)
 {
     QVariantMap metadata;
     metadata[QStringLiteral("name")] = outputName;
     return metadata;
 }
 
-QVariantMap createOutputInfo(const QString &outputId, const QString &outputName)
+QVariantMap createOutputInfo(const QString& outputId, const QString& outputName)
 {
     QVariantMap outputInfo;
     outputInfo[QStringLiteral("id")] = outputId;
@@ -254,12 +258,14 @@ QVariantMap createOutputInfo(const QString &outputId, const QString &outputName)
     return outputInfo;
 }
 
-void ControlConfig::setOutputRetention(const Disman::OutputPtr &output, OutputRetention value)
+void ControlConfig::setOutputRetention(const Disman::OutputPtr& output, OutputRetention value)
 {
     setOutputRetention(output->hashMd5(), output->name(), value);
 }
 
-void ControlConfig::setOutputRetention(const QString &outputId, const QString &outputName, OutputRetention value)
+void ControlConfig::setOutputRetention(const QString& outputId,
+                                       const QString& outputName,
+                                       OutputRetention value)
 {
     QList<QVariant>::iterator it;
     QVariantList outputsInfo = getOutputs();
@@ -282,17 +288,17 @@ void ControlConfig::setOutputRetention(const QString &outputId, const QString &o
     setOutputs(outputsInfo);
 }
 
-qreal ControlConfig::getScale(const Disman::OutputPtr &output) const
+qreal ControlConfig::getScale(const Disman::OutputPtr& output) const
 {
     return getScale(output->hashMd5(), output->name());
 }
 
-qreal ControlConfig::getScale(const QString &outputId, const QString &outputName) const
+qreal ControlConfig::getScale(const QString& outputId, const QString& outputName) const
 {
     const auto retention = getOutputRetention(outputId, outputName);
     if (retention == OutputRetention::Individual) {
         const QVariantList outputsInfo = getOutputs();
-        for (const auto &variantInfo : outputsInfo) {
+        for (const auto& variantInfo : outputsInfo) {
             const QVariantMap info = variantInfo.toMap();
             if (!infoIsOutput(info, outputId, outputName)) {
                 continue;
@@ -302,30 +308,29 @@ qreal ControlConfig::getScale(const QString &outputId, const QString &outputName
         }
     }
     // Retention is global or info for output not in config control file.
-    if (auto *outputControl = getOutputControl(outputId, outputName)) {
+    if (auto* outputControl = getOutputControl(outputId, outputName)) {
         return outputControl->getScale();
     }
 
     // Info for output not found.
-     return 1;
- }
+    return 1;
+}
 
-void ControlConfig::setScale(const Disman::OutputPtr &output, qreal value)
+void ControlConfig::setScale(const Disman::OutputPtr& output, qreal value)
 {
     setScale(output->hashMd5(), output->name(), value);
 }
 
 // TODO: combine methods (templated functions)
-void ControlConfig::setScale(const QString &outputId, const QString &outputName, qreal value)
+void ControlConfig::setScale(const QString& outputId, const QString& outputName, qreal value)
 {
     QList<QVariant>::iterator it;
     QVariantList outputsInfo = getOutputs();
 
     auto setOutputScale = [&outputId, &outputName, value, this]() {
-        if (auto *control = getOutputControl(outputId, outputName)) {
+        if (auto* control = getOutputControl(outputId, outputName)) {
             control->setScale(value);
         }
-
     };
 
     for (it = outputsInfo.begin(); it != outputsInfo.end(); ++it) {
@@ -348,17 +353,17 @@ void ControlConfig::setScale(const QString &outputId, const QString &outputName,
     setOutputScale();
 }
 
-bool ControlConfig::getAutoRotate(const Disman::OutputPtr &output) const
+bool ControlConfig::getAutoRotate(const Disman::OutputPtr& output) const
 {
     return getAutoRotate(output->hashMd5(), output->name());
 }
 
-bool ControlConfig::getAutoRotate(const QString &outputId, const QString &outputName) const
+bool ControlConfig::getAutoRotate(const QString& outputId, const QString& outputName) const
 {
     const auto retention = getOutputRetention(outputId, outputName);
     if (retention == OutputRetention::Individual) {
         const QVariantList outputsInfo = getOutputs();
-        for (const auto &variantInfo : outputsInfo) {
+        for (const auto& variantInfo : outputsInfo) {
             const QVariantMap info = variantInfo.toMap();
             if (!infoIsOutput(info, outputId, outputName)) {
                 continue;
@@ -368,7 +373,7 @@ bool ControlConfig::getAutoRotate(const QString &outputId, const QString &output
         }
     }
     // Retention is global or info for output not in config control file.
-    if (auto *outputControl = getOutputControl(outputId, outputName)) {
+    if (auto* outputControl = getOutputControl(outputId, outputName)) {
         return outputControl->getAutoRotate();
     }
 
@@ -376,22 +381,21 @@ bool ControlConfig::getAutoRotate(const QString &outputId, const QString &output
     return true;
 }
 
-void ControlConfig::setAutoRotate(const Disman::OutputPtr &output, bool value)
+void ControlConfig::setAutoRotate(const Disman::OutputPtr& output, bool value)
 {
     setAutoRotate(output->hashMd5(), output->name(), value);
 }
 
 // TODO: combine methods (templated functions)
-void ControlConfig::setAutoRotate(const QString &outputId, const QString &outputName, bool value)
+void ControlConfig::setAutoRotate(const QString& outputId, const QString& outputName, bool value)
 {
     QList<QVariant>::iterator it;
     QVariantList outputsInfo = getOutputs();
 
     auto setOutputAutoRotate = [&outputId, &outputName, value, this]() {
-        if (auto *control = getOutputControl(outputId, outputName)) {
+        if (auto* control = getOutputControl(outputId, outputName)) {
             control->setAutoRotate(value);
         }
-
     };
 
     for (it = outputsInfo.begin(); it != outputsInfo.end(); ++it) {
@@ -414,18 +418,18 @@ void ControlConfig::setAutoRotate(const QString &outputId, const QString &output
     setOutputAutoRotate();
 }
 
-bool ControlConfig::getAutoRotateOnlyInTabletMode(const Disman::OutputPtr &output) const
+bool ControlConfig::getAutoRotateOnlyInTabletMode(const Disman::OutputPtr& output) const
 {
     return getAutoRotateOnlyInTabletMode(output->hashMd5(), output->name());
 }
 
-bool ControlConfig::getAutoRotateOnlyInTabletMode(const QString &outputId,
-                                                  const QString &outputName) const
+bool ControlConfig::getAutoRotateOnlyInTabletMode(const QString& outputId,
+                                                  const QString& outputName) const
 {
     const auto retention = getOutputRetention(outputId, outputName);
     if (retention == OutputRetention::Individual) {
         const QVariantList outputsInfo = getOutputs();
-        for (const auto &variantInfo : outputsInfo) {
+        for (const auto& variantInfo : outputsInfo) {
             const QVariantMap info = variantInfo.toMap();
             if (!infoIsOutput(info, outputId, outputName)) {
                 continue;
@@ -435,7 +439,7 @@ bool ControlConfig::getAutoRotateOnlyInTabletMode(const QString &outputId,
         }
     }
     // Retention is global or info for output not in config control file.
-    if (auto *outputControl = getOutputControl(outputId, outputName)) {
+    if (auto* outputControl = getOutputControl(outputId, outputName)) {
         return outputControl->getAutoRotateOnlyInTabletMode();
     }
 
@@ -443,20 +447,21 @@ bool ControlConfig::getAutoRotateOnlyInTabletMode(const QString &outputId,
     return true;
 }
 
-void ControlConfig::setAutoRotateOnlyInTabletMode(const Disman::OutputPtr &output, bool value)
+void ControlConfig::setAutoRotateOnlyInTabletMode(const Disman::OutputPtr& output, bool value)
 {
     setAutoRotateOnlyInTabletMode(output->hashMd5(), output->name(), value);
 }
 
 // TODO: combine methods (templated functions)
-void ControlConfig::setAutoRotateOnlyInTabletMode(const QString &outputId,
-                                                  const QString &outputName, bool value)
+void ControlConfig::setAutoRotateOnlyInTabletMode(const QString& outputId,
+                                                  const QString& outputName,
+                                                  bool value)
 {
     QList<QVariant>::iterator it;
     QVariantList outputsInfo = getOutputs();
 
     auto setOutputAutoRotateOnlyInTabletMode = [&outputId, &outputName, value, this]() {
-        if (auto *control = getOutputControl(outputId, outputName)) {
+        if (auto* control = getOutputControl(outputId, outputName)) {
             control->setAutoRotateOnlyInTabletMode(value);
         }
     };
@@ -481,17 +486,16 @@ void ControlConfig::setAutoRotateOnlyInTabletMode(const QString &outputId,
     setOutputAutoRotateOnlyInTabletMode();
 }
 
-
-Disman::OutputPtr ControlConfig::getReplicationSource(const Disman::OutputPtr &output) const
+Disman::OutputPtr ControlConfig::getReplicationSource(const Disman::OutputPtr& output) const
 {
     return getReplicationSource(output->hashMd5(), output->name());
 }
 
-Disman::OutputPtr ControlConfig::getReplicationSource(const QString &outputId,
-                                                       const QString &outputName) const
+Disman::OutputPtr ControlConfig::getReplicationSource(const QString& outputId,
+                                                      const QString& outputName) const
 {
     const QVariantList outputsInfo = getOutputs();
-    for (const auto &variantInfo : outputsInfo) {
+    for (const auto& variantInfo : outputsInfo) {
         const QVariantMap info = variantInfo.toMap();
         if (!infoIsOutput(info, outputId, outputName)) {
             continue;
@@ -504,7 +508,7 @@ Disman::OutputPtr ControlConfig::getReplicationSource(const QString &outputId,
             return nullptr;
         }
 
-        for (const auto &output : m_config->outputs()) {
+        for (const auto& output : m_config->outputs()) {
             if (output->hashMd5() == sourceHash && output->name() == sourceName) {
                 return output;
             }
@@ -516,14 +520,15 @@ Disman::OutputPtr ControlConfig::getReplicationSource(const QString &outputId,
     return nullptr;
 }
 
-void ControlConfig::setReplicationSource(const Disman::OutputPtr &output,
-                                         const Disman::OutputPtr &source)
+void ControlConfig::setReplicationSource(const Disman::OutputPtr& output,
+                                         const Disman::OutputPtr& source)
 {
     setReplicationSource(output->hashMd5(), output->name(), source);
 }
 
-void ControlConfig::setReplicationSource(const QString &outputId, const QString &outputName,
-                                         const Disman::OutputPtr &source)
+void ControlConfig::setReplicationSource(const QString& outputId,
+                                         const QString& outputName,
+                                         const Disman::OutputPtr& source)
 {
     QList<QVariant>::iterator it;
     QVariantList outputsInfo = getOutputs();
@@ -559,13 +564,13 @@ QVariantList ControlConfig::getOutputs() const
 
 void ControlConfig::setOutputs(QVariantList outputsInfo)
 {
-    auto &infoMap = info();
+    auto& infoMap = info();
     infoMap[QStringLiteral("outputs")] = outputsInfo;
 }
-ControlOutput* ControlConfig::getOutputControl(const QString &outputId,
-                                               const QString &outputName) const
+ControlOutput* ControlConfig::getOutputControl(const QString& outputId,
+                                               const QString& outputName) const
 {
-    for (auto *control : m_outputsControls) {
+    for (auto* control : m_outputsControls) {
         if (control->id() == outputId && control->name() == outputName) {
             return control;
         }
@@ -573,7 +578,7 @@ ControlOutput* ControlConfig::getOutputControl(const QString &outputId,
     return nullptr;
 }
 
-ControlOutput::ControlOutput(Disman::OutputPtr output, QObject *parent)
+ControlOutput::ControlOutput(Disman::OutputPtr output, QObject* parent)
     : Control(parent)
     , m_output(output)
 {
@@ -611,7 +616,7 @@ qreal ControlOutput::getScale() const
 
 void ControlOutput::setScale(qreal value)
 {
-    auto &infoMap = info();
+    auto& infoMap = info();
     if (infoMap.isEmpty()) {
         infoMap = createOutputInfo(m_output->hashMd5(), m_output->name());
     }
@@ -626,7 +631,7 @@ bool ControlOutput::getAutoRotate() const
 
 void ControlOutput::setAutoRotate(bool value)
 {
-    auto &infoMap = info();
+    auto& infoMap = info();
     if (infoMap.isEmpty()) {
         infoMap = createOutputInfo(m_output->hashMd5(), m_output->name());
     }
@@ -641,7 +646,7 @@ bool ControlOutput::getAutoRotateOnlyInTabletMode() const
 
 void ControlOutput::setAutoRotateOnlyInTabletMode(bool value)
 {
-    auto &infoMap = info();
+    auto& infoMap = info();
     if (infoMap.isEmpty()) {
         infoMap = createOutputInfo(m_output->hashMd5(), m_output->name());
     }

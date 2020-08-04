@@ -16,11 +16,9 @@
  *  along with this program; if not, write to the Free Software                      *
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA   *
  *************************************************************************************/
-
 #include "device.h"
-#include "kdisplay_daemon_debug.h"
 #include "kded/freedesktop_interface.h"
-
+#include "kdisplay_daemon_debug.h"
 
 Device* Device::m_instance = nullptr;
 
@@ -39,17 +37,18 @@ void Device::destroy()
     m_instance = nullptr;
 }
 
-Device::Device(QObject* parent) 
-   : QObject(parent)
-   , m_isReady(false)
-   , m_isLaptop(false)
-   , m_isLidClosed(false)
-   , m_isDocked(false)
+Device::Device(QObject* parent)
+    : QObject(parent)
+    , m_isReady(false)
+    , m_isLaptop(false)
+    , m_isLidClosed(false)
+    , m_isDocked(false)
 {
-    m_freedesktop = new OrgFreedesktopDBusPropertiesInterface(QStringLiteral("org.freedesktop.UPower"),
-                                                              QStringLiteral("/org/freedesktop/UPower"),
-                                                              QDBusConnection::systemBus(),
-                                                              this);
+    m_freedesktop
+        = new OrgFreedesktopDBusPropertiesInterface(QStringLiteral("org.freedesktop.UPower"),
+                                                    QStringLiteral("/org/freedesktop/UPower"),
+                                                    QDBusConnection::systemBus(),
+                                                    this);
     if (!m_freedesktop->isValid()) {
         qCWarning(KDISPLAY_KDED) << "UPower not available, lid detection won't work";
         qCDebug(KDISPLAY_KDED) << m_freedesktop->lastError().message();
@@ -58,20 +57,21 @@ Device::Device(QObject* parent)
                                              QStringLiteral("/org/freedesktop/UPower"),
                                              QStringLiteral("org.freedesktop.DBus.Properties"),
                                              QStringLiteral("PropertiesChanged"),
-                                             this, SLOT(changed()));
+                                             this,
+                                             SLOT(changed()));
         fetchIsLaptop();
     }
 
-    m_suspendSession = new QDBusInterface(QStringLiteral("org.kde.Solid.PowerManagement"),
-                                          QStringLiteral("/org/kde/Solid/PowerManagement/Actions/SuspendSession"),
-                                          QStringLiteral("org.kde.Solid.PowerManagement.Actions.SuspendSession"),
-                                          QDBusConnection::sessionBus(),
-                                          this);
+    m_suspendSession = new QDBusInterface(
+        QStringLiteral("org.kde.Solid.PowerManagement"),
+        QStringLiteral("/org/kde/Solid/PowerManagement/Actions/SuspendSession"),
+        QStringLiteral("org.kde.Solid.PowerManagement.Actions.SuspendSession"),
+        QDBusConnection::sessionBus(),
+        this);
     if (m_suspendSession->isValid()) {
-        connect(m_suspendSession, SIGNAL(resumingFromSuspend()),
-                this, SIGNAL(resumingFromSuspend()));
-        connect(m_suspendSession, SIGNAL(aboutToSuspend()),
-                this, SIGNAL(aboutToSuspend()));
+        connect(
+            m_suspendSession, SIGNAL(resumingFromSuspend()), this, SIGNAL(resumingFromSuspend()));
+        connect(m_suspendSession, SIGNAL(aboutToSuspend()), this, SIGNAL(aboutToSuspend()));
     } else {
         qCWarning(KDISPLAY_KDED) << "PowerDevil SuspendSession action not available!";
         qCDebug(KDISPLAY_KDED) << m_suspendSession->lastError().message();
@@ -121,8 +121,9 @@ bool Device::isDocked() const
 
 void Device::fetchIsLaptop()
 {
-    QDBusPendingReply<QVariant> res = m_freedesktop->Get(QStringLiteral("org.freedesktop.UPower"), QStringLiteral("LidIsPresent"));
-    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(res);
+    QDBusPendingReply<QVariant> res = m_freedesktop->Get(QStringLiteral("org.freedesktop.UPower"),
+                                                         QStringLiteral("LidIsPresent"));
+    QDBusPendingCallWatcher* watcher = new QDBusPendingCallWatcher(res);
     connect(watcher, &QDBusPendingCallWatcher::finished, this, &Device::isLaptopFetched);
 }
 
@@ -130,7 +131,8 @@ void Device::isLaptopFetched(QDBusPendingCallWatcher* watcher)
 {
     const QDBusPendingReply<QVariant> reply = *watcher;
     if (reply.isError()) {
-        qCDebug(KDISPLAY_KDED) << "Couldn't get if the device is a laptop: " << reply.error().message();
+        qCDebug(KDISPLAY_KDED) << "Couldn't get if the device is a laptop: "
+                               << reply.error().message();
         return;
     }
 
@@ -147,8 +149,9 @@ void Device::isLaptopFetched(QDBusPendingCallWatcher* watcher)
 
 void Device::fetchLidIsClosed()
 {
-    QDBusPendingReply<QVariant> res = m_freedesktop->Get(QStringLiteral("org.freedesktop.UPower"), QStringLiteral("LidIsClosed"));
-    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(res);
+    QDBusPendingReply<QVariant> res = m_freedesktop->Get(QStringLiteral("org.freedesktop.UPower"),
+                                                         QStringLiteral("LidIsClosed"));
+    QDBusPendingCallWatcher* watcher = new QDBusPendingCallWatcher(res);
     connect(watcher, &QDBusPendingCallWatcher::finished, this, &Device::isLidClosedFetched);
 }
 
@@ -156,14 +159,16 @@ void Device::isLidClosedFetched(QDBusPendingCallWatcher* watcher)
 {
     const QDBusPendingReply<QVariant> reply = *watcher;
     if (reply.isError()) {
-        qCDebug(KDISPLAY_KDED) << "Couldn't get if the laptop has the lid closed: " << reply.error().message();
+        qCDebug(KDISPLAY_KDED) << "Couldn't get if the laptop has the lid closed: "
+                               << reply.error().message();
         return;
     }
 
     if (reply.argumentAt<0>() != m_isLidClosed) {
         m_isLidClosed = reply.value().toBool();
         if (m_isReady) {
-            Q_EMIT lidClosedChanged(m_isLidClosed);;
+            Q_EMIT lidClosedChanged(m_isLidClosed);
+            ;
         }
     }
     watcher->deleteLater();

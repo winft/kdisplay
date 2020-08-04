@@ -15,7 +15,6 @@
  *  License along with this library; if not, write to the Free Software              *
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA       *
  *************************************************************************************/
-
 #include "osdtest.h"
 #include "../../kded/osdmanager.h"
 
@@ -27,8 +26,9 @@
 
 Q_LOGGING_CATEGORY(KDISPLAY_KDED, "kdisplay.kded")
 
-namespace Disman {
-OsdTest::OsdTest(QObject *parent)
+namespace Disman
+{
+OsdTest::OsdTest(QObject* parent)
     : QObject(parent)
 {
 }
@@ -37,7 +37,7 @@ OsdTest::~OsdTest()
 {
 }
 
-OsdManager *OsdTest::getOsdManager()
+OsdManager* OsdTest::getOsdManager()
 {
     if (m_osdManager)
         return m_osdManager;
@@ -51,20 +51,18 @@ void OsdTest::showOutputIdentifiers()
         QTimer::singleShot(5500, qApp, &QCoreApplication::quit);
         getOsdManager()->showOutputIdentifiers();
     } else {
-        QDBusMessage msg = QDBusMessage::createMethodCall(
-            QLatin1String("org.kwinft.kdisplay.osdService"),
-            QLatin1String("/org/kwinft/kdisplay/osdService"),
-            QLatin1String("org.kwinft.kdisplay.osdService"),
-            QLatin1String("showOutputIdentifiers")
-        );
-        //msg << icon << text;
+        QDBusMessage msg
+            = QDBusMessage::createMethodCall(QLatin1String("org.kwinft.kdisplay.osdService"),
+                                             QLatin1String("/org/kwinft/kdisplay/osdService"),
+                                             QLatin1String("org.kwinft.kdisplay.osdService"),
+                                             QLatin1String("showOutputIdentifiers"));
+        // msg << icon << text;
         QDBusConnection::sessionBus().asyncCall(msg);
 
         qCWarning(KDISPLAY_KDED) << "Sent dbus message.";
         QTimer::singleShot(500, qApp, &QCoreApplication::quit);
     }
 }
-
 
 void OsdTest::setUseDBus(bool yesno)
 {
@@ -75,8 +73,9 @@ void OsdTest::showGenericOsd(const QString& icon, const QString& message)
 {
     if (!m_useDBus) {
         QTimer::singleShot(5500, qApp, &QCoreApplication::quit);
-        getOsdManager()->showOsd(!icon.isEmpty() ? icon : QStringLiteral("preferences-desktop-display-randr"),
-                                             !message.isEmpty() ? message : QStringLiteral("On-Screen-Display"));
+        getOsdManager()->showOsd(
+            !icon.isEmpty() ? icon : QStringLiteral("preferences-desktop-display-randr"),
+            !message.isEmpty() ? message : QStringLiteral("On-Screen-Display"));
     } else {
         qCWarning(KDISPLAY_KDED) << "Implement me.";
         QTimer::singleShot(100, qApp, &QCoreApplication::quit);
@@ -87,11 +86,10 @@ void OsdTest::showActionSelector()
 {
     if (!m_useDBus) {
         auto action = getOsdManager()->showActionSelector();
-        connect(action, &Disman::OsdAction::selected,
-                [](Disman::OsdAction::Action action) {
-                    qCDebug(KDISPLAY_KDED) << "Selected action:" << action;
-                    qApp->quit();
-                });
+        connect(action, &Disman::OsdAction::selected, [](Disman::OsdAction::Action action) {
+            qCDebug(KDISPLAY_KDED) << "Selected action:" << action;
+            qApp->quit();
+        });
     } else {
         qCWarning(KDISPLAY_KDED) << "Implement me.";
         QTimer::singleShot(100, qApp, &QCoreApplication::quit);

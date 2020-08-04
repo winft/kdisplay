@@ -15,40 +15,40 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-
 #ifndef OSDM_H
 #define OSDM_H
 
+#include <QMap>
 #include <QObject>
 #include <QString>
-#include <QMap>
 #include <QTimer>
 
 #include "osdaction.h"
 
-
-namespace Disman {
+namespace Disman
+{
 
 class ConfigOperation;
 class Osd;
 class Output;
 
-class OsdManager : public QObject {
+class OsdManager : public QObject
+{
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kwinft.kidsplay.osdService")
 
 public:
-    OsdManager(QObject *parent = nullptr);
+    OsdManager(QObject* parent = nullptr);
     ~OsdManager() override;
 
 public Q_SLOTS:
     void showOutputIdentifiers();
-    void showOsd(const QString &icon, const QString &text);
+    void showOsd(const QString& icon, const QString& text);
     void hideOsd();
-    OsdAction *showActionSelector();
+    OsdAction* showActionSelector();
 
 private:
-    void slotIdentifyOutputs(Disman::ConfigOperation *op);
+    void slotIdentifyOutputs(Disman::ConfigOperation* op);
     QMap<QString, Disman::Osd*> m_osds;
     QTimer* m_cleanupTimer;
 };

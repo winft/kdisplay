@@ -16,7 +16,6 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-
 #ifndef KSCREEN_OSD_H
 #define KSCREEN_OSD_H
 
@@ -28,24 +27,27 @@
 
 #include "osdmanager.h"
 
-namespace KDeclarative {
-    class QmlObject;
+namespace KDeclarative
+{
+class QmlObject;
 }
 
 class QTimer;
 
-namespace Disman {
+namespace Disman
+{
 
-class Osd : public QObject {
+class Osd : public QObject
+{
 
     Q_OBJECT
 
 public:
-    explicit Osd(const OutputPtr &output, QObject *parent = nullptr);
+    explicit Osd(const OutputPtr& output, QObject* parent = nullptr);
     ~Osd() override;
 
-    void showGenericOsd(const QString &icon, const QString &text);
-    void showOutputIdentifier(const Disman::OutputPtr &output);
+    void showGenericOsd(const QString& icon, const QString& text);
+    void showOutputIdentifier(const Disman::OutputPtr& output);
     void showActionSelector();
     void hideOsd();
 
@@ -63,9 +65,9 @@ private:
 
     Disman::OutputPtr m_output;
     QRectF m_outputGeometry;
-    KDeclarative::QmlObject *m_osdObject = nullptr;
-    KDeclarative::QmlObject *m_osdActionSelector = nullptr;
-    QTimer *m_osdTimer = nullptr;
+    KDeclarative::QmlObject* m_osdObject = nullptr;
+    KDeclarative::QmlObject* m_osdActionSelector = nullptr;
+    QTimer* m_osdTimer = nullptr;
     int m_timeout = 0;
 };
 
