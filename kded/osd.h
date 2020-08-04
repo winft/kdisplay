@@ -56,12 +56,12 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void onOsdActionSelected(int action);
-    void onOutputAvailabilityChanged();
 
 private:
     bool initOsd();
     void showOsd();
     void updatePosition();
+    void maybe_hide();
 
     Disman::OutputPtr m_output;
     QRectF m_outputGeometry;
