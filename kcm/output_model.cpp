@@ -306,7 +306,8 @@ bool OutputModel::setResolution(int outputIndex, int resIndex)
     }
     const QSize size = resolutionList[resIndex];
 
-    const float oldRate = output.ptr->currentMode() ? output.ptr->currentMode()->refreshRate() : -1;
+    auto const old_mode = output.ptr->auto_mode();
+    const float oldRate = old_mode ? old_mode->refreshRate() : -1;
     const auto modes = output.ptr->modes();
 
     auto modeIt
@@ -330,11 +331,11 @@ bool OutputModel::setResolution(int outputIndex, int resIndex)
     }
     Q_ASSERT(modeIt != modes.end());
 
-    const auto id = (*modeIt)->id();
-    if (output.ptr->currentModeId() == id) {
+    const auto mode = *modeIt;
+    if (auto auto_mode = output.ptr->auto_mode(); auto_mode && auto_mode->id() == mode->id()) {
         return false;
     }
-    output.ptr->setCurrentModeId(id);
+    output.ptr->set_mode(mode);
 
     QModelIndex index = createIndex(outputIndex, 0);
     // Calling this directly ignores possible optimization when the
@@ -354,7 +355,7 @@ bool OutputModel::setRefreshRate(int outputIndex, int refIndex)
     const float refreshRate = rates[refIndex];
 
     const auto modes = output.ptr->modes();
-    const auto oldMode = output.ptr->currentMode();
+    const auto oldMode = output.ptr->auto_mode();
 
     auto modeIt = std::find_if(
         modes.begin(), modes.end(), [oldMode, refreshRate](const Disman::ModePtr& mode) {
@@ -369,7 +370,7 @@ bool OutputModel::setRefreshRate(int outputIndex, int refIndex)
         // no change
         return false;
     }
-    output.ptr->setCurrentModeId((*modeIt)->id());
+    output.ptr->set_mode(*modeIt);
     QModelIndex index = createIndex(outputIndex, 0);
     Q_EMIT dataChanged(index, index, {RefreshRateIndexRole});
     return true;
@@ -424,7 +425,7 @@ bool OutputModel::setRotation(int outputIndex, Disman::Output::Rotation rotation
 
 int OutputModel::resolutionIndex(const Disman::OutputPtr& output) const
 {
-    const QSize currentResolution = output->enforcedModeSize();
+    const QSize currentResolution = output->auto_mode()->size();
 
     if (!currentResolution.isValid()) {
         return 0;
@@ -444,11 +445,11 @@ int OutputModel::resolutionIndex(const Disman::OutputPtr& output) const
 
 int OutputModel::refreshRateIndex(const Disman::OutputPtr& output) const
 {
-    if (!output->currentMode()) {
+    if (!output->auto_mode()) {
         return 0;
     }
     const auto rates = refreshRates(output);
-    const float currentRate = output->currentMode()->refreshRate();
+    const float currentRate = output->auto_mode()->refreshRate();
 
     const auto it = std::find_if(rates.begin(), rates.end(), [currentRate](float rate) {
         return refreshRateCompare(rate, currentRate);
@@ -518,10 +519,10 @@ QVector<float> OutputModel::refreshRates(const Disman::OutputPtr& output) const
     QVector<float> hits;
 
     QSize baseSize;
-    if (output->currentMode()) {
-        baseSize = output->currentMode()->size();
-    } else if (output->preferredMode()) {
-        baseSize = output->preferredMode()->size();
+    if (output->auto_mode()) {
+        baseSize = output->auto_mode()->size();
+    } else if (output->preferred_mode()) {
+        baseSize = output->preferred_mode()->size();
     }
     if (!baseSize.isValid()) {
         return hits;

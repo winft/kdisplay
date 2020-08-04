@@ -92,7 +92,7 @@ void testScreenConfig::singleOutput()
     ConfigPtr config = generator->idealConfig(currentConfig);
     OutputPtr output = config->outputs().value(1);
 
-    QCOMPARE(output->currentModeId(), QLatin1String("3"));
+    QCOMPARE(output->auto_mode()->id(), QLatin1String("3"));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->isPrimary(), true);
     QCOMPARE(output->position(), QPoint(0, 0));
@@ -111,12 +111,12 @@ void testScreenConfig::laptopLidOpenAndExternal()
     OutputPtr laptop = config->outputs().value(1);
     OutputPtr external = config->outputs().value(2);
 
-    QCOMPARE(laptop->currentModeId(), QLatin1String("3"));
+    QCOMPARE(laptop->auto_mode()->id(), QLatin1String("3"));
     QCOMPARE(laptop->isPrimary(), true);
     QCOMPARE(laptop->isEnabled(), true);
     QCOMPARE(laptop->position(), QPoint(0, 0));
 
-    QCOMPARE(external->currentModeId(), QLatin1String("4"));
+    QCOMPARE(external->auto_mode()->id(), QLatin1String("4"));
     QCOMPARE(external->isPrimary(), false);
     QCOMPARE(external->isEnabled(), true);
     QCOMPARE(external->position(), QPoint(1280, 0));
@@ -136,18 +136,18 @@ void testScreenConfig::laptopLidOpenAndTwoExternal()
     OutputPtr hdmi1 = config->outputs().value(2);
     OutputPtr hdmi2 = config->outputs().value(3);
 
-    QCOMPARE(laptop->currentModeId(), QLatin1String("3"));
+    QCOMPARE(laptop->auto_mode()->id(), QLatin1String("3"));
     QCOMPARE(laptop->isPrimary(), true);
     QCOMPARE(laptop->isEnabled(), true);
     QCOMPARE(laptop->position(), QPoint(0, 0));
 
-    QCOMPARE(hdmi1->currentModeId(), QLatin1String("4"));
+    QCOMPARE(hdmi1->auto_mode()->id(), QLatin1String("4"));
     QCOMPARE(hdmi1->isPrimary(), false);
     QCOMPARE(hdmi1->isEnabled(), true);
     QCOMPARE(hdmi1->position(),
-             QPoint(hdmi2->position().x() + hdmi2->currentMode()->size().width(), 0));
+             QPoint(hdmi2->position().x() + hdmi2->auto_mode()->size().width(), 0));
 
-    QCOMPARE(hdmi2->currentModeId(), QLatin1String("4"));
+    QCOMPARE(hdmi2->auto_mode()->id(), QLatin1String("4"));
     QCOMPARE(hdmi2->isPrimary(), false);
     QCOMPARE(hdmi2->isEnabled(), true);
     QCOMPARE(hdmi2->position(), QPoint(1280, 0));
@@ -170,7 +170,7 @@ void testScreenConfig::laptopLidClosedAndExternal()
     QCOMPARE(laptop->isEnabled(), false);
     QCOMPARE(laptop->isPrimary(), false);
 
-    QCOMPARE(external->currentModeId(), QLatin1String("4"));
+    QCOMPARE(external->auto_mode()->id(), QLatin1String("4"));
     QCOMPARE(external->isPrimary(), true);
     QCOMPARE(external->isEnabled(), true);
     QCOMPARE(external->position(), QPoint(0, 0));
@@ -197,18 +197,18 @@ void testScreenConfig::laptopLidClosedAndThreeExternal()
 
     QCOMPARE(hdmi1->isEnabled(), true);
     QCOMPARE(hdmi1->isPrimary(), false);
-    QCOMPARE(hdmi1->currentModeId(), QLatin1String("4"));
-    QCOMPARE(hdmi1->position(), QPoint(primary->currentMode()->size().width(), 0));
+    QCOMPARE(hdmi1->auto_mode()->id(), QLatin1String("4"));
+    QCOMPARE(hdmi1->position(), QPoint(primary->auto_mode()->size().width(), 0));
 
     QCOMPARE(hdmi2->isEnabled(), true);
     QCOMPARE(hdmi2->isPrimary(), false);
-    QCOMPARE(hdmi2->currentModeId(), QLatin1String("3"));
+    QCOMPARE(hdmi2->auto_mode()->id(), QLatin1String("3"));
     QCOMPARE(hdmi2->position(),
-             QPoint(hdmi1->position().x() + hdmi1->currentMode()->size().width(), 0));
+             QPoint(hdmi1->position().x() + hdmi1->auto_mode()->size().width(), 0));
 
     QCOMPARE(primary->isEnabled(), true);
     QCOMPARE(primary->isPrimary(), true);
-    QCOMPARE(primary->currentModeId(), QLatin1String("4"));
+    QCOMPARE(primary->auto_mode()->id(), QLatin1String("4"));
     QCOMPARE(primary->position(), QPoint(0, 0));
 }
 
@@ -227,12 +227,12 @@ void testScreenConfig::laptopDockedLidOpenAndExternal()
     OutputPtr laptop = config->outputs().value(1);
     OutputPtr external = config->outputs().value(2);
 
-    QCOMPARE(laptop->currentModeId(), QLatin1String("3"));
+    QCOMPARE(laptop->auto_mode()->id(), QLatin1String("3"));
     QCOMPARE(laptop->isPrimary(), false);
     QCOMPARE(laptop->isEnabled(), true);
     QCOMPARE(laptop->position(), QPoint(0, 0));
 
-    QCOMPARE(external->currentModeId(), QLatin1String("4"));
+    QCOMPARE(external->auto_mode()->id(), QLatin1String("4"));
     QCOMPARE(external->isPrimary(), true);
     QCOMPARE(external->isEnabled(), true);
     QCOMPARE(external->position(), QPoint(1280, 0));
@@ -256,7 +256,7 @@ void testScreenConfig::laptopDockedLidClosedAndExternal()
     QCOMPARE(laptop->isEnabled(), false);
     QCOMPARE(laptop->isPrimary(), false);
 
-    QCOMPARE(external->currentModeId(), QLatin1String("4"));
+    QCOMPARE(external->auto_mode()->id(), QLatin1String("4"));
     QCOMPARE(external->isPrimary(), true);
     QCOMPARE(external->isEnabled(), true);
     QCOMPARE(external->position(), QPoint(0, 0));
@@ -292,8 +292,6 @@ void testScreenConfig::workstationWithNoConnectedScreens()
     OutputPtr external1 = config->output(1);
     OutputPtr external2 = config->output(2);
 
-    // Even though the test config says the outputs are not connected Disman will ignore these
-    // values nowadays since it only knows connected outputs anymore.
     QCOMPARE(external1->isEnabled(), true);
     QCOMPARE(external2->isEnabled(), true);
 }
@@ -314,13 +312,13 @@ void testScreenConfig::workstationTwoExternalSameSize()
 
     QCOMPARE(external1->isPrimary(), true);
     QCOMPARE(external1->isEnabled(), true);
-    QCOMPARE(external1->currentModeId(), QLatin1String("3"));
+    QCOMPARE(external1->auto_mode()->id(), QLatin1String("3"));
     QCOMPARE(external1->position(), QPoint(0, 0));
 
     QCOMPARE(external2->isPrimary(), false);
     QCOMPARE(external2->isEnabled(), true);
-    QCOMPARE(external2->currentModeId(), QLatin1String("3"));
-    QCOMPARE(external2->position(), QPoint(external1->currentMode()->size().width(), 0));
+    QCOMPARE(external2->auto_mode()->id(), QLatin1String("3"));
+    QCOMPARE(external2->position(), QPoint(external1->auto_mode()->size().width(), 0));
 }
 
 void testScreenConfig::workstationFallbackMode()
@@ -339,12 +337,12 @@ void testScreenConfig::workstationFallbackMode()
 
     QCOMPARE(external1->isPrimary(), true);
     QCOMPARE(external1->isEnabled(), true);
-    QCOMPARE(external1->currentModeId(), QLatin1String("1"));
+    QCOMPARE(external1->auto_mode()->id(), QLatin1String("1"));
     QCOMPARE(external1->position(), QPoint(0, 0));
 
     QCOMPARE(external2->isPrimary(), false);
     QCOMPARE(external2->isEnabled(), true);
-    QCOMPARE(external2->currentModeId(), QLatin1String("1"));
+    QCOMPARE(external2->auto_mode()->id(), QLatin1String("1"));
     QCOMPARE(external2->position(), QPoint(0, 0));
 }
 
@@ -365,12 +363,12 @@ void testScreenConfig::workstationTwoExternalDiferentSize()
 
     QCOMPARE(external1->isPrimary(), false);
     QCOMPARE(external1->isEnabled(), true);
-    QCOMPARE(external1->currentModeId(), QLatin1String("3"));
-    QCOMPARE(external1->position(), QPoint(external2->currentMode()->size().width(), 0));
+    QCOMPARE(external1->auto_mode()->id(), QLatin1String("3"));
+    QCOMPARE(external1->position(), QPoint(external2->auto_mode()->size().width(), 0));
 
     QCOMPARE(external2->isPrimary(), true);
     QCOMPARE(external2->isEnabled(), true);
-    QCOMPARE(external2->currentModeId(), QLatin1String("4"));
+    QCOMPARE(external2->auto_mode()->id(), QLatin1String("4"));
 }
 
 void testScreenConfig::switchDisplayTwoScreens()
@@ -389,11 +387,11 @@ void testScreenConfig::switchDisplayTwoScreens()
     ConfigPtr config = generator->displaySwitch(Generator::Clone);
     OutputPtr laptop = config->outputs().value(1);
     OutputPtr external = config->outputs().value(2);
-    QCOMPARE(laptop->currentModeId(), QLatin1String("2"));
+    QCOMPARE(laptop->auto_mode()->id(), QLatin1String("2"));
     QCOMPARE(laptop->isPrimary(), true);
     QCOMPARE(laptop->isEnabled(), true);
     QCOMPARE(laptop->position(), QPoint(0, 0));
-    QCOMPARE(external->currentModeId(), QLatin1String("3"));
+    QCOMPARE(external->auto_mode()->id(), QLatin1String("3"));
     QCOMPARE(external->isPrimary(), false);
     QCOMPARE(external->isEnabled(), true);
     QCOMPARE(external->position(), QPoint(0, 0));
@@ -402,11 +400,11 @@ void testScreenConfig::switchDisplayTwoScreens()
     config = generator->displaySwitch(Generator::ExtendToLeft);
     laptop = config->outputs().value(1);
     external = config->outputs().value(2);
-    QCOMPARE(laptop->currentModeId(), QLatin1String("3"));
+    QCOMPARE(laptop->auto_mode()->id(), QLatin1String("3"));
     QCOMPARE(laptop->isPrimary(), true);
     QCOMPARE(laptop->isEnabled(), true);
     QCOMPARE(laptop->position(), QPoint(1920, 0));
-    QCOMPARE(external->currentModeId(), QLatin1String("5"));
+    QCOMPARE(external->auto_mode()->id(), QLatin1String("5"));
     QCOMPARE(external->isPrimary(), false);
     QCOMPARE(external->isEnabled(), true);
     QCOMPARE(external->position(), QPoint(0, 0));
@@ -417,7 +415,7 @@ void testScreenConfig::switchDisplayTwoScreens()
     external = config->outputs().value(2);
     ;
     QCOMPARE(laptop->isEnabled(), false);
-    QCOMPARE(external->currentModeId(), QLatin1String("5"));
+    QCOMPARE(external->auto_mode()->id(), QLatin1String("5"));
     QCOMPARE(external->isPrimary(), true);
     QCOMPARE(external->isEnabled(), true);
     QCOMPARE(external->position(), QPoint(0, 0));
@@ -427,7 +425,7 @@ void testScreenConfig::switchDisplayTwoScreens()
     laptop = config->outputs().value(1);
     external = config->outputs().value(2);
     ;
-    QCOMPARE(laptop->currentModeId(), QLatin1String("3"));
+    QCOMPARE(laptop->auto_mode()->id(), QLatin1String("3"));
     QCOMPARE(laptop->isPrimary(), true);
     QCOMPARE(laptop->isEnabled(), true);
     QCOMPARE(laptop->position(), QPoint(0, 0));
@@ -438,11 +436,11 @@ void testScreenConfig::switchDisplayTwoScreens()
     config = generator->displaySwitch(Generator::ExtendToRight);
     laptop = config->outputs().value(1);
     external = config->outputs().value(2);
-    QCOMPARE(laptop->currentModeId(), QLatin1String("3"));
+    QCOMPARE(laptop->auto_mode()->id(), QLatin1String("3"));
     QCOMPARE(laptop->isPrimary(), true);
     QCOMPARE(laptop->isEnabled(), true);
     QCOMPARE(laptop->position(), QPoint(0, 0));
-    QCOMPARE(external->currentModeId(), QLatin1String("5"));
+    QCOMPARE(external->auto_mode()->id(), QLatin1String("5"));
     QCOMPARE(external->isPrimary(), false);
     QCOMPARE(external->isEnabled(), true);
     QCOMPARE(external->position(), QPoint(1280, 0));
@@ -460,11 +458,11 @@ void testScreenConfig::switchDisplayTwoScreensNoCommonMode()
     OutputPtr laptop = config->outputs().value(1);
     OutputPtr external = config->outputs().value(2);
 
-    QCOMPARE(laptop->currentModeId(), QLatin1String("3"));
+    QCOMPARE(laptop->auto_mode()->id(), QLatin1String("3"));
     QCOMPARE(laptop->isPrimary(), true);
     QCOMPARE(laptop->isEnabled(), true);
     QCOMPARE(laptop->position(), QPoint(0, 0));
-    QCOMPARE(external->currentModeId(), QLatin1String("5"));
+    QCOMPARE(external->auto_mode()->id(), QLatin1String("5"));
     QCOMPARE(external->isPrimary(), false);
     QCOMPARE(external->isEnabled(), true);
     QCOMPARE(external->position(), QPoint(0, 0));

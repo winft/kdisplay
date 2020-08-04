@@ -53,8 +53,6 @@ public:
     void setForceDocked(bool force);
     void setForceNotLaptop(bool force);
 
-    static Disman::ModePtr biggestMode(const Disman::ModeList& modes);
-
 Q_SIGNALS:
     void ready();
 
@@ -69,13 +67,10 @@ private:
     void singleOutput(Disman::OutputList& connectedOutputs);
     void extendToRight(Disman::OutputList& connectedOutputs);
 
-    Disman::ModePtr bestModeForSize(const Disman::ModeList& modes, const QSize& size);
-    Disman::ModePtr bestModeForOutput(const Disman::OutputPtr& output);
     qreal bestScaleForOutput(const Disman::OutputPtr& output);
 
     Disman::OutputPtr biggestOutput(const Disman::OutputList& connectedOutputs);
     Disman::OutputPtr embeddedOutput(const Disman::OutputList& connectedOutputs);
-    void disableAllDisconnectedOutputs(const Disman::OutputList& connectedOutputs);
 
     bool isLaptop() const;
     bool isLidClosed() const;

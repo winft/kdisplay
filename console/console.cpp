@@ -91,12 +91,14 @@ void Console::printConfig()
         qDebug() << "Pos: " << output->position();
         qDebug() << "MMSize: " << output->sizeMm();
         qDebug() << "FollowPreferredMode: " << output->followPreferredMode();
-        if (output->currentMode()) {
-            qDebug() << "Size: " << output->enforcedModeSize();
+        if (output->auto_mode()) {
+            qDebug() << "Size: " << output->auto_mode()->size();
+        } else {
+            qDebug() << "Size: No mode found!";
         }
         qDebug() << "Scale: " << output->scale();
-        qDebug() << "Mode: " << output->currentModeId();
-        qDebug() << "Preferred Mode: " << output->preferredModeId();
+        qDebug() << "Mode: " << output->auto_mode();
+        qDebug() << "Preferred Mode: " << output->preferred_mode();
         qDebug() << "Preferred modes: " << output->preferredModes();
         qDebug() << "Modes: ";
 

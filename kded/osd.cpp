@@ -102,7 +102,7 @@ void Osd::showOutputIdentifier(const Disman::OutputPtr& output)
     m_outputGeometry = output->geometry();
 
     auto* rootObject = m_osdObject->rootObject();
-    auto mode = output->currentMode();
+    auto mode = output->auto_mode();
     QSize realSize = mode->size();
     if (!output->isHorizontal()) {
         realSize.transpose();
@@ -155,7 +155,7 @@ void Osd::onOsdActionSelected(int action)
 
 void Osd::maybe_hide()
 {
-    if (!m_output || !m_output->isEnabled() || !m_output->currentMode()) {
+    if (!m_output || !m_output->isEnabled() || !m_output->auto_mode()) {
         hideOsd();
     }
 }

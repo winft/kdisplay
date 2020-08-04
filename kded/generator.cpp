@@ -31,6 +31,7 @@
         Q_FOREACH (const Disman::OutputPtr& output, outputs) {                                     \
             Q_ASSERT(output);                                                                      \
             Q_ASSERT(output->id());                                                                \
+            Q_ASSERT(output->auto_mode());                                                         \
         }                                                                                          \
         break;                                                                                     \
     }
@@ -205,18 +206,20 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
         qCDebug(KDISPLAY_KDED) << "Extend to left";
         external->setPosition(QPointF(0, 0));
         external->setEnabled(true);
-        const Disman::ModePtr extMode = bestModeForOutput(external);
+        auto extMode = external->best_mode();
         Q_ASSERT(extMode);
-        external->setCurrentModeId(extMode->id());
+        external->set_mode(extMode);
 
-        Q_ASSERT(external->currentMode()); // we must have a mode now
+        Q_ASSERT(external->commanded_mode()); // we must have a mode now
         auto const size = external->geometry().size();
         embedded->setPosition(QPointF(size.width(), 0));
         embedded->setEnabled(true);
         embedded->setPrimary(true);
-        const Disman::ModePtr embeddedMode = bestModeForOutput(embedded);
+
+        // TODO: do this just in auto mode?
+        const Disman::ModePtr embeddedMode = embedded->best_mode();
         Q_ASSERT(embeddedMode);
-        embedded->setCurrentModeId(embeddedMode->id());
+        embedded->set_mode(embeddedMode);
 
         return config;
     }
@@ -227,9 +230,10 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
 
         external->setEnabled(true);
         external->setPrimary(true);
-        const Disman::ModePtr extMode = bestModeForOutput(external);
+
+        auto extMode = external->best_mode();
         Q_ASSERT(extMode);
-        external->setCurrentModeId(extMode->id());
+        external->set_mode(extMode);
         return config;
     }
     case Generator::TurnOffExternal: {
@@ -237,9 +241,11 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
         embedded->setPosition(QPointF(0, 0));
         embedded->setEnabled(true);
         embedded->setPrimary(true);
-        const Disman::ModePtr embeddedMode = bestModeForOutput(embedded);
+
+        // TODO: do this just in auto mode?
+        auto embeddedMode = embedded->best_mode();
         Q_ASSERT(embeddedMode);
-        embedded->setCurrentModeId(embeddedMode->id());
+        embedded->set_mode(embeddedMode);
 
         external->setEnabled(false);
         external->setPrimary(false);
@@ -250,18 +256,22 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
         embedded->setPosition(QPointF(0, 0));
         embedded->setEnabled(true);
         embedded->setPrimary(true);
-        const Disman::ModePtr embeddedMode = bestModeForOutput(embedded);
-        Q_ASSERT(embeddedMode);
-        embedded->setCurrentModeId(embeddedMode->id());
 
-        Q_ASSERT(embedded->currentMode()); // we must have a mode now
+        // TODO: do this just in auto mode?
+        auto embeddedMode = embedded->best_mode();
+        Q_ASSERT(embeddedMode);
+        embedded->set_mode(embeddedMode);
+
+        Q_ASSERT(embedded->best_mode()); // we must have a mode now
         auto const size = embedded->geometry().size();
         external->setPosition(QPointF(size.width(), 0));
         external->setEnabled(true);
         external->setPrimary(false);
-        const Disman::ModePtr extMode = bestModeForOutput(external);
+
+        // TODO: do this just in auto mode?
+        auto extMode = external->best_mode();
         Q_ASSERT(extMode);
-        external->setCurrentModeId(extMode->id());
+        external->set_mode(extMode);
 
         return config;
     }
@@ -316,9 +326,11 @@ void Generator::cloneScreens(Disman::OutputList& connectedOutputs)
             }
             output->setEnabled(true);
             output->setPosition(QPointF(0, 0));
-            const Disman::ModePtr mode = biggestMode(output->modes());
+
+            // TODO: do this just in auto mode?
+            auto const mode = output->best_mode();
             Q_ASSERT(mode);
-            output->setCurrentModeId(mode->id());
+            output->set_mode(mode);
         }
         return;
     }
@@ -330,16 +342,20 @@ void Generator::cloneScreens(Disman::OutputList& connectedOutputs)
 
     // Finally, look for the mode with biggestSize and biggest refreshRate and set it
     qCDebug(KDISPLAY_KDED) << "Biggest Size: " << biggestSize;
-    Disman::ModePtr bestMode;
-    Q_FOREACH (Disman::OutputPtr output, connectedOutputs) {
+
+    for (Disman::OutputPtr output : connectedOutputs) {
         if (output->modes().isEmpty()) {
             continue;
         }
-        bestMode = bestModeForSize(output->modes(), biggestSize);
-        Q_ASSERT(bestMode); // we resolved this mode previously, so it better works
+        output->set_resolution(biggestSize);
+        output->set_auto_resolution(false);
+        output->set_auto_refresh_rate(true);
+
+        // we resolved this mode previously, so it better works
+        Q_ASSERT(output->auto_mode()->size() == biggestSize);
+
         output->setEnabled(true);
         output->setPosition(QPointF(0, 0));
-        output->setCurrentModeId(bestMode->id());
     }
 }
 
@@ -355,9 +371,9 @@ void Generator::singleOutput(Disman::OutputList& connectedOutputs)
         return;
     }
 
-    const Disman::ModePtr bestMode = bestModeForOutput(output);
-    Q_ASSERT(bestMode);
-    output->setCurrentModeId(bestMode->id());
+    output->set_auto_resolution(true);
+    output->set_auto_refresh_rate(true);
+
     output->setEnabled(true);
     output->setPrimary(true);
     output->setPosition(QPointF(0, 0));
@@ -403,9 +419,10 @@ void Generator::laptop(Disman::OutputList& connectedOutputs)
         }
         external->setEnabled(true);
         external->setPrimary(true);
-        const Disman::ModePtr bestMode = bestModeForOutput(external);
-        Q_ASSERT(bestMode);
-        external->setCurrentModeId(bestMode->id());
+
+        external->set_auto_resolution(true);
+        external->set_auto_refresh_rate(true);
+
         external->setPosition(QPointF(0, 0));
 
         return;
@@ -425,9 +442,9 @@ void Generator::laptop(Disman::OutputList& connectedOutputs)
     embedded->setPosition(QPointF(0, 0));
     embedded->setPrimary(true);
     embedded->setEnabled(true);
-    const Disman::ModePtr embeddedMode = bestModeForOutput(embedded);
-    Q_ASSERT(embeddedMode);
-    embedded->setCurrentModeId(embeddedMode->id());
+
+    embedded->set_auto_resolution(true);
+    embedded->set_auto_refresh_rate(true);
 
     double globalWidth = embedded->geometry().width();
     Disman::OutputPtr biggest = biggestOutput(connectedOutputs);
@@ -437,17 +454,18 @@ void Generator::laptop(Disman::OutputList& connectedOutputs)
     biggest->setPosition(QPointF(globalWidth, 0));
     biggest->setEnabled(true);
     biggest->setPrimary(false);
-    const Disman::ModePtr mode = bestModeForOutput(biggest);
-    biggest->setCurrentModeId(mode->id());
+
+    biggest->set_auto_resolution(true);
+    biggest->set_auto_refresh_rate(true);
 
     globalWidth += biggest->geometry().width();
     Q_FOREACH (Disman::OutputPtr output, connectedOutputs) {
         output->setEnabled(true);
         output->setPrimary(false);
         output->setPosition(QPointF(globalWidth, 0));
-        const Disman::ModePtr mode = bestModeForOutput(output);
-        Q_ASSERT(mode);
-        output->setCurrentModeId(mode->id());
+
+        output->set_auto_resolution(true);
+        output->set_auto_refresh_rate(true);
 
         globalWidth += output->geometry().width();
     }
@@ -475,9 +493,9 @@ void Generator::extendToRight(Disman::OutputList& connectedOutputs)
     biggest->setEnabled(true);
     biggest->setPrimary(true);
     biggest->setPosition(QPointF(0, 0));
-    const Disman::ModePtr mode = bestModeForOutput(biggest);
-    Q_ASSERT(mode);
-    biggest->setCurrentModeId(mode->id());
+
+    biggest->set_auto_resolution(true);
+    biggest->set_auto_refresh_rate(true);
 
     double globalWidth = biggest->geometry().width();
 
@@ -485,59 +503,12 @@ void Generator::extendToRight(Disman::OutputList& connectedOutputs)
         output->setEnabled(true);
         output->setPrimary(false);
         output->setPosition(QPointF(globalWidth, 0));
-        const Disman::ModePtr mode = bestModeForOutput(output);
-        Q_ASSERT(mode);
-        output->setCurrentModeId(mode->id());
+
+        output->set_auto_resolution(true);
+        output->set_auto_refresh_rate(true);
 
         globalWidth += output->geometry().width();
     }
-}
-
-Disman::ModePtr Generator::biggestMode(const Disman::ModeList& modes)
-{
-    Q_ASSERT(!modes.isEmpty());
-
-    int modeArea, biggestArea = 0;
-    Disman::ModePtr biggestMode;
-    Q_FOREACH (const Disman::ModePtr& mode, modes) {
-        modeArea = mode->size().width() * mode->size().height();
-        if (modeArea < biggestArea) {
-            continue;
-        }
-        if (modeArea == biggestArea && mode->refreshRate() < biggestMode->refreshRate()) {
-            continue;
-        }
-        if (modeArea == biggestArea && mode->refreshRate() > biggestMode->refreshRate()) {
-            biggestMode = mode;
-            continue;
-        }
-
-        biggestArea = modeArea;
-        biggestMode = mode;
-    }
-
-    return biggestMode;
-}
-
-Disman::ModePtr Generator::bestModeForSize(const Disman::ModeList& modes, const QSize& size)
-{
-    Disman::ModePtr bestMode;
-    Q_FOREACH (const Disman::ModePtr& mode, modes) {
-        if (mode->size() != size) {
-            continue;
-        }
-
-        if (!bestMode) {
-            bestMode = mode;
-            continue;
-        }
-
-        if (mode->refreshRate() > bestMode->refreshRate()) {
-            bestMode = mode;
-        }
-    }
-
-    return bestMode;
 }
 
 qreal Generator::bestScaleForOutput(const Disman::OutputPtr& output)
@@ -546,7 +517,7 @@ qreal Generator::bestScaleForOutput(const Disman::OutputPtr& output)
     if (output->sizeMm().height() <= 0) {
         return 1.0;
     }
-    const auto mode = bestModeForOutput(output);
+    const auto mode = output->auto_mode();
     const qreal dpi = mode->size().height() / (output->sizeMm().height() / 25.4);
 
     // if reported DPI is closer to two times normal DPI, followed by a sanity check of having the
@@ -557,15 +528,6 @@ qreal Generator::bestScaleForOutput(const Disman::OutputPtr& output)
     return 1.0;
 }
 
-Disman::ModePtr Generator::bestModeForOutput(const Disman::OutputPtr& output)
-{
-    if (Disman::ModePtr outputMode = output->preferredMode()) {
-        return outputMode;
-    }
-
-    return biggestMode(output->modes());
-}
-
 Disman::OutputPtr Generator::biggestOutput(const Disman::OutputList& outputs)
 {
     ASSERT_OUTPUTS(outputs)
@@ -573,7 +535,7 @@ Disman::OutputPtr Generator::biggestOutput(const Disman::OutputList& outputs)
     int area, total = 0;
     Disman::OutputPtr biggest;
     Q_FOREACH (const Disman::OutputPtr& output, outputs) {
-        const Disman::ModePtr mode = bestModeForOutput(output);
+        auto const mode = output->best_mode();
         if (!mode) {
             continue;
         }

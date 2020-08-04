@@ -93,12 +93,12 @@ void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMa
                "or a different device with the same serial number has been connected (very "
                "unlikely)."
                "Falling back to preferred modes.";
-        matchingMode = output->preferredMode();
+        matchingMode = output->preferred_mode();
     }
     if (!matchingMode) {
         qCWarning(KDISPLAY_KDED)
             << "\tFailed to get a preferred mode, falling back to biggest mode.";
-        matchingMode = Generator::biggestMode(modes);
+        matchingMode = output->best_mode();
     }
     if (!matchingMode) {
         qCWarning(KDISPLAY_KDED) << "\tFailed to get biggest mode. Which means there are no modes. "
@@ -107,7 +107,7 @@ void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMa
         return;
     }
 
-    output->setCurrentModeId(matchingMode->id());
+    output->set_mode(matchingMode);
 }
 
 QVariantMap Output::getGlobalData(Disman::OutputPtr output)
@@ -440,12 +440,14 @@ bool Output::writeGlobalPart(const Disman::OutputPtr& output,
     QVariantMap modeInfo;
     float refreshRate = -1.;
     QSize modeSize;
-    if (output->currentMode() && output->isEnabled()) {
-        refreshRate = output->currentMode()->refreshRate();
-        modeSize = output->currentMode()->size();
-    } else if (fallback && fallback->currentMode()) {
-        refreshRate = fallback->currentMode()->refreshRate();
-        modeSize = fallback->currentMode()->size();
+    if (auto mode = output->auto_mode(); mode && output->isEnabled()) {
+        refreshRate = mode->refreshRate();
+        modeSize = mode->size();
+    } else if (fallback) {
+        if (auto mode = fallback->auto_mode()) {
+            refreshRate = mode->refreshRate();
+            modeSize = mode->size();
+        }
     }
 
     if (refreshRate < 0 || !modeSize.isValid()) {

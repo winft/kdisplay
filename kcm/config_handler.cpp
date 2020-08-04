@@ -142,7 +142,7 @@ void ConfigHandler::checkNeedsSave()
                 needsSave = true;
             }
             if (output->isEnabled()) {
-                needsSave |= output->currentModeId() != initialOutput->currentModeId()
+                needsSave |= output->auto_mode()->id() != initialOutput->auto_mode()->id()
                     || output->position() != initialOutput->position()
                     || output->scale() != initialOutput->scale()
                     || output->rotation() != initialOutput->rotation()

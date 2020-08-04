@@ -97,7 +97,7 @@ void OsdManager::slotIdentifyOutputs(Disman::ConfigOperation* op)
     const Disman::ConfigPtr config = qobject_cast<Disman::GetConfigOperation*>(op)->config();
 
     Q_FOREACH (const Disman::OutputPtr& output, config->outputs()) {
-        if (!output->isEnabled() || !output->currentMode()) {
+        if (!output->isEnabled() || !output->auto_mode()) {
             continue;
         }
         auto osd = m_osds.value(output->name());
@@ -126,7 +126,7 @@ void OsdManager::showOsd(const QString& icon, const QString& text)
                     = qobject_cast<Disman::GetConfigOperation*>(op)->config();
 
                 Q_FOREACH (const Disman::OutputPtr& output, config->outputs()) {
-                    if (!output->isEnabled() || !output->currentMode()) {
+                    if (!output->isEnabled() || !output->auto_mode()) {
                         continue;
                     }
                     auto osd = m_osds.value(output->name());
@@ -163,7 +163,7 @@ OsdAction* OsdManager::showActionSelector()
                 const auto outputs = op->config()->outputs();
                 Disman::OutputPtr osdOutput;
                 for (const auto& output : outputs) {
-                    if (!output->isEnabled() || !output->currentMode()) {
+                    if (!output->isEnabled() || !output->auto_mode()) {
                         continue;
                     }
 
@@ -182,7 +182,7 @@ OsdAction* OsdManager::showActionSelector()
                 // no laptop or primary screen, just take the first usable one
                 if (!osdOutput) {
                     for (const auto& output : outputs) {
-                        if (output->isEnabled() && output->currentMode()) {
+                        if (output->isEnabled() && output->auto_mode()) {
                             osdOutput = output;
                             break;
                         }

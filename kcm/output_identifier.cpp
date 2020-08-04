@@ -37,11 +37,11 @@ OutputIdentifier::OutputIdentifier(Disman::ConfigPtr config, QObject* parent)
                                                    QStringLiteral(QML_PATH "OutputIdentifier.qml"));
 
     for (const auto& output : config->connectedOutputs()) {
-        if (!output->currentMode()) {
+        if (!output->auto_mode()) {
             continue;
         }
 
-        const Disman::ModePtr mode = output->currentMode();
+        auto const mode = output->auto_mode();
         auto* view = new PlasmaQuick::Dialog();
 
         auto qmlObject = new KDeclarative::QmlObject(view);

@@ -328,12 +328,12 @@ void KDisplayDaemon::configChanged()
     bool changed = false;
     Q_FOREACH (const Disman::OutputPtr& output, m_monitoredConfig->data()->outputs()) {
         if (output->isEnabled()
-            && (output->currentMode().isNull()
+            && (output->auto_mode().isNull()
                 || (output->followPreferredMode()
-                    && output->currentModeId() != output->preferredModeId()))) {
-            qCDebug(KDISPLAY_KDED) << "Current mode was" << output->currentModeId()
-                                   << ", setting preferred mode" << output->preferredModeId();
-            output->setCurrentModeId(output->preferredModeId());
+                    && output->auto_mode()->id() != output->preferred_mode()->id()))) {
+            qCDebug(KDISPLAY_KDED) << "Current mode was" << output->auto_mode()
+                                   << ", setting preferred mode" << output->preferred_mode()->id();
+            output->set_mode(output->preferred_mode());
             changed = true;
         }
     }
@@ -491,7 +491,7 @@ void KDisplayDaemon::disableOutput(Disman::OutputPtr& output)
 {
     auto const geom = output->geometry();
     qCDebug(KDISPLAY_KDED) << "Laptop geometry:" << geom << output->position()
-                           << (output->currentMode() ? output->currentMode()->size() : QSize());
+                           << (output->auto_mode() ? output->auto_mode()->size() : QSize());
 
     // Move all outputs right from the @p output to left
     for (Disman::OutputPtr& otherOutput : m_monitoredConfig->data()->outputs()) {

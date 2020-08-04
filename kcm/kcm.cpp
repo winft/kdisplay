@@ -123,7 +123,7 @@ void KCMKDisplay::doSave(bool force)
 
     bool atLeastOneEnabledOutput = false;
     for (const Disman::OutputPtr& output : config->outputs()) {
-        Disman::ModePtr mode = output->currentMode();
+        Disman::ModePtr mode = output->auto_mode();
 
         atLeastOneEnabledOutput |= output->isEnabled();
 

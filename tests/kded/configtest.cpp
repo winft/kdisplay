@@ -136,8 +136,8 @@ void TestConfig::testSimpleConfig()
 
     auto output = config->connectedOutputs().first();
     QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
-    QCOMPARE(output->currentModeId(), QLatin1String("MODE-4"));
-    QCOMPARE(output->currentMode()->size(), QSize(1920, 1280));
+    QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-4"));
+    QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->position(), QPoint(0, 0));
@@ -145,8 +145,8 @@ void TestConfig::testSimpleConfig()
 
     auto output2 = config->connectedOutputs().last();
     QCOMPARE(output2->name(), QLatin1String("OUTPUT-2"));
-    QCOMPARE(output2->currentModeId(), QLatin1String("MODE-4"));
-    QCOMPARE(output2->currentMode()->size(), QSize(1920, 1280));
+    QCOMPARE(output2->auto_mode()->id(), QLatin1String("MODE-4"));
+    QCOMPARE(output2->auto_mode()->size(), QSize(1920, 1280));
     QCOMPARE(output2->isEnabled(), false);
     QCOMPARE(output2->rotation(), Disman::Output::None);
     QCOMPARE(output2->position(), QPoint(0, 0));
@@ -168,8 +168,8 @@ void TestConfig::testTwoScreenConfig()
 
     auto output = config->connectedOutputs().first();
     QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
-    QCOMPARE(output->currentModeId(), QLatin1String("MODE-4"));
-    QCOMPARE(output->currentMode()->size(), QSize(1920, 1280));
+    QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-4"));
+    QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->position(), QPoint(0, 0));
@@ -177,8 +177,8 @@ void TestConfig::testTwoScreenConfig()
 
     output = config->connectedOutputs().last();
     QCOMPARE(output->name(), QLatin1String("OUTPUT-2"));
-    QCOMPARE(output->currentModeId(), QLatin1String("MODE-3"));
-    QCOMPARE(output->currentMode()->size(), QSize(1280, 1024));
+    QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-3"));
+    QCOMPARE(output->auto_mode()->size(), QSize(1280, 1024));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->position(), QPoint(1920, 0));
@@ -200,8 +200,8 @@ void TestConfig::testRotatedScreenConfig()
 
     auto output = config->connectedOutputs().first();
     QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
-    QCOMPARE(output->currentModeId(), QLatin1String("MODE-4"));
-    QCOMPARE(output->currentMode()->size(), QSize(1920, 1280));
+    QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-4"));
+    QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->position(), QPoint(0, 0));
@@ -209,8 +209,8 @@ void TestConfig::testRotatedScreenConfig()
 
     output = config->connectedOutputs().last();
     QCOMPARE(output->name(), QLatin1String("OUTPUT-2"));
-    QCOMPARE(output->currentModeId(), QLatin1String("MODE-3"));
-    QCOMPARE(output->currentMode()->size(), QSize(1280, 1024));
+    QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-3"));
+    QCOMPARE(output->auto_mode()->size(), QSize(1280, 1024));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::Left);
     QCOMPARE(output->position(), QPoint(1920, 0));
@@ -232,8 +232,8 @@ void TestConfig::testDisabledScreenConfig()
 
     auto output = config->connectedOutputs().first();
     QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
-    QCOMPARE(output->currentModeId(), QLatin1String("MODE-4"));
-    QCOMPARE(output->currentMode()->size(), QSize(1920, 1280));
+    QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-4"));
+    QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->position(), QPoint(0, 0));
@@ -417,8 +417,8 @@ void TestConfig::testIdenticalOutputs()
         QVERIFY(positions.keys().contains(output->name()));
         QVERIFY(output->name() != output->hash());
         QCOMPARE(positions[output->name()], output->position());
-        QCOMPARE(output->currentMode()->size(), QSize(1920, 1080));
-        QCOMPARE(output->currentMode()->refreshRate(), 60.0);
+        QCOMPARE(output->auto_mode()->size(), QSize(1920, 1080));
+        QCOMPARE(output->auto_mode()->refreshRate(), 60.0);
         QVERIFY(output->isEnabled());
     }
     QCOMPARE(config2->screen()->currentSize(), QSize(5940, 2160));
