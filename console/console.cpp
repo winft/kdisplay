@@ -95,12 +95,6 @@ void Console::printConfig()
             qDebug() << "Size: " << output->enforcedModeSize();
         }
         qDebug() << "Scale: " << output->scale();
-        if (output->clones().isEmpty()) {
-            qDebug() << "Clones: "
-                     << "None";
-        } else {
-            qDebug() << "Clones: " << output->clones().count();
-        }
         qDebug() << "Mode: " << output->currentModeId();
         qDebug() << "Preferred Mode: " << output->preferredModeId();
         qDebug() << "Preferred modes: " << output->preferredModes();
