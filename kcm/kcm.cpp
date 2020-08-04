@@ -128,7 +128,6 @@ void KCMKDisplay::doSave(bool force)
         atLeastOneEnabledOutput |= output->isEnabled();
 
         qCDebug(KDISPLAY_KCM) << output->name() << output->id() << output.data() << "\n"
-                              << "	Connected:" << output->isConnected() << "\n"
                               << "	Enabled:" << output->isEnabled() << "\n"
                               << "	Primary:" << output->isPrimary() << "\n"
                               << "	Rotation:" << output->rotation() << "\n"

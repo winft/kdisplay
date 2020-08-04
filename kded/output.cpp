@@ -361,10 +361,6 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputs
     }
 
     for (Disman::OutputPtr output : outputs) {
-        if (!output->isConnected()) {
-            output->setEnabled(false);
-            continue;
-        }
         const auto outputId = output->hash();
         bool infoFound = false;
         for (const auto& variantInfo : outputsInfo) {

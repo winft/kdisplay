@@ -292,8 +292,10 @@ void testScreenConfig::workstationWithNoConnectedScreens()
     OutputPtr external1 = config->output(1);
     OutputPtr external2 = config->output(2);
 
-    QCOMPARE(external1->isEnabled(), false);
-    QCOMPARE(external2->isEnabled(), false);
+    // Even though the test config says the outputs are not connected Disman will ignore these
+    // values nowadays since it only knows connected outputs anymore.
+    QCOMPARE(external1->isEnabled(), true);
+    QCOMPARE(external2->isEnabled(), true);
 }
 
 void testScreenConfig::workstationTwoExternalSameSize()

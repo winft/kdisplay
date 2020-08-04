@@ -261,10 +261,6 @@ bool Config::writeFile(const QString& filePath)
         const Disman::OutputPtr oldOutput
             = oldOutputIt != oldOutputs.constEnd() ? *oldOutputIt : nullptr;
 
-        if (!output->isConnected()) {
-            continue;
-        }
-
         Output::writeGlobalPart(output, info, oldOutput);
         info[QStringLiteral("primary")] = output->isPrimary();
         info[QStringLiteral("enabled")] = output->isEnabled();
@@ -321,8 +317,6 @@ void Config::log()
     }
     const auto outputs = m_data->outputs();
     for (const auto& o : outputs) {
-        if (o->isConnected()) {
-            qCDebug(KDISPLAY_KDED) << o;
-        }
+        qCDebug(KDISPLAY_KDED) << o;
     }
 }

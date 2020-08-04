@@ -74,7 +74,6 @@ private:
     void lidClosedTimeout();
     void setMonitorForChanges(bool enabled);
 
-    void outputConnectedChanged();
     void showOutputIdentifier();
     void applyOsdAction(Disman::OsdAction::Action action);
 

@@ -327,7 +327,7 @@ void KDisplayDaemon::configChanged()
     // Modes may have changed, fix-up current mode id
     bool changed = false;
     Q_FOREACH (const Disman::OutputPtr& output, m_monitoredConfig->data()->outputs()) {
-        if (output->isConnected() && output->isEnabled()
+        if (output->isEnabled()
             && (output->currentMode().isNull()
                 || (output->followPreferredMode()
                     && output->currentModeId() != output->preferredModeId()))) {
@@ -437,7 +437,7 @@ void KDisplayDaemon::lidClosedTimeout()
         << "Lid closed without system going to suspend -> turning off the screen";
     for (Disman::OutputPtr& output : m_monitoredConfig->data()->outputs()) {
         if (output->type() == Disman::Output::Panel) {
-            if (output->isConnected() && output->isEnabled()) {
+            if (output->isEnabled()) {
                 // Save the current config with opened lid, just so that we know
                 // how to restore it later
                 m_monitoredConfig->writeOpenLidFile();
@@ -449,49 +449,15 @@ void KDisplayDaemon::lidClosedTimeout()
     }
 }
 
-void KDisplayDaemon::outputConnectedChanged()
-{
-    if (!m_changeCompressor->isActive()) {
-        m_changeCompressor->start();
-    }
-
-    Disman::Output* output = qobject_cast<Disman::Output*>(sender());
-    qCDebug(KDISPLAY_KDED) << "outputConnectedChanged():" << output->name();
-
-    if (output->isConnected()) {
-        Q_EMIT outputConnected(output->name());
-
-        if (!m_monitoredConfig->fileExists()) {
-            Q_EMIT unknownOutputConnected(output->name());
-        }
-    }
-}
-
 void KDisplayDaemon::monitorConnectedChange()
 {
-    Disman::OutputList outputs = m_monitoredConfig->data()->outputs();
-    Q_FOREACH (const Disman::OutputPtr& output, outputs) {
-        connect(output.data(),
-                &Disman::Output::isConnectedChanged,
-                this,
-                &KDisplayDaemon::outputConnectedChanged,
-                Qt::UniqueConnection);
-    }
     connect(
         m_monitoredConfig->data().data(),
         &Disman::Config::outputAdded,
         this,
-        [this](const Disman::OutputPtr output) {
-            if (output->isConnected()) {
-                m_changeCompressor->start();
-            }
-            connect(output.data(),
-                    &Disman::Output::isConnectedChanged,
-                    this,
-                    &KDisplayDaemon::outputConnectedChanged,
-                    Qt::UniqueConnection);
-        },
+        [this] { m_changeCompressor->start(); },
         Qt::UniqueConnection);
+
     connect(m_monitoredConfig->data().data(),
             &Disman::Config::outputRemoved,
             this,
@@ -529,7 +495,7 @@ void KDisplayDaemon::disableOutput(Disman::OutputPtr& output)
 
     // Move all outputs right from the @p output to left
     for (Disman::OutputPtr& otherOutput : m_monitoredConfig->data()->outputs()) {
-        if (otherOutput == output || !otherOutput->isConnected() || !otherOutput->isEnabled()) {
+        if (otherOutput == output || !otherOutput->isEnabled()) {
             continue;
         }
 

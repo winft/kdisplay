@@ -69,10 +69,10 @@ private Q_SLOTS:
     void testFixedConfig();
 
 private:
-    std::unique_ptr<Config> createConfig(bool output1Connected, bool output2Conected);
+    std::unique_ptr<Config> createConfig(bool output1Enabled, bool output2Enabled);
 };
 
-std::unique_ptr<Config> TestConfig::createConfig(bool output1Connected, bool output2Connected)
+std::unique_ptr<Config> TestConfig::createConfig(bool output1Enabled, bool output2Enabled)
 {
     Disman::ScreenPtr screen = Disman::ScreenPtr::create();
     screen->setCurrentSize(QSize(1920, 1080));
@@ -96,20 +96,15 @@ std::unique_ptr<Config> TestConfig::createConfig(bool output1Connected, bool out
     output1->setId(1);
     output1->setName(QStringLiteral("OUTPUT-1"));
     output1->setPosition(QPoint(0, 0));
-    output1->setConnected(output1Connected);
-    output1->setEnabled(output1Connected);
-    if (output1Connected) {
-        output1->setModes(modes);
-    }
+    output1->setEnabled(output1Enabled);
+    output1->setModes(modes);
 
     Disman::OutputPtr output2 = Disman::OutputPtr::create();
     output2->setId(2);
     output2->setName(QStringLiteral("OUTPUT-2"));
     output2->setPosition(QPoint(0, 0));
-    output2->setConnected(output2Connected);
-    if (output2Connected) {
-        output2->setModes(modes);
-    }
+    output2->setEnabled(output2Enabled);
+    output2->setModes(modes);
 
     Disman::ConfigPtr config = Disman::ConfigPtr::create();
     config->setScreen(screen);
@@ -117,7 +112,6 @@ std::unique_ptr<Config> TestConfig::createConfig(bool output1Connected, bool out
     config->addOutput(output2);
 
     auto configWrapper = std::unique_ptr<Config>(new Config(config));
-
     return configWrapper;
 }
 
@@ -138,7 +132,7 @@ void TestConfig::testSimpleConfig()
 
     auto config = configWrapper->data();
     QVERIFY(config);
-    QCOMPARE(config->connectedOutputs().count(), 1);
+    QCOMPARE(config->connectedOutputs().count(), 2);
 
     auto output = config->connectedOutputs().first();
     QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
@@ -148,6 +142,15 @@ void TestConfig::testSimpleConfig()
     QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->position(), QPoint(0, 0));
     QCOMPARE(output->isPrimary(), true);
+
+    auto output2 = config->connectedOutputs().last();
+    QCOMPARE(output2->name(), QLatin1String("OUTPUT-2"));
+    QCOMPARE(output2->currentModeId(), QLatin1String("MODE-4"));
+    QCOMPARE(output2->currentMode()->size(), QSize(1920, 1280));
+    QCOMPARE(output2->isEnabled(), false);
+    QCOMPARE(output2->rotation(), Disman::Output::None);
+    QCOMPARE(output2->position(), QPoint(0, 0));
+    QCOMPARE(output2->isPrimary(), false);
 
     auto screen = config->screen();
     QCOMPARE(screen->currentSize(), QSize(1920, 1280));
@@ -342,7 +345,6 @@ void TestConfig::testIdenticalOutputs()
     output1->setEdid(data);
     output1->setName(QStringLiteral("DisplayPort-0"));
     output1->setPosition(QPoint(0, 0));
-    output1->setConnected(true);
     output1->setEnabled(false);
     output1->setModes(modes);
 
@@ -351,7 +353,6 @@ void TestConfig::testIdenticalOutputs()
     output2->setEdid(data);
     output2->setName(QStringLiteral("DisplayPort-1"));
     output2->setPosition(QPoint(0, 0));
-    output2->setConnected(true);
     output2->setEnabled(false);
     output2->setModes(modes);
 
@@ -360,7 +361,6 @@ void TestConfig::testIdenticalOutputs()
     output3->setEdid(data);
     output3->setName(QStringLiteral("DisplayPort-2"));
     output3->setPosition(QPoint(0, 0));
-    output3->setConnected(true);
     output3->setEnabled(false);
     output3->setModes(modes);
 
@@ -369,7 +369,6 @@ void TestConfig::testIdenticalOutputs()
     output6->setEdid(data);
     output6->setName(QStringLiteral("DVI-0"));
     output6->setPosition(QPoint(0, 0));
-    output6->setConnected(true);
     output6->setEnabled(false);
     output6->setModes(modes);
 
@@ -378,7 +377,6 @@ void TestConfig::testIdenticalOutputs()
     output4->setEdid(data);
     output4->setName(QStringLiteral("DisplayPort-3"));
     output4->setPosition(QPoint(0, 0));
-    output4->setConnected(true);
     output4->setEnabled(false);
     output4->setModes(modes);
 
@@ -387,7 +385,6 @@ void TestConfig::testIdenticalOutputs()
     output5->setEdid(data);
     output5->setName(QStringLiteral("DVI-1"));
     output5->setPosition(QPoint(0, 0));
-    output5->setConnected(true);
     output5->setEnabled(false);
     output5->setModes(modes);
 

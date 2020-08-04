@@ -30,7 +30,7 @@
         Q_ASSERT(!outputs.isEmpty());                                                              \
         Q_FOREACH (const Disman::OutputPtr& output, outputs) {                                     \
             Q_ASSERT(output);                                                                      \
-            Q_ASSERT(output->isConnected());                                                       \
+            Q_ASSERT(output->id());                                                                \
         }                                                                                          \
         break;                                                                                     \
     }
@@ -82,8 +82,6 @@ Disman::ConfigPtr Generator::idealConfig(const Disman::ConfigPtr& currentConfig)
 
     //     KDebug::Block idealBlock("Ideal Config");
     Disman::ConfigPtr config = currentConfig->clone();
-
-    disableAllDisconnectedOutputs(config->outputs());
 
     Disman::OutputList connectedOutputs = config->connectedOutputs();
     qCDebug(KDISPLAY_KDED) << "Connected outputs: " << connectedOutputs.count();
@@ -589,18 +587,6 @@ Disman::OutputPtr Generator::biggestOutput(const Disman::OutputList& outputs)
     }
 
     return biggest;
-}
-
-void Generator::disableAllDisconnectedOutputs(const Disman::OutputList& outputs)
-{
-    //     KDebug::Block disableBlock("Disabling disconnected screens");
-    Q_FOREACH (Disman::OutputPtr output, outputs) {
-        if (!output->isConnected()) {
-            qCDebug(KDISPLAY_KDED) << output->name() << " Disabled";
-            output->setEnabled(false);
-            output->setPrimary(false);
-        }
-    }
 }
 
 Disman::OutputPtr Generator::embeddedOutput(const Disman::OutputList& outputs)

@@ -90,13 +90,8 @@ void ConfigHandler::resetScale(const Disman::OutputPtr& output)
 
 void ConfigHandler::initOutput(const Disman::OutputPtr& output)
 {
-    if (output->isConnected()) {
-        resetScale(output);
-        m_outputs->add(output);
-    }
-    connect(output.data(), &Disman::Output::isConnectedChanged, this, [this, output]() {
-        Q_EMIT outputConnect(output->isConnected());
-    });
+    resetScale(output);
+    m_outputs->add(output);
 }
 
 void ConfigHandler::updateInitialData()

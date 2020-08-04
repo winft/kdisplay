@@ -101,10 +101,7 @@ void KDisplayApplet::checkOutputs()
     const int oldConnectedOutputCount = m_connectedOutputCount;
 
     const auto outputs = m_screenConfiguration->outputs();
-    m_connectedOutputCount
-        = std::count_if(outputs.begin(), outputs.end(), [](const Disman::OutputPtr& output) {
-              return output->isConnected();
-          });
+    m_connectedOutputCount = outputs.size();
 
     if (m_connectedOutputCount != oldConnectedOutputCount) {
         emit connectedOutputCountChanged();

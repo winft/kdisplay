@@ -38,10 +38,6 @@ Osd::Osd(const Disman::OutputPtr& output, QObject* parent)
     : QObject(parent)
     , m_output(output)
 {
-    connect(output.data(),
-            &Disman::Output::isConnectedChanged,
-            this,
-            &Osd::onOutputAvailabilityChanged);
     connect(
         output.data(), &Disman::Output::isEnabledChanged, this, &Osd::onOutputAvailabilityChanged);
     connect(output.data(), &Disman::Output::currentModeIdChanged, this, &Osd::updatePosition);
@@ -160,8 +156,7 @@ void Osd::onOsdActionSelected(int action)
 
 void Osd::onOutputAvailabilityChanged()
 {
-    if (!m_output || !m_output->isConnected() || !m_output->isEnabled()
-        || !m_output->currentMode()) {
+    if (!m_output || !m_output->isEnabled() || !m_output->currentMode()) {
         hideOsd();
     }
 }
