@@ -17,9 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KDED_OUTPUT_H
 #define KDED_OUTPUT_H
 
-#include "../common/control.h"
 #include "../common/globals.h"
 
+#include <disman/output.h>
 #include <disman/types.h>
 
 #include <QOrientationReading>
@@ -46,7 +46,7 @@ private:
     static QVariantMap getGlobalData(Disman::OutputPtr output);
 
     static void
-    readIn(Disman::OutputPtr output, const QVariantMap& info, Control::OutputRetention retention);
+    readIn(Disman::OutputPtr output, const QVariantMap& info, Disman::Output::Retention retention);
     static bool readInGlobal(Disman::OutputPtr output);
     static void readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMap& info);
     /*

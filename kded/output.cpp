@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStringList>
 
 #include <disman/edid.h>
-#include <disman/output.h>
 
 QString Output::s_dirName = QStringLiteral("outputs/");
 
@@ -54,14 +53,6 @@ void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMa
 {
     output->setRotation(
         static_cast<Disman::Output::Rotation>(info.value(QStringLiteral("rotation"), 1).toInt()));
-
-    // TODO: Disabled, since we use control files now. That is just a reminder. Remove at some point
-    //       when everything is proven to work.
-    //    bool scaleOk;
-    //    const qreal scale = info.value(QStringLiteral("scale"), 1.).toDouble(&scaleOk);
-    //    if (scaleOk) {
-    //        output->setScale(scale);
-    //    }
 
     const QVariantMap modeInfo = info[QStringLiteral("mode")].toMap();
     const QVariantMap modeSize = modeInfo[QStringLiteral("size")].toMap();
@@ -324,7 +315,7 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList& outpu
 
 void Output::readIn(Disman::OutputPtr output,
                     const QVariantMap& info,
-                    Control::OutputRetention retention)
+                    Disman::Output::Retention retention)
 {
     const QVariantMap posInfo = info[QStringLiteral("pos")].toMap();
     QPoint point(posInfo[QStringLiteral("x")].toInt(), posInfo[QStringLiteral("y")].toInt());
@@ -332,7 +323,7 @@ void Output::readIn(Disman::OutputPtr output,
     output->setPrimary(info[QStringLiteral("primary")].toBool());
     output->setEnabled(info[QStringLiteral("enabled")].toBool());
 
-    if (retention != Control::OutputRetention::Individual && readInGlobal(output)) {
+    if (retention != Disman::Output::Retention::Individual && readInGlobal(output)) {
         // output data read from global output file
         return;
     }
@@ -343,7 +334,7 @@ void Output::readIn(Disman::OutputPtr output,
 void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputsInfo)
 {
     Disman::OutputList outputs = config->outputs();
-    ControlConfig control(config);
+
     // As global outputs are indexed by a hash of their edid, which is not unique,
     // to be able to tell apart multiple identical outputs, these need special treatment
     QStringList duplicateIds;
@@ -380,7 +371,7 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputs
                 }
             }
             infoFound = true;
-            readIn(output, info, control.getOutputRetention(output));
+            readIn(output, info, output->retention());
             break;
         }
         if (!infoFound) {
@@ -396,12 +387,6 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputs
                 readInGlobalPartFromInfo(output, QVariantMap());
             }
         }
-        output->setScale(control.getScale(output));
-    }
-
-    for (Disman::OutputPtr output : outputs) {
-        auto source = control.getReplicationSource(output);
-        output->setReplicationSource(source ? source->id() : 0);
     }
 
     // TODO: this does not work at the moment with logical size replication. Deactivate for now.
@@ -431,11 +416,6 @@ bool Output::writeGlobalPart(const Disman::OutputPtr& output,
     info[QStringLiteral("id")] = output->hash();
     info[QStringLiteral("metadata")] = metadata(output);
     info[QStringLiteral("rotation")] = output->rotation();
-
-    // TODO: Disabled, since we use control files now. That is just a reminder. Remove at some point
-    //       when everything is proven to work.
-    //    // Round scale to four digits
-    //    info[QStringLiteral("scale")] = int(output->scale() * 10000 + 0.5) / 10000.;
 
     QVariantMap modeInfo;
     float refreshRate = -1.;

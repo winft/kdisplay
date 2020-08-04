@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <disman/configmonitor.h>
 #include <disman/getconfigoperation.h>
-#include <disman/output.h>
 
 #include <QRect>
 
@@ -36,10 +35,7 @@ void ConfigHandler::setConfig(Disman::ConfigPtr config)
 {
     m_config = config;
     m_initialConfig = m_config->clone();
-    m_initialControl.reset(new ControlConfig(m_initialConfig));
-
     Disman::ConfigMonitor::instance()->addConfig(m_config);
-    m_control.reset(new ControlConfig(config));
 
     m_outputs = new OutputModel(this);
     connect(
@@ -50,10 +46,6 @@ void ConfigHandler::setConfig(Disman::ConfigPtr config)
         initOutput(output);
     }
     m_lastNormalizedScreenSize = screenSize();
-
-    // TODO: put this into m_initialControl
-    m_initialRetention = getRetention();
-    Q_EMIT retentionChanged();
 
     connect(m_outputs, &OutputModel::changed, this, [this]() {
         checkNeedsSave();
@@ -73,40 +65,19 @@ void ConfigHandler::setConfig(Disman::ConfigPtr config)
     Q_EMIT outputModelChanged();
 }
 
-void ConfigHandler::resetScale(const Disman::OutputPtr& output)
-{
-    // Load scale control (either not set, same or windowing system does not transmit scale).
-    const qreal scale = m_control->getScale(output);
-    if (scale > 0) {
-        output->setScale(scale);
-        for (auto initialOutput : m_initialConfig->outputs()) {
-            if (initialOutput->id() == output->id()) {
-                initialOutput->setScale(scale);
-                break;
-            }
-        }
-    }
-}
-
 void ConfigHandler::initOutput(const Disman::OutputPtr& output)
 {
-    resetScale(output);
     m_outputs->add(output);
 }
 
 void ConfigHandler::updateInitialData()
 {
-    m_initialRetention = getRetention();
     connect(
         new GetConfigOperation(), &GetConfigOperation::finished, this, [this](ConfigOperation* op) {
             if (op->hasError()) {
                 return;
             }
             m_initialConfig = qobject_cast<GetConfigOperation*>(op)->config();
-            for (auto output : m_config->outputs()) {
-                resetScale(output);
-            }
-            m_initialControl.reset(new ControlConfig(m_initialConfig));
             checkNeedsSave();
         });
 }
@@ -125,11 +96,6 @@ void ConfigHandler::checkNeedsSave()
         }
     }
 
-    if (m_initialRetention != getRetention()) {
-        Q_EMIT needsSaveChecked(true);
-        return;
-    }
-
     for (const auto& output : m_config->connectedOutputs()) {
         const QString hash = output->hash();
         for (const auto& initialOutput : m_initialConfig->outputs()) {
@@ -146,9 +112,10 @@ void ConfigHandler::checkNeedsSave()
                     || output->scale() != initialOutput->scale()
                     || output->rotation() != initialOutput->rotation()
                     || output->replicationSource() != initialOutput->replicationSource()
-                    || autoRotate(output) != m_initialControl->getAutoRotate(output)
-                    || autoRotateOnlyInTabletMode(output)
-                        != m_initialControl->getAutoRotateOnlyInTabletMode(output);
+                    || output->retention() != initialOutput->retention()
+                    || output->auto_rotate() != initialOutput->auto_rotate()
+                    || output->auto_rotate_only_in_tablet_mode()
+                        != initialOutput->auto_rotate_only_in_tablet_mode();
             }
             if (needsSave) {
                 Q_EMIT needsSaveChecked(true);
@@ -221,22 +188,24 @@ void ConfigHandler::primaryOutputChanged(const Disman::OutputPtr& output)
     Q_UNUSED(output)
 }
 
-Control::OutputRetention ConfigHandler::getRetention() const
+Disman::Output::Retention ConfigHandler::getRetention() const
 {
-    using Retention = Control::OutputRetention;
+    using Retention = Disman::Output::Retention;
 
     auto ret = Retention::Undefined;
-    if (!m_control) {
+
+    if (!m_config) {
         return ret;
     }
+
     const auto outputs = m_config->connectedOutputs();
     if (outputs.isEmpty()) {
         return ret;
     }
-    ret = m_control->getOutputRetention(outputs.first());
+    ret = outputs.first()->retention();
 
     for (const auto& output : outputs) {
-        const auto outputRet = m_control->getOutputRetention(output);
+        const auto outputRet = output->retention();
         if (ret != outputRet) {
             // Control file with different retention values per output.
             return Retention::Undefined;
@@ -258,72 +227,27 @@ int ConfigHandler::retention() const
 
 void ConfigHandler::setRetention(int retention)
 {
-    using Retention = Control::OutputRetention;
+    using Retention = Disman::Output::Retention;
 
-    if (!m_control) {
+    if (!m_config) {
         return;
     }
+
     if (retention != static_cast<int>(Retention::Global)
         && retention != static_cast<int>(Retention::Individual)) {
         // We only allow setting to global or individual retention.
         return;
     }
+
     if (retention == ConfigHandler::retention()) {
         return;
     }
+
     auto ret = static_cast<Retention>(retention);
-    for (const auto& output : m_config->connectedOutputs()) {
-        m_control->setOutputRetention(output, ret);
+    for (auto const& output : m_config->connectedOutputs()) {
+        output->set_retention(ret);
     }
     checkNeedsSave();
     Q_EMIT retentionChanged();
     Q_EMIT changed();
-}
-
-qreal ConfigHandler::scale(const Disman::OutputPtr& output) const
-{
-    return m_control->getScale(output);
-}
-
-void ConfigHandler::setScale(Disman::OutputPtr& output, qreal scale)
-{
-    m_control->setScale(output, scale);
-}
-
-Disman::OutputPtr ConfigHandler::replicationSource(const Disman::OutputPtr& output) const
-{
-    return m_control->getReplicationSource(output);
-}
-
-void ConfigHandler::setReplicationSource(Disman::OutputPtr& output, const Disman::OutputPtr& source)
-{
-    m_control->setReplicationSource(output, source);
-}
-
-bool ConfigHandler::autoRotate(const Disman::OutputPtr& output) const
-{
-    return m_control->getAutoRotate(output);
-}
-
-void ConfigHandler::setAutoRotate(Disman::OutputPtr& output, bool autoRotate)
-{
-    m_control->setAutoRotate(output, autoRotate);
-}
-
-bool ConfigHandler::autoRotateOnlyInTabletMode(const Disman::OutputPtr& output) const
-{
-    return m_control->getAutoRotateOnlyInTabletMode(output);
-}
-
-void ConfigHandler::setAutoRotateOnlyInTabletMode(Disman::OutputPtr& output, bool value)
-{
-    m_control->setAutoRotateOnlyInTabletMode(output, value);
-}
-
-void ConfigHandler::writeControl()
-{
-    if (!m_control) {
-        return;
-    }
-    m_control->writeFile();
 }

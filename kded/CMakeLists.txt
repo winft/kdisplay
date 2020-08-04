@@ -12,7 +12,6 @@ set(kdisplay_daemon_SRCS
     osdmanager.cpp
     osdaction.cpp
     ${CMAKE_SOURCE_DIR}/common/globals.cpp
-    ${CMAKE_SOURCE_DIR}/common/control.cpp
     ${CMAKE_SOURCE_DIR}/common/orientation_sensor.cpp
     ${CMAKE_SOURCE_DIR}/common/utils.cpp
 )

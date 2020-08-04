@@ -10,7 +10,6 @@ macro(ADD_KDED_TEST testname)
         ${CMAKE_SOURCE_DIR}/kded/config.cpp
         ${CMAKE_SOURCE_DIR}/kded/output.cpp
         ${CMAKE_SOURCE_DIR}/common/globals.cpp
-        ${CMAKE_SOURCE_DIR}/common/control.cpp
         #${CMAKE_SOURCE_DIR}/kded/daemon.cpp
     )
     ecm_qt_declare_logging_category(test_SRCS HEADER kdisplay_daemon_debug.h IDENTIFIER KDISPLAY_KDED CATEGORY_NAME kdisplay.kded)

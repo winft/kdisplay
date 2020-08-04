@@ -60,9 +60,9 @@ QVariant OutputModel::data(const QModelIndex& index, int role) const
     case NormalizedPositionRole:
         return output->geometry().topLeft();
     case AutoRotateRole:
-        return m_config->autoRotate(output);
+        return output->auto_rotate();
     case AutoRotateOnlyInTabletModeRole:
-        return m_config->autoRotateOnlyInTabletMode(output);
+        return output->auto_rotate_only_in_tablet_mode();
     case RotationRole:
         return output->rotation();
     case ScaleRole:
@@ -163,7 +163,6 @@ bool OutputModel::setData(const QModelIndex& index, const QVariant& value, int r
         const qreal scale = value.toReal(&ok);
         if (ok && !qFuzzyCompare(output.ptr->scale(), scale)) {
             output.ptr->setScale(scale);
-            m_config->setScale(output.ptr, scale);
             Q_EMIT sizeChanged();
             Q_EMIT dataChanged(index, index, {role, SizeRole});
             return true;
@@ -380,10 +379,10 @@ bool OutputModel::setAutoRotate(int outputIndex, bool value)
 {
     Output& output = m_outputs[outputIndex];
 
-    if (m_config->autoRotate(output.ptr) == value) {
+    if (output.ptr->auto_rotate() == value) {
         return false;
     }
-    m_config->setAutoRotate(output.ptr, value);
+    output.ptr->set_auto_rotate(value);
 
     QModelIndex index = createIndex(outputIndex, 0);
     Q_EMIT dataChanged(index, index, {AutoRotateRole});
@@ -394,10 +393,10 @@ bool OutputModel::setAutoRotateOnlyInTabletMode(int outputIndex, bool value)
 {
     Output& output = m_outputs[outputIndex];
 
-    if (m_config->autoRotateOnlyInTabletMode(output.ptr) == value) {
+    if (output.ptr->auto_rotate_only_in_tablet_mode() == value) {
         return false;
     }
-    m_config->setAutoRotateOnlyInTabletMode(output.ptr, value);
+    output.ptr->set_auto_rotate_only_in_tablet_mode(value);
 
     QModelIndex index = createIndex(outputIndex, 0);
     Q_EMIT dataChanged(index, index, {AutoRotateOnlyInTabletModeRole});
@@ -545,11 +544,7 @@ QVector<float> OutputModel::refreshRates(const Disman::OutputPtr& output) const
 
 int OutputModel::replicationSourceId(const Output& output) const
 {
-    const Disman::OutputPtr source = m_config->replicationSource(output.ptr);
-    if (!source) {
-        return 0;
-    }
-    return source->id();
+    return output.ptr->replicationSource();
 }
 
 QStringList OutputModel::replicationSourceModel(const Disman::OutputPtr& output) const
@@ -590,7 +585,7 @@ bool OutputModel::setReplicationSourceIndex(int outputIndex, int sourceIndex)
             // no change
             return false;
         }
-        m_config->setReplicationSource(output.ptr, nullptr);
+        output.ptr->setReplicationSource(0);
         resetPosition(output);
     } else {
         const auto source = m_outputs[sourceIndex].ptr;
@@ -598,7 +593,7 @@ bool OutputModel::setReplicationSourceIndex(int outputIndex, int sourceIndex)
             // no change
             return false;
         }
-        m_config->setReplicationSource(output.ptr, source);
+        output.ptr->setReplicationSource(source->id());
         output.posReset = output.ptr->position();
         output.ptr->setPosition(source->position());
     }

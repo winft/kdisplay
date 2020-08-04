@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "config.h"
-#include "../common/control.h"
+
 #include "device.h"
 #include "kdisplay_daemon_debug.h"
 #include "output.h"
@@ -41,7 +41,6 @@ QString Config::configsDirPath()
 Config::Config(Disman::ConfigPtr config, QObject* parent)
     : QObject(parent)
     , m_data(config)
-    , m_control(new ControlConfig(config, this))
 {
 }
 
@@ -76,16 +75,11 @@ QString Config::id() const
     return m_data->connectedOutputsHash();
 }
 
-void Config::activateControlWatching()
-{
-    connect(m_control, &ControlConfig::changed, this, &Config::controlChanged);
-    m_control->activateWatcher();
-}
-
 bool Config::autoRotationRequested() const
 {
-    for (Disman::OutputPtr& output : m_data->outputs()) {
-        if (m_control->getAutoRotate(output)) {
+    for (auto const& output : m_data->outputs()) {
+        if (output->auto_rotate()) {
+            // We say auto rotation is requested when at least one output does.
             return true;
         }
     }
@@ -95,11 +89,11 @@ bool Config::autoRotationRequested() const
 void Config::setDeviceOrientation(QOrientationReading::Orientation orientation)
 {
     for (Disman::OutputPtr& output : m_data->outputs()) {
-        if (!m_control->getAutoRotate(output)) {
+        if (!output->auto_rotate()) {
             continue;
         }
         auto finalOrientation = orientation;
-        if (m_control->getAutoRotateOnlyInTabletMode(output) && !m_data->tabletModeEngaged()) {
+        if (output->auto_rotate_only_in_tablet_mode() && !m_data->tabletModeEngaged()) {
             finalOrientation = QOrientationReading::Orientation::TopUp;
         }
         if (Output::updateOrientation(output, finalOrientation)) {
@@ -116,21 +110,18 @@ bool Config::getAutoRotate() const
         if (output->type() != Disman::Output::Type::Panel) {
             return true;
         }
-        return m_control->getAutoRotate(output);
+        return output->auto_rotate();
     });
 }
 
 void Config::setAutoRotate(bool value)
 {
-    for (Disman::OutputPtr& output : m_data->outputs()) {
-        if (output->type() != Disman::Output::Type::Panel) {
-            continue;
-        }
-        if (m_control->getAutoRotate(output) != value) {
-            m_control->setAutoRotate(output, value);
+    for (auto& output : m_data->outputs()) {
+        if (output->type() == Disman::Output::Type::Panel) {
+            // For now we only set it for panel-type outputs.
+            output->set_auto_rotate(value);
         }
     }
-    m_control->writeFile();
 }
 
 bool Config::fileExists() const
@@ -277,19 +268,9 @@ bool Config::writeFile(const QString& filePath)
         };
         setOutputConfigInfo(output->isEnabled() ? output : oldOutput);
 
-        if (output->isEnabled()
-            && m_control->getOutputRetention(output->hash(), output->name())
-                != Control::OutputRetention::Individual) {
+        if (output->isEnabled() && output->retention() != Disman::Output::Retention::Individual) {
             // try to update global output data
             Output::writeGlobal(output);
-
-            // TODO: set some calculated scale in case control file not available
-            //            if (!m_control->getScale(output)) {
-            //                auto modeSize = output->enforcedModeSize();
-            //                auto logicalSize = output->geometry().size();
-            //                auto scale = logicalSize.width() > 0 ? modeSize.width() /
-            //                logicalSize.width() : 1; m_control->setScale(output, scale);
-            //            }
         }
 
         outputList.append(info);

@@ -23,8 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <memory>
 
-class ControlConfig;
-
 class Config : public QObject
 {
     Q_OBJECT
@@ -45,7 +43,6 @@ public:
         return m_data;
     }
 
-    void activateControlWatching();
     bool autoRotationRequested() const;
     void setDeviceOrientation(QOrientationReading::Orientation orientation);
     bool getAutoRotate() const;
@@ -58,9 +55,6 @@ public:
     }
 
     bool canBeApplied() const;
-
-Q_SIGNALS:
-    void controlChanged();
 
 private:
     friend class TestConfig;
@@ -77,7 +71,6 @@ private:
 
     Disman::ConfigPtr m_data;
     Disman::Config::ValidityFlags m_validityFlags;
-    ControlConfig* m_control;
 
     static QString s_configsDirName;
     static QString s_fixedConfigFileName;

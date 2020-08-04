@@ -16,7 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kcm.h"
 
-#include "../common/control.h"
 #include "../common/orientation_sensor.h"
 #include "config_handler.h"
 #include "kcm_kdisplay_debug.h"
@@ -49,12 +48,7 @@ KCMKDisplay::KCMKDisplay(QObject* parent, const QVariantList& args)
 {
     qmlRegisterType<OutputModel>();
     qmlRegisterType<Disman::Output>("org.kwinft.private.kcm.kdisplay", 1, 0, "Output");
-    qmlRegisterUncreatableType<Control>(
-        "org.kwinft.private.kcm.kdisplay",
-        1,
-        0,
-        "Control",
-        QStringLiteral("Provides only the OutputRetention enum class"));
+
     Log::instance();
 
     KAboutData* about = new KAboutData(QStringLiteral("kcm_kdisplay"),
@@ -100,6 +94,7 @@ void KCMKDisplay::configReady(ConfigOperation* op)
     Q_EMIT outputReplicationSupportedChanged();
     Q_EMIT tabletModeAvailableChanged();
     Q_EMIT autoRotationSupportedChanged();
+    Q_EMIT outputRetentionChanged();
 }
 
 void KCMKDisplay::forceSave()
@@ -159,7 +154,6 @@ void KCMKDisplay::doSave(bool force)
     if (!perOutputScaling()) {
         writeGlobalScale();
     }
-    m_config->writeControl();
 
     // Store the current config, apply settings. Block until operation is
     // completed, otherwise ConfigModule might terminate before we get to
