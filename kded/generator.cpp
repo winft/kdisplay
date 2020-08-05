@@ -220,11 +220,6 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
         embedded->setEnabled(true);
         embedded->setPrimary(true);
 
-        // TODO: do this just in auto mode?
-        const Disman::ModePtr embeddedMode = embedded->best_mode();
-        Q_ASSERT(embeddedMode);
-        embedded->set_mode(embeddedMode);
-
         return config;
     }
     case Generator::TurnOffEmbedded: {
@@ -242,40 +237,30 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
     }
     case Generator::TurnOffExternal: {
         qCDebug(KDISPLAY_KDED) << "Turn off external screen";
+
         embedded->setPosition(QPointF(0, 0));
         embedded->setEnabled(true);
         embedded->setPrimary(true);
 
-        // TODO: do this just in auto mode?
-        auto embeddedMode = embedded->best_mode();
-        Q_ASSERT(embeddedMode);
-        embedded->set_mode(embeddedMode);
-
         external->setEnabled(false);
         external->setPrimary(false);
+
         return config;
     }
     case Generator::ExtendToRight: {
         qCDebug(KDISPLAY_KDED) << "Extend to the right";
+
         embedded->setPosition(QPointF(0, 0));
         embedded->setEnabled(true);
         embedded->setPrimary(true);
 
-        // TODO: do this just in auto mode?
-        auto embeddedMode = embedded->best_mode();
-        Q_ASSERT(embeddedMode);
-        embedded->set_mode(embeddedMode);
+        // We must have a mode now.
+        Q_ASSERT(embedded->auto_mode());
 
-        Q_ASSERT(embedded->best_mode()); // we must have a mode now
         auto const size = embedded->geometry().size();
         external->setPosition(QPointF(size.width(), 0));
         external->setEnabled(true);
         external->setPrimary(false);
-
-        // TODO: do this just in auto mode?
-        auto extMode = external->best_mode();
-        Q_ASSERT(extMode);
-        external->set_mode(extMode);
 
         return config;
     }
@@ -332,11 +317,6 @@ void Generator::cloneScreens(Disman::OutputList& connectedOutputs)
             }
             output->setEnabled(true);
             output->setPosition(QPointF(0, 0));
-
-            // TODO: do this just in auto mode?
-            auto const mode = output->best_mode();
-            Q_ASSERT(mode);
-            output->set_mode(mode);
         }
         return;
     }
