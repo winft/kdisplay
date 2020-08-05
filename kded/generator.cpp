@@ -22,16 +22,18 @@
 
 #include <disman/config.h>
 
+#include <algorithm>
+
 #if defined(QT_NO_DEBUG)
 #define ASSERT_OUTPUTS(outputs)
 #else
 #define ASSERT_OUTPUTS(outputs)                                                                    \
     while (true) {                                                                                 \
-        Q_ASSERT(!outputs.isEmpty());                                                              \
-        Q_FOREACH (const Disman::OutputPtr& output, outputs) {                                     \
-            Q_ASSERT(output);                                                                      \
-            Q_ASSERT(output->id());                                                                \
-            Q_ASSERT(output->auto_mode());                                                         \
+        assert(!outputs.isEmpty());                                                                \
+        for (Disman::OutputPtr const& output : outputs) {                                          \
+            assert(output);                                                                        \
+            assert(output->id());                                                                  \
+            assert(output->auto_mode());                                                           \
         }                                                                                          \
         break;                                                                                     \
     }
@@ -68,49 +70,56 @@ void Generator::destroy()
     Generator::instance = nullptr;
 }
 
-Generator::~Generator()
-{
-}
-
 void Generator::setCurrentConfig(const Disman::ConfigPtr& currentConfig)
 {
     m_currentConfig = currentConfig;
+}
+
+void Generator::prepare(Disman::ConfigPtr& config)
+{
+    auto outputs = config->connectedOutputs();
+
+    for (auto& output : outputs) {
+        // The scale will generally be independent no matter where the output is
+        // scale will affect geometry, so do this first.
+        if (config->supportedFeatures().testFlag(Disman::Config::Feature::PerOutputScaling)) {
+            output->setScale(bestScaleForOutput(output));
+        }
+        output->set_auto_resolution(true);
+        output->set_auto_refresh_rate(true);
+    }
 }
 
 Disman::ConfigPtr Generator::idealConfig(const Disman::ConfigPtr& currentConfig)
 {
     Q_ASSERT(currentConfig);
 
-    //     KDebug::Block idealBlock("Ideal Config");
-    Disman::ConfigPtr config = currentConfig->clone();
+    auto config = currentConfig->clone();
 
-    Disman::OutputList connectedOutputs = config->connectedOutputs();
-    qCDebug(KDISPLAY_KDED) << "Connected outputs: " << connectedOutputs.count();
+    qCDebug(KDISPLAY_KDED) << "Generates ideal config for" << config->connectedOutputs().count()
+                           << "displays.";
 
-    if (connectedOutputs.isEmpty()) {
+    if (config->connectedOutputs().isEmpty()) {
+        qCDebug(KDISPLAY_KDED) << "No displays found. Nothing to generate.";
         return config;
     }
 
-    // the scale will generally be independent no matter where the output is
-    // scale will affect geometry, so do this first
-    if (config->supportedFeatures().testFlag(Disman::Config::Feature::PerOutputScaling)) {
-        for (auto output : qAsConst(connectedOutputs)) {
-            output->setScale(bestScaleForOutput(output));
-        }
-    }
+    prepare(config);
 
-    if (connectedOutputs.count() == 1) {
-        singleOutput(connectedOutputs);
+    auto outputs = config->connectedOutputs();
+
+    if (outputs.count() == 1) {
+        singleOutput(outputs);
         return config;
     }
 
     if (isLaptop()) {
-        laptop(connectedOutputs);
+        laptop(outputs);
         return fallbackIfNeeded(config);
     }
 
     qCDebug(KDISPLAY_KDED) << "Extend to Right";
-    extendToRight(connectedOutputs);
+    extendToRight(outputs);
 
     return fallbackIfNeeded(config);
 }
@@ -149,19 +158,14 @@ Disman::ConfigPtr Generator::fallbackIfNeeded(const Disman::ConfigPtr& config)
 
 Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
 {
-    //     KDebug::Block switchBlock("Display Switch");
-    Disman::ConfigPtr config = m_currentConfig;
+    qCDebug(KDISPLAY_KDED) << "Display Switch";
+
+    auto config = m_currentConfig;
     Q_ASSERT(config);
 
-    Disman::OutputList connectedOutputs = config->connectedOutputs();
+    prepare(config);
 
-    // the scale will generally be independent no matter where the output is
-    // scale will affect geometry, so do this first
-    if (config->supportedFeatures().testFlag(Disman::Config::Feature::PerOutputScaling)) {
-        for (auto output : qAsConst(connectedOutputs)) {
-            output->setScale(bestScaleForOutput(output));
-        }
-    }
+    auto connectedOutputs = config->connectedOutputs();
 
     // There's not much else we can do with only one output
     if (connectedOutputs.count() < 2) {
@@ -196,6 +200,7 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
 
     connectedOutputs.remove(embedded->id());
     external = connectedOutputs.value(connectedOutputs.keys().first());
+
     // Just to be sure
     if (external->modes().isEmpty()) {
         return config;
@@ -206,11 +211,10 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
         qCDebug(KDISPLAY_KDED) << "Extend to left";
         external->setPosition(QPointF(0, 0));
         external->setEnabled(true);
-        auto extMode = external->best_mode();
-        Q_ASSERT(extMode);
-        external->set_mode(extMode);
 
-        Q_ASSERT(external->commanded_mode()); // we must have a mode now
+        // We must have a mode now.
+        Q_ASSERT(external->auto_mode());
+
         auto const size = external->geometry().size();
         embedded->setPosition(QPointF(size.width(), 0));
         embedded->setEnabled(true);
@@ -278,7 +282,7 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
     case Generator::None:  // just return config
     case Generator::Clone: // handled above
         break;
-    } // switch
+    }
 
     return config;
 }
@@ -298,9 +302,10 @@ void Generator::cloneScreens(Disman::OutputList& connectedOutputs)
     QSet<QSize> commonSizes;
     const QSize maxScreenSize = m_currentConfig->screen()->maxSize();
 
-    Q_FOREACH (const Disman::OutputPtr& output, connectedOutputs) {
+    for (Disman::OutputPtr const& output : connectedOutputs) {
         QSet<QSize> modeSizes;
-        Q_FOREACH (const Disman::ModePtr& mode, output->modes()) {
+
+        for (Disman::ModePtr const& mode : output->modes()) {
             const QSize size = mode->size();
             if (size.width() > maxScreenSize.width() || size.height() > maxScreenSize.height()) {
                 continue;
@@ -318,9 +323,10 @@ void Generator::cloneScreens(Disman::OutputList& connectedOutputs)
     }
 
     qCDebug(KDISPLAY_KDED) << "Common sizes: " << commonSizes;
-    // fallback to biggestMode if no commonSizes have been found
+
+    // Fallback to biggestMode if no common sizes have been found.
     if (commonSizes.isEmpty()) {
-        Q_FOREACH (Disman::OutputPtr output, connectedOutputs) {
+        for (Disman::OutputPtr& output : connectedOutputs) {
             if (output->modes().isEmpty()) {
                 continue;
             }
@@ -335,9 +341,10 @@ void Generator::cloneScreens(Disman::OutputList& connectedOutputs)
         return;
     }
 
-    // At this point, we know we have common sizes, let's get the biggest on
+    // At this point, we know we have common sizes, let's get the biggest on.
     QList<QSize> commonSizeList = commonSizes.values();
     std::sort(commonSizeList.begin(), commonSizeList.end());
+
     const QSize biggestSize = commonSizeList.last();
 
     // Finally, look for the mode with biggestSize and biggest refreshRate and set it
@@ -349,7 +356,6 @@ void Generator::cloneScreens(Disman::OutputList& connectedOutputs)
         }
         output->set_resolution(biggestSize);
         output->set_auto_resolution(false);
-        output->set_auto_refresh_rate(true);
 
         // we resolved this mode previously, so it better works
         Q_ASSERT(output->auto_mode()->size() == biggestSize);
@@ -371,9 +377,6 @@ void Generator::singleOutput(Disman::OutputList& connectedOutputs)
         return;
     }
 
-    output->set_auto_resolution(true);
-    output->set_auto_refresh_rate(true);
-
     output->setEnabled(true);
     output->setPrimary(true);
     output->setPosition(QPointF(0, 0));
@@ -382,13 +385,17 @@ void Generator::singleOutput(Disman::OutputList& connectedOutputs)
 void Generator::laptop(Disman::OutputList& connectedOutputs)
 {
     ASSERT_OUTPUTS(connectedOutputs)
+
+    qCDebug(KDISPLAY_KDED) << "Generate laptop config with" << connectedOutputs.count()
+                           << "displays";
+
     if (connectedOutputs.isEmpty()) {
+        qCDebug(KDISPLAY_KDED) << "No displays found. Nothing to generate.";
         return;
     }
 
-    //     KDebug::Block laptopBlock("Laptop config");
+    auto embedded = embeddedOutput(connectedOutputs);
 
-    Disman::OutputPtr embedded = embeddedOutput(connectedOutputs);
     /* Apparently older laptops use "VGA-*" as embedded output ID, so embeddedOutput()
      * will fail, because it looks only for modern "LVDS", "EDP", etc. If we
      * fail to detect which output is embedded, just use the one  with the lowest
@@ -400,51 +407,44 @@ void Generator::laptop(Disman::OutputList& connectedOutputs)
         std::sort(keys.begin(), keys.end());
         embedded = connectedOutputs.value(keys.first());
     }
+
     connectedOutputs.remove(embedded->id());
 
     if (connectedOutputs.isEmpty() || embedded->modes().isEmpty()) {
-        qCWarning(KDISPLAY_KDED) << "No external outputs found, going for singleOutput()";
+        qCWarning(KDISPLAY_KDED) << "No external outputs found, going for single-output.";
         connectedOutputs.insert(embedded->id(), embedded);
         return singleOutput(connectedOutputs);
     }
 
-    if (isLidClosed() && connectedOutputs.count() == 1) {
-        qCDebug(KDISPLAY_KDED) << "With lid closed";
-        embedded->setEnabled(false);
-        embedded->setPrimary(false);
+    if (isLidClosed()) {
+        if (connectedOutputs.count() == 1) {
+            qCDebug(KDISPLAY_KDED) << "With lid closed and one other display.";
+            embedded->setEnabled(false);
+            embedded->setPrimary(false);
 
-        Disman::OutputPtr external = connectedOutputs.value(connectedOutputs.keys().first());
-        if (external->modes().isEmpty()) {
-            return;
+            Disman::OutputPtr external = connectedOutputs.value(connectedOutputs.keys().first());
+            if (external->modes().isEmpty()) {
+                return;
+            }
+            external->setEnabled(true);
+            external->setPrimary(true);
+            external->setPosition(QPointF(0, 0));
+        } else {
+            qCDebug(KDISPLAY_KDED) << "With lid closed and more than one other display.";
+            embedded->setEnabled(false);
+            embedded->setPrimary(false);
+
+            extendToRight(connectedOutputs);
         }
-        external->setEnabled(true);
-        external->setPrimary(true);
-
-        external->set_auto_resolution(true);
-        external->set_auto_refresh_rate(true);
-
-        external->setPosition(QPointF(0, 0));
-
         return;
     }
 
-    if (isLidClosed() && connectedOutputs.count() > 1) {
-        qCDebug(KDISPLAY_KDED) << "Lid is closed, and more than one output";
-        embedded->setEnabled(false);
-        embedded->setPrimary(false);
+    qCDebug(KDISPLAY_KDED) << "Lid is open.";
 
-        extendToRight(connectedOutputs);
-        return;
-    }
-
-    qCDebug(KDISPLAY_KDED) << "Lid is open";
-    // If lid is open, laptop screen should be primary
+    // If lid is open, laptop screen should be primary.
     embedded->setPosition(QPointF(0, 0));
     embedded->setPrimary(true);
     embedded->setEnabled(true);
-
-    embedded->set_auto_resolution(true);
-    embedded->set_auto_refresh_rate(true);
 
     double globalWidth = embedded->geometry().width();
     Disman::OutputPtr biggest = biggestOutput(connectedOutputs);
@@ -455,17 +455,11 @@ void Generator::laptop(Disman::OutputList& connectedOutputs)
     biggest->setEnabled(true);
     biggest->setPrimary(false);
 
-    biggest->set_auto_resolution(true);
-    biggest->set_auto_refresh_rate(true);
-
     globalWidth += biggest->geometry().width();
-    Q_FOREACH (Disman::OutputPtr output, connectedOutputs) {
+    for (Disman::OutputPtr& output : connectedOutputs) {
         output->setEnabled(true);
         output->setPrimary(false);
         output->setPosition(QPointF(globalWidth, 0));
-
-        output->set_auto_resolution(true);
-        output->set_auto_refresh_rate(true);
 
         globalWidth += output->geometry().width();
     }
@@ -480,12 +474,15 @@ void Generator::laptop(Disman::OutputList& connectedOutputs)
 void Generator::extendToRight(Disman::OutputList& connectedOutputs)
 {
     ASSERT_OUTPUTS(connectedOutputs);
+
+    qCDebug(KDISPLAY_KDED) << "Generate config by extending to the right.";
+
     if (connectedOutputs.isEmpty()) {
+        qCDebug(KDISPLAY_KDED) << "No displays found. Nothing to generate.";
         return;
     }
 
-    qCDebug(KDISPLAY_KDED) << "Extending to the right";
-    Disman::OutputPtr biggest = biggestOutput(connectedOutputs);
+    auto biggest = biggestOutput(connectedOutputs);
     Q_ASSERT(biggest);
 
     connectedOutputs.remove(biggest->id());
@@ -494,34 +491,28 @@ void Generator::extendToRight(Disman::OutputList& connectedOutputs)
     biggest->setPrimary(true);
     biggest->setPosition(QPointF(0, 0));
 
-    biggest->set_auto_resolution(true);
-    biggest->set_auto_refresh_rate(true);
-
     double globalWidth = biggest->geometry().width();
 
-    Q_FOREACH (Disman::OutputPtr output, connectedOutputs) {
+    for (Disman::OutputPtr& output : connectedOutputs) {
         output->setEnabled(true);
         output->setPrimary(false);
         output->setPosition(QPointF(globalWidth, 0));
-
-        output->set_auto_resolution(true);
-        output->set_auto_refresh_rate(true);
 
         globalWidth += output->geometry().width();
     }
 }
 
-qreal Generator::bestScaleForOutput(const Disman::OutputPtr& output)
+double Generator::bestScaleForOutput(const Disman::OutputPtr& output)
 {
-    // if we have no physical size, we can't determine the DPI properly. Fallback to scale 1
+    // If we have no physical size, we can't determine the DPI properly. Fallback to scale 1.
     if (output->sizeMm().height() <= 0) {
         return 1.0;
     }
     const auto mode = output->auto_mode();
     const qreal dpi = mode->size().height() / (output->sizeMm().height() / 25.4);
 
-    // if reported DPI is closer to two times normal DPI, followed by a sanity check of having the
-    // sort of vertical resolution you'd find in a high res screen
+    // If reported DPI is closer to two times normal DPI, followed by a sanity check of having the
+    // sort of vertical resolution you'd find in a high res screen.
     if (dpi > 96 * 1.5 && mode->size().height() >= 1440) {
         return 2.0;
     }
@@ -532,20 +523,19 @@ Disman::OutputPtr Generator::biggestOutput(const Disman::OutputList& outputs)
 {
     ASSERT_OUTPUTS(outputs)
 
-    int area, total = 0;
+    auto max_area = 0;
     Disman::OutputPtr biggest;
-    Q_FOREACH (const Disman::OutputPtr& output, outputs) {
+
+    for (Disman::OutputPtr const& output : outputs) {
         auto const mode = output->best_mode();
         if (!mode) {
             continue;
         }
-        area = mode->size().width() * mode->size().height();
-        if (area <= total) {
-            continue;
+        auto const area = mode->size().width() * mode->size().height();
+        if (area > max_area) {
+            max_area = area;
+            biggest = output;
         }
-
-        total = area;
-        biggest = output;
     }
 
     return biggest;
@@ -553,15 +543,11 @@ Disman::OutputPtr Generator::biggestOutput(const Disman::OutputList& outputs)
 
 Disman::OutputPtr Generator::embeddedOutput(const Disman::OutputList& outputs)
 {
-    Q_FOREACH (const Disman::OutputPtr& output, outputs) {
-        if (output->type() != Disman::Output::Panel) {
-            continue;
-        }
-
-        return output;
-    }
-
-    return Disman::OutputPtr();
+    auto it = std::find_if(
+        outputs.constBegin(), outputs.constEnd(), [](Disman::OutputPtr const& output) {
+            return output->type() == Disman::Output::Panel;
+        });
+    return it != outputs.constEnd() ? *it : Disman::OutputPtr();
 }
 
 bool Generator::isLaptop() const

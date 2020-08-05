@@ -15,8 +15,7 @@
  *  along with this program; if not, write to the Free Software                      *
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA   *
  *************************************************************************************/
-#ifndef KDED_GENERATOR_H
-#define KDED_GENERATOR_H
+#pragma once
 
 #include <QObject>
 
@@ -27,6 +26,7 @@ namespace Disman
 {
 class Config;
 }
+
 class Generator : public QObject
 {
     Q_OBJECT
@@ -57,8 +57,9 @@ Q_SIGNALS:
     void ready();
 
 private:
-    explicit Generator();
-    ~Generator() override;
+    Generator();
+
+    void prepare(Disman::ConfigPtr& config);
 
     Disman::ConfigPtr fallbackIfNeeded(const Disman::ConfigPtr& config);
 
@@ -67,7 +68,7 @@ private:
     void singleOutput(Disman::OutputList& connectedOutputs);
     void extendToRight(Disman::OutputList& connectedOutputs);
 
-    qreal bestScaleForOutput(const Disman::OutputPtr& output);
+    double bestScaleForOutput(const Disman::OutputPtr& output);
 
     Disman::OutputPtr biggestOutput(const Disman::OutputList& connectedOutputs);
     Disman::OutputPtr embeddedOutput(const Disman::OutputList& connectedOutputs);
@@ -85,5 +86,3 @@ private:
 
     static Generator* instance;
 };
-
-#endif // KDED_GENERATOR_H
