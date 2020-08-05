@@ -85,8 +85,13 @@ QVariant OutputModel::data(const QModelIndex& index, int role) const
         return replicasModel(output);
     case RefreshRatesRole:
         QVariantList ret;
-        for (const auto rate : refreshRates(output)) {
-            ret << i18n("%1 Hz", rate);
+        for (auto rate : refreshRates(output)) {
+            if (output->auto_refresh_rate()) {
+                // We just show rounded values when not manual selecting a rate.
+                ret << i18n("≈ %1 Hz", static_cast<int>(rate + 0.5));
+            } else {
+                ret << i18n("%1 Hz", rate);
+            }
         }
         return ret;
     }
@@ -386,7 +391,7 @@ bool OutputModel::setAutoRefreshRate(int outputIndex, bool value)
     output.ptr->set_auto_refresh_rate(value);
 
     QModelIndex index = createIndex(outputIndex, 0);
-    Q_EMIT dataChanged(index, index, {AutoRefreshRateRole, RefreshRateIndexRole});
+    Q_EMIT dataChanged(index, index, {AutoRefreshRateRole, RefreshRateIndexRole, RefreshRatesRole});
     return true;
 }
 
