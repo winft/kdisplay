@@ -2,7 +2,7 @@
     "outputs": [
         {
             "enabled": true,
-            "id": "OUTPUT-1",
+            "id": "229fa9e8a378cb151d7302df42666774",
             "metadata": {
                 "name": "OUTPUT-1"
             },
@@ -22,7 +22,7 @@
         },
         {
             "enabled": true,
-            "id": "OUTPUT-2",
+            "id": "cf680eb9a91e64b21324c8cd60d0796a",
             "metadata": {
                 "name": "OUTPUT-2"
             },

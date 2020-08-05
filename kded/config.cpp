@@ -256,7 +256,7 @@ bool Config::writeFile(const QString& filePath)
 
         const auto oldOutputIt = std::find_if(
             oldOutputs.constBegin(), oldOutputs.constEnd(), [output](const Disman::OutputPtr& out) {
-                return out->hashMd5() == output->hashMd5();
+                return out->hash() == output->hash();
             });
         const Disman::OutputPtr oldOutput
             = oldOutputIt != oldOutputs.constEnd() ? *oldOutputIt : nullptr;

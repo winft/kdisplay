@@ -112,7 +112,7 @@ void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMa
 
 QVariantMap Output::getGlobalData(Disman::OutputPtr output)
 {
-    QFile file(path(output->hashMd5()));
+    QFile file(path(output->hash()));
     if (!file.open(QIODevice::ReadOnly)) {
         qCDebug(KDISPLAY_KDED) << "Failed to open file" << file.fileName();
         return QVariantMap();
@@ -474,7 +474,7 @@ void Output::writeGlobal(const Disman::OutputPtr& output)
         return;
     }
 
-    QFile file(createPath(output->hashMd5()));
+    QFile file(createPath(output->hash()));
     if (!file.open(QIODevice::WriteOnly)) {
         qCWarning(KDISPLAY_KDED) << "Failed to open global output file for writing! "
                                  << file.errorString();

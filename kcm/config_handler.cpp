@@ -115,8 +115,7 @@ void ConfigHandler::checkNeedsSave()
 {
     if (m_config->supportedFeatures() & Disman::Config::Feature::PrimaryDisplay) {
         if (m_config->primaryOutput() && m_initialConfig->primaryOutput()) {
-            if (m_config->primaryOutput()->hashMd5()
-                != m_initialConfig->primaryOutput()->hashMd5()) {
+            if (m_config->primaryOutput()->hash() != m_initialConfig->primaryOutput()->hash()) {
                 Q_EMIT needsSaveChecked(true);
                 return;
             }
@@ -132,9 +131,9 @@ void ConfigHandler::checkNeedsSave()
     }
 
     for (const auto& output : m_config->connectedOutputs()) {
-        const QString hash = output->hashMd5();
+        const QString hash = output->hash();
         for (const auto& initialOutput : m_initialConfig->outputs()) {
-            if (hash != initialOutput->hashMd5()) {
+            if (hash != initialOutput->hash()) {
                 continue;
             }
             bool needsSave = false;

@@ -143,7 +143,7 @@ ControlConfig::ControlConfig(Disman::ConfigPtr config, QObject* parent)
     const auto outputs = config->outputs();
     allIds.reserve(outputs.count());
     for (const Disman::OutputPtr& output : outputs) {
-        const auto outputId = output->hashMd5();
+        const auto outputId = output->hash();
         if (allIds.contains(outputId) && !m_duplicateOutputIds.contains(outputId)) {
             m_duplicateOutputIds << outputId;
         }
@@ -225,7 +225,7 @@ bool ControlConfig::infoIsOutput(const QVariantMap& info,
 
 Control::OutputRetention ControlConfig::getOutputRetention(const Disman::OutputPtr& output) const
 {
-    return getOutputRetention(output->hashMd5(), output->name());
+    return getOutputRetention(output->hash(), output->name());
 }
 
 Control::OutputRetention ControlConfig::getOutputRetention(const QString& outputId,
@@ -260,7 +260,7 @@ QVariantMap createOutputInfo(const QString& outputId, const QString& outputName)
 
 void ControlConfig::setOutputRetention(const Disman::OutputPtr& output, OutputRetention value)
 {
-    setOutputRetention(output->hashMd5(), output->name(), value);
+    setOutputRetention(output->hash(), output->name(), value);
 }
 
 void ControlConfig::setOutputRetention(const QString& outputId,
@@ -290,7 +290,7 @@ void ControlConfig::setOutputRetention(const QString& outputId,
 
 qreal ControlConfig::getScale(const Disman::OutputPtr& output) const
 {
-    return getScale(output->hashMd5(), output->name());
+    return getScale(output->hash(), output->name());
 }
 
 qreal ControlConfig::getScale(const QString& outputId, const QString& outputName) const
@@ -318,7 +318,7 @@ qreal ControlConfig::getScale(const QString& outputId, const QString& outputName
 
 void ControlConfig::setScale(const Disman::OutputPtr& output, qreal value)
 {
-    setScale(output->hashMd5(), output->name(), value);
+    setScale(output->hash(), output->name(), value);
 }
 
 // TODO: combine methods (templated functions)
@@ -355,7 +355,7 @@ void ControlConfig::setScale(const QString& outputId, const QString& outputName,
 
 bool ControlConfig::getAutoRotate(const Disman::OutputPtr& output) const
 {
-    return getAutoRotate(output->hashMd5(), output->name());
+    return getAutoRotate(output->hash(), output->name());
 }
 
 bool ControlConfig::getAutoRotate(const QString& outputId, const QString& outputName) const
@@ -383,7 +383,7 @@ bool ControlConfig::getAutoRotate(const QString& outputId, const QString& output
 
 void ControlConfig::setAutoRotate(const Disman::OutputPtr& output, bool value)
 {
-    setAutoRotate(output->hashMd5(), output->name(), value);
+    setAutoRotate(output->hash(), output->name(), value);
 }
 
 // TODO: combine methods (templated functions)
@@ -420,7 +420,7 @@ void ControlConfig::setAutoRotate(const QString& outputId, const QString& output
 
 bool ControlConfig::getAutoRotateOnlyInTabletMode(const Disman::OutputPtr& output) const
 {
-    return getAutoRotateOnlyInTabletMode(output->hashMd5(), output->name());
+    return getAutoRotateOnlyInTabletMode(output->hash(), output->name());
 }
 
 bool ControlConfig::getAutoRotateOnlyInTabletMode(const QString& outputId,
@@ -449,7 +449,7 @@ bool ControlConfig::getAutoRotateOnlyInTabletMode(const QString& outputId,
 
 void ControlConfig::setAutoRotateOnlyInTabletMode(const Disman::OutputPtr& output, bool value)
 {
-    setAutoRotateOnlyInTabletMode(output->hashMd5(), output->name(), value);
+    setAutoRotateOnlyInTabletMode(output->hash(), output->name(), value);
 }
 
 // TODO: combine methods (templated functions)
@@ -488,7 +488,7 @@ void ControlConfig::setAutoRotateOnlyInTabletMode(const QString& outputId,
 
 Disman::OutputPtr ControlConfig::getReplicationSource(const Disman::OutputPtr& output) const
 {
-    return getReplicationSource(output->hashMd5(), output->name());
+    return getReplicationSource(output->hash(), output->name());
 }
 
 Disman::OutputPtr ControlConfig::getReplicationSource(const QString& outputId,
@@ -509,7 +509,7 @@ Disman::OutputPtr ControlConfig::getReplicationSource(const QString& outputId,
         }
 
         for (const auto& output : m_config->outputs()) {
-            if (output->hashMd5() == sourceHash && output->name() == sourceName) {
+            if (output->hash() == sourceHash && output->name() == sourceName) {
                 return output;
             }
         }
@@ -523,7 +523,7 @@ Disman::OutputPtr ControlConfig::getReplicationSource(const QString& outputId,
 void ControlConfig::setReplicationSource(const Disman::OutputPtr& output,
                                          const Disman::OutputPtr& source)
 {
-    setReplicationSource(output->hashMd5(), output->name(), source);
+    setReplicationSource(output->hash(), output->name(), source);
 }
 
 void ControlConfig::setReplicationSource(const QString& outputId,
@@ -532,7 +532,7 @@ void ControlConfig::setReplicationSource(const QString& outputId,
 {
     QList<QVariant>::iterator it;
     QVariantList outputsInfo = getOutputs();
-    const QString sourceHash = source ? source->hashMd5() : QStringLiteral("");
+    const QString sourceHash = source ? source->hash() : QStringLiteral("");
     const QString sourceName = source ? source->name() : QStringLiteral("");
 
     for (it = outputsInfo.begin(); it != outputsInfo.end(); ++it) {
@@ -587,7 +587,7 @@ ControlOutput::ControlOutput(Disman::OutputPtr output, QObject* parent)
 
 QString ControlOutput::id() const
 {
-    return m_output->hashMd5();
+    return m_output->hash();
 }
 
 QString ControlOutput::name() const
@@ -605,7 +605,7 @@ QString ControlOutput::filePath() const
     if (!m_output) {
         return QString();
     }
-    return filePathFromHash(m_output->hashMd5());
+    return filePathFromHash(m_output->hash());
 }
 
 qreal ControlOutput::getScale() const
@@ -618,7 +618,7 @@ void ControlOutput::setScale(qreal value)
 {
     auto& infoMap = info();
     if (infoMap.isEmpty()) {
-        infoMap = createOutputInfo(m_output->hashMd5(), m_output->name());
+        infoMap = createOutputInfo(m_output->hash(), m_output->name());
     }
     infoMap[QStringLiteral("scale")] = value;
 }
@@ -633,7 +633,7 @@ void ControlOutput::setAutoRotate(bool value)
 {
     auto& infoMap = info();
     if (infoMap.isEmpty()) {
-        infoMap = createOutputInfo(m_output->hashMd5(), m_output->name());
+        infoMap = createOutputInfo(m_output->hash(), m_output->name());
     }
     infoMap[QStringLiteral("autorotate")] = value;
 }
@@ -648,7 +648,7 @@ void ControlOutput::setAutoRotateOnlyInTabletMode(bool value)
 {
     auto& infoMap = info();
     if (infoMap.isEmpty()) {
-        infoMap = createOutputInfo(m_output->hashMd5(), m_output->name());
+        infoMap = createOutputInfo(m_output->hash(), m_output->name());
     }
     infoMap[QStringLiteral("autorotate-tablet-only")] = value;
 }
