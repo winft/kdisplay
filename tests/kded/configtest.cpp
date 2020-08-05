@@ -300,6 +300,8 @@ void TestConfig::testNullConfig()
     auto config = createConfig(true, true);
     QVERIFY(!config->readFile(QString()));
 
+    auto guard = TestPathGuard();
+
     // Wrong config file name should fail to save
     QVERIFY(!config->writeFile(QString()));
 }
