@@ -127,8 +127,7 @@ ColumnLayout {
                 enabled: !auto_refresh_rate_switch.checked
                 Kirigami.FormData.label: i18n("Refresh rate:")
                 model: element.refreshRates
-                currentIndex: element.refreshRateIndex ?
-                                  element.refreshRateIndex : 0
+                currentIndex: element.refreshRateIndex
                 onActivated: element.refreshRateIndex = currentIndex
             }
         }
