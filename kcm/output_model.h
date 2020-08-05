@@ -37,6 +37,8 @@ public:
         PositionRole,
         /** Position for backend relative to most northwest display corner. */
         NormalizedPositionRole,
+        AutoResolutionRole,
+        AutoRefreshRateRole,
         AutoRotateRole,
         AutoRotateOnlyInTabletModeRole,
         RotationRole,
@@ -127,6 +129,9 @@ private:
     bool setResolution(int outputIndex, int resIndex);
     bool setRefreshRate(int outputIndex, int refIndex);
     bool setRotation(int outputIndex, Disman::Output::Rotation rotation);
+
+    bool setAutoResolution(int outputIndex, bool value);
+    bool setAutoRefreshRate(int outputIndex, bool value);
     bool setAutoRotate(int outputIndex, bool value);
     bool setAutoRotateOnlyInTabletMode(int outputIndex, bool value);
 

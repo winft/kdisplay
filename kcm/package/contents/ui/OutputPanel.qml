@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 import QtQuick 2.9
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.3 as Controls
+import QtQuick.Controls 2.15 as Controls
 import org.kde.kirigami 2.4 as Kirigami
 
 import org.kde.kcm 1.2 as KCM
@@ -42,12 +42,27 @@ ColumnLayout {
            visible: kcm.primaryOutputSupported && kcm.outputModel.rowCount() > 1
         }
 
-        Controls.ComboBox {
+        ColumnLayout {
             Kirigami.FormData.label: i18n("Resolution:")
-            model: element.resolutions
-            currentIndex: element.resolutionIndex !== undefined ?
-                              element.resolutionIndex : -1
-            onActivated: element.resolutionIndex = currentIndex
+            Kirigami.FormData.buddyFor: auto_resolution_switch
+
+            Layout.fillWidth: true
+            spacing: Kirigami.Units.smallSpacing
+
+            Controls.Switch {
+                id: auto_resolution_switch
+                text: i18n("Auto")
+                checked: element.autoResolution
+                onToggled: element.autoResolution = checked
+            }
+
+            Controls.ComboBox {
+                enabled: !auto_resolution_switch.checked
+                model: element.resolutions
+                currentIndex: element.resolutionIndex !== undefined ?
+                                  element.resolutionIndex : -1
+                onActivated: element.resolutionIndex = currentIndex
+            }
         }
 
         RowLayout {
@@ -94,12 +109,28 @@ ColumnLayout {
 
         Orientation {}
 
-        Controls.ComboBox {
+        ColumnLayout {
             Kirigami.FormData.label: i18n("Refresh rate:")
-            model: element.refreshRates
-            currentIndex: element.refreshRateIndex ?
-                              element.refreshRateIndex : 0
-            onActivated: element.refreshRateIndex = currentIndex
+            Kirigami.FormData.buddyFor: auto_refresh_rate_switch
+
+            Layout.fillWidth: true
+            spacing: Kirigami.Units.smallSpacing
+
+            Controls.Switch {
+                id: auto_refresh_rate_switch
+                text: i18n("Auto")
+                checked: element.autoRefreshRate
+                onToggled: element.autoRefreshRate = checked
+            }
+
+            Controls.ComboBox {
+                enabled: !auto_refresh_rate_switch.checked
+                Kirigami.FormData.label: i18n("Refresh rate:")
+                model: element.refreshRates
+                currentIndex: element.refreshRateIndex ?
+                                  element.refreshRateIndex : 0
+                onActivated: element.refreshRateIndex = currentIndex
+            }
         }
 
         Controls.ComboBox {

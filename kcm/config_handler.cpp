@@ -113,6 +113,8 @@ void ConfigHandler::checkNeedsSave()
                     || output->rotation() != initialOutput->rotation()
                     || output->replicationSource() != initialOutput->replicationSource()
                     || output->retention() != initialOutput->retention()
+                    || output->auto_resolution() != initialOutput->auto_resolution()
+                    || output->auto_refresh_rate() != initialOutput->auto_refresh_rate()
                     || output->auto_rotate() != initialOutput->auto_rotate()
                     || output->auto_rotate_only_in_tablet_mode()
                         != initialOutput->auto_rotate_only_in_tablet_mode();
