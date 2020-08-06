@@ -42,29 +42,6 @@ ColumnLayout {
            visible: kcm.primaryOutputSupported && kcm.outputModel.rowCount() > 1
         }
 
-        ColumnLayout {
-            Kirigami.FormData.label: i18n("Resolution:")
-            Kirigami.FormData.buddyFor: auto_resolution_switch
-
-            Layout.fillWidth: true
-            spacing: Kirigami.Units.smallSpacing
-
-            Controls.Switch {
-                id: auto_resolution_switch
-                text: i18n("Auto")
-                checked: element.autoResolution
-                onToggled: element.autoResolution = checked
-            }
-
-            Controls.ComboBox {
-                enabled: !auto_resolution_switch.checked
-                model: element.resolutions
-                currentIndex: element.resolutionIndex !== undefined ?
-                                  element.resolutionIndex : -1
-                onActivated: element.resolutionIndex = currentIndex
-            }
-        }
-
         RowLayout {
             Layout.fillWidth: true
 
@@ -108,6 +85,29 @@ ColumnLayout {
         }
 
         Orientation {}
+
+        ColumnLayout {
+            Kirigami.FormData.label: i18n("Resolution:")
+            Kirigami.FormData.buddyFor: auto_resolution_switch
+
+            Layout.fillWidth: true
+            spacing: Kirigami.Units.smallSpacing
+
+            Controls.Switch {
+                id: auto_resolution_switch
+                text: i18n("Auto")
+                checked: element.autoResolution
+                onToggled: element.autoResolution = checked
+            }
+
+            Controls.ComboBox {
+                enabled: !auto_resolution_switch.checked
+                model: element.resolutions
+                currentIndex: element.resolutionIndex !== undefined ?
+                                  element.resolutionIndex : -1
+                onActivated: element.resolutionIndex = currentIndex
+            }
+        }
 
         ColumnLayout {
             Kirigami.FormData.label: i18n("Refresh rate:")
