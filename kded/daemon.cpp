@@ -51,7 +51,6 @@ KDisplayDaemon::KDisplayDaemon(QObject* parent, const QList<QVariant>&)
     : KDEDModule(parent)
     , m_monitoring(false)
     , m_changeCompressor(new QTimer(this))
-    , m_saveTimer(nullptr)
     , m_lidClosedTimer(new QTimer(this))
     , m_orientationSensor(new OrientationSensor(this))
 {
@@ -219,24 +218,7 @@ void KDisplayDaemon::refreshConfig()
 void KDisplayDaemon::applyConfig()
 {
     qCDebug(KDISPLAY_KDED) << "Applying config";
-    if (m_monitoredConfig->fileExists()) {
-        applyKnownConfig();
-        return;
-    }
     applyIdealConfig();
-}
-
-void KDisplayDaemon::applyKnownConfig()
-{
-    qCDebug(KDISPLAY_KDED) << "Applying known config";
-
-    std::unique_ptr<Config> readInConfig = m_monitoredConfig->readFile();
-    if (readInConfig) {
-        doApplyConfig(std::move(readInConfig));
-    } else {
-        // loading not successful, fall back to ideal config
-        applyIdealConfig();
-    }
 }
 
 void KDisplayDaemon::applyLayoutPreset(const QString& presetName)
@@ -270,39 +252,46 @@ void KDisplayDaemon::setAutoRotate(bool value)
 
 void KDisplayDaemon::applyOsdAction(Disman::OsdAction::Action action)
 {
+    Disman::ConfigPtr config;
+
     switch (action) {
     case Disman::OsdAction::NoAction:
         qCDebug(KDISPLAY_KDED) << "OSD: no action";
-        return;
+        break;
     case Disman::OsdAction::SwitchToInternal:
         qCDebug(KDISPLAY_KDED) << "OSD: switch to internal";
-        doApplyConfig(Generator::self()->displaySwitch(Generator::TurnOffExternal));
-        return;
+        config = Generator::self()->displaySwitch(Generator::TurnOffExternal);
+        break;
     case Disman::OsdAction::SwitchToExternal:
         qCDebug(KDISPLAY_KDED) << "OSD: switch to external";
-        doApplyConfig(Generator::self()->displaySwitch(Generator::TurnOffEmbedded));
-        return;
+        config = Generator::self()->displaySwitch(Generator::TurnOffEmbedded);
+        break;
     case Disman::OsdAction::ExtendLeft:
         qCDebug(KDISPLAY_KDED) << "OSD: extend left";
-        doApplyConfig(Generator::self()->displaySwitch(Generator::ExtendToLeft));
-        return;
+        config = Generator::self()->displaySwitch(Generator::ExtendToLeft);
+        break;
     case Disman::OsdAction::ExtendRight:
         qCDebug(KDISPLAY_KDED) << "OSD: extend right";
-        doApplyConfig(Generator::self()->displaySwitch(Generator::ExtendToRight));
+        config = Generator::self()->displaySwitch(Generator::ExtendToRight);
         return;
     case Disman::OsdAction::Clone:
         qCDebug(KDISPLAY_KDED) << "OSD: clone";
-        doApplyConfig(Generator::self()->displaySwitch(Generator::Clone));
-        return;
+        config = Generator::self()->displaySwitch(Generator::Clone);
+        break;
     }
-    Q_UNREACHABLE();
+    if (config) {
+        doApplyConfig(config);
+    }
 }
 
 void KDisplayDaemon::applyIdealConfig()
 {
-    const bool showOsd = m_monitoredConfig->data()->connectedOutputs().count() > 1 && !m_startingUp;
+    const bool showOsd = m_monitoredConfig->data()->connectedOutputs().count() > 1 && !m_startingUp
+        && m_monitoredConfig->data()->origin() == Disman::Config::Origin::generated;
 
-    doApplyConfig(Generator::self()->idealConfig(m_monitoredConfig->data()));
+    if (auto config = Generator::self()->idealConfig(m_monitoredConfig->data())) {
+        doApplyConfig(config);
+    }
 
     if (showOsd) {
         qCDebug(KDISPLAY_KDED) << "Getting ideal config from user via OSD...";
@@ -333,32 +322,6 @@ void KDisplayDaemon::configChanged()
     }
     if (changed) {
         refreshConfig();
-    }
-
-    // Reset timer, delay the writeback
-    if (!m_saveTimer) {
-        m_saveTimer = new QTimer(this);
-        m_saveTimer->setInterval(300);
-        m_saveTimer->setSingleShot(true);
-        connect(m_saveTimer, &QTimer::timeout, this, &KDisplayDaemon::saveCurrentConfig);
-    }
-    m_saveTimer->start();
-}
-
-void KDisplayDaemon::saveCurrentConfig()
-{
-    qCDebug(KDISPLAY_KDED) << "Saving current config to file";
-
-    // We assume the config is valid, since it's what we got, but we are interested
-    // in the "at least one enabled screen" check
-
-    if (m_monitoredConfig->canBeApplied()) {
-        m_monitoredConfig->writeFile();
-        m_monitoredConfig->log();
-    } else {
-        qCWarning(KDISPLAY_KDED) << "Config does not have at least one screen enabled, WILL NOT "
-                                    "save this config, this is not what user wants.";
-        m_monitoredConfig->log();
     }
 }
 

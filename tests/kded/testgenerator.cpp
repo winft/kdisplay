@@ -38,18 +38,13 @@ private:
 private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
-    void singleOutput();
+
     void laptopLidOpenAndExternal();
     void laptopLidOpenAndTwoExternal();
     void laptopLidClosedAndExternal();
     void laptopLidClosedAndThreeExternal();
     void laptopDockedLidOpenAndExternal();
     void laptopDockedLidClosedAndExternal();
-    void workstationWithoutScreens();
-    void workstationWithNoConnectedScreens();
-    void workstationTwoExternalSameSize();
-    void workstationFallbackMode();
-    void workstationTwoExternalDiferentSize();
 
     void switchDisplayTwoScreens();
 };
@@ -60,7 +55,6 @@ Disman::ConfigPtr testScreenConfig::loadConfig(const QByteArray& fileName)
 
     QByteArray path(TEST_DATA "configs/" + fileName);
     qputenv("DISMAN_BACKEND_ARGS", "TEST_DATA=" + path);
-    qDebug() << path;
 
     Disman::GetConfigOperation* op = new Disman::GetConfigOperation;
     if (!op->exec()) {
@@ -79,23 +73,6 @@ void testScreenConfig::initTestCase()
 void testScreenConfig::cleanupTestCase()
 {
     Disman::BackendManager::instance()->shutdownBackend();
-}
-
-void testScreenConfig::singleOutput()
-{
-    const ConfigPtr currentConfig = loadConfig("singleOutput.json");
-    QVERIFY(currentConfig);
-
-    Generator* generator = Generator::self();
-    generator->setCurrentConfig(currentConfig);
-
-    ConfigPtr config = generator->idealConfig(currentConfig);
-    OutputPtr output = config->outputs().value(1);
-
-    QCOMPARE(output->auto_mode()->id(), QLatin1String("3"));
-    QCOMPARE(output->isEnabled(), true);
-    QCOMPARE(output->isPrimary(), true);
-    QCOMPARE(output->position(), QPoint(0, 0));
 }
 
 void testScreenConfig::laptopLidOpenAndExternal()
@@ -118,7 +95,7 @@ void testScreenConfig::laptopLidOpenAndExternal()
 
     QCOMPARE(external->auto_mode()->id(), QLatin1String("4"));
     QCOMPARE(external->isPrimary(), false);
-    QCOMPARE(external->isEnabled(), true);
+    QCOMPARE(external->isEnabled(), false);
     QCOMPARE(external->position(), QPoint(1280, 0));
 }
 
@@ -143,14 +120,14 @@ void testScreenConfig::laptopLidOpenAndTwoExternal()
 
     QCOMPARE(hdmi1->auto_mode()->id(), QLatin1String("4"));
     QCOMPARE(hdmi1->isPrimary(), false);
-    QCOMPARE(hdmi1->isEnabled(), true);
-    QCOMPARE(hdmi1->position(),
-             QPoint(hdmi2->position().x() + hdmi2->auto_mode()->size().width(), 0));
+    QCOMPARE(hdmi1->isEnabled(), false);
+    QCOMPARE(hdmi1->position(), QPoint(1280, 0));
 
     QCOMPARE(hdmi2->auto_mode()->id(), QLatin1String("4"));
     QCOMPARE(hdmi2->isPrimary(), false);
-    QCOMPARE(hdmi2->isEnabled(), true);
-    QCOMPARE(hdmi2->position(), QPoint(1280, 0));
+    QCOMPARE(hdmi2->isEnabled(), false);
+    QCOMPARE(hdmi2->position(),
+             QPoint(hdmi1->position().x() + hdmi1->auto_mode()->size().width(), 0));
 }
 
 void testScreenConfig::laptopLidClosedAndExternal()
@@ -195,12 +172,12 @@ void testScreenConfig::laptopLidClosedAndThreeExternal()
     QCOMPARE(laptop->isEnabled(), false);
     QCOMPARE(laptop->isPrimary(), false);
 
-    QCOMPARE(hdmi1->isEnabled(), true);
+    QCOMPARE(hdmi1->isEnabled(), false);
     QCOMPARE(hdmi1->isPrimary(), false);
     QCOMPARE(hdmi1->auto_mode()->id(), QLatin1String("4"));
-    QCOMPARE(hdmi1->position(), QPoint(primary->auto_mode()->size().width(), 0));
+    QCOMPARE(hdmi1->position(), QPoint(laptop->auto_mode()->size().width(), 0));
 
-    QCOMPARE(hdmi2->isEnabled(), true);
+    QCOMPARE(hdmi2->isEnabled(), false);
     QCOMPARE(hdmi2->isPrimary(), false);
     QCOMPARE(hdmi2->auto_mode()->id(), QLatin1String("3"));
     QCOMPARE(hdmi2->position(),
@@ -262,115 +239,6 @@ void testScreenConfig::laptopDockedLidClosedAndExternal()
     QCOMPARE(external->position(), QPoint(0, 0));
 }
 
-void testScreenConfig::workstationWithoutScreens()
-{
-    const ConfigPtr currentConfig = loadConfig("workstationWithoutScreens.json");
-    QVERIFY(currentConfig);
-
-    Generator* generator = Generator::self();
-    generator->setCurrentConfig(currentConfig);
-    generator->setForceLaptop(false);
-    generator->setForceNotLaptop(true);
-
-    ConfigPtr config = generator->idealConfig(currentConfig);
-
-    QVERIFY(config->outputs().isEmpty());
-}
-
-void testScreenConfig::workstationWithNoConnectedScreens()
-{
-    const ConfigPtr currentConfig = loadConfig("workstationWithNoConnectedScreens.json");
-    QVERIFY(currentConfig);
-
-    Generator* generator = Generator::self();
-    generator->setCurrentConfig(currentConfig);
-    generator->setForceLaptop(false);
-    generator->setForceNotLaptop(true);
-
-    ConfigPtr config = generator->idealConfig(currentConfig);
-
-    OutputPtr external1 = config->output(1);
-    OutputPtr external2 = config->output(2);
-
-    QCOMPARE(external1->isEnabled(), true);
-    QCOMPARE(external2->isEnabled(), true);
-}
-
-void testScreenConfig::workstationTwoExternalSameSize()
-{
-    const ConfigPtr currentConfig = loadConfig("workstaionTwoExternalSameSize.json");
-    QVERIFY(currentConfig);
-
-    Generator* generator = Generator::self();
-    generator->setCurrentConfig(currentConfig);
-    generator->setForceLaptop(false);
-    generator->setForceNotLaptop(true);
-
-    ConfigPtr config = generator->idealConfig(currentConfig);
-    OutputPtr external1 = config->output(1);
-    OutputPtr external2 = config->output(2);
-
-    QCOMPARE(external1->isPrimary(), true);
-    QCOMPARE(external1->isEnabled(), true);
-    QCOMPARE(external1->auto_mode()->id(), QLatin1String("3"));
-    QCOMPARE(external1->position(), QPoint(0, 0));
-
-    QCOMPARE(external2->isPrimary(), false);
-    QCOMPARE(external2->isEnabled(), true);
-    QCOMPARE(external2->auto_mode()->id(), QLatin1String("3"));
-    QCOMPARE(external2->position(), QPoint(external1->auto_mode()->size().width(), 0));
-}
-
-void testScreenConfig::workstationFallbackMode()
-{
-    const ConfigPtr currentConfig = loadConfig("workstationFallbackMode.json");
-    QVERIFY(currentConfig);
-
-    Generator* generator = Generator::self();
-    generator->setCurrentConfig(currentConfig);
-    generator->setForceLaptop(false);
-    generator->setForceNotLaptop(true);
-
-    ConfigPtr config = generator->idealConfig(currentConfig);
-    OutputPtr external1 = config->output(1);
-    OutputPtr external2 = config->output(2);
-
-    QCOMPARE(external1->isPrimary(), true);
-    QCOMPARE(external1->isEnabled(), true);
-    QCOMPARE(external1->auto_mode()->id(), QLatin1String("1"));
-    QCOMPARE(external1->position(), QPoint(0, 0));
-
-    QCOMPARE(external2->isPrimary(), false);
-    QCOMPARE(external2->isEnabled(), true);
-    QCOMPARE(external2->auto_mode()->id(), QLatin1String("1"));
-    QCOMPARE(external2->position(), QPoint(0, 0));
-}
-
-void testScreenConfig::workstationTwoExternalDiferentSize()
-{
-
-    const ConfigPtr currentConfig = loadConfig("workstationTwoExternalDiferentSize.json");
-    QVERIFY(currentConfig);
-
-    Generator* generator = Generator::self();
-    generator->setCurrentConfig(currentConfig);
-    generator->setForceLaptop(false);
-    generator->setForceNotLaptop(true);
-
-    ConfigPtr config = generator->idealConfig(currentConfig);
-    OutputPtr external1 = config->output(1);
-    OutputPtr external2 = config->output(2);
-
-    QCOMPARE(external1->isPrimary(), false);
-    QCOMPARE(external1->isEnabled(), true);
-    QCOMPARE(external1->auto_mode()->id(), QLatin1String("3"));
-    QCOMPARE(external1->position(), QPoint(external2->auto_mode()->size().width(), 0));
-
-    QCOMPARE(external2->isPrimary(), true);
-    QCOMPARE(external2->isEnabled(), true);
-    QCOMPARE(external2->auto_mode()->id(), QLatin1String("4"));
-}
-
 void testScreenConfig::switchDisplayTwoScreens()
 {
     const ConfigPtr currentConfig = loadConfig("switchDisplayTwoScreens.json");
@@ -387,14 +255,17 @@ void testScreenConfig::switchDisplayTwoScreens()
     ConfigPtr config = generator->displaySwitch(Generator::Clone);
     OutputPtr laptop = config->outputs().value(1);
     OutputPtr external = config->outputs().value(2);
-    QCOMPARE(laptop->auto_mode()->id(), QLatin1String("2"));
+    QCOMPARE(laptop->auto_mode()->id(), QLatin1String("3"));
     QCOMPARE(laptop->isPrimary(), true);
     QCOMPARE(laptop->isEnabled(), true);
     QCOMPARE(laptop->position(), QPoint(0, 0));
-    QCOMPARE(external->auto_mode()->id(), QLatin1String("3"));
+    QCOMPARE(laptop->replicationSource(), 0);
+
+    QCOMPARE(external->auto_mode()->id(), QLatin1String("5"));
     QCOMPARE(external->isPrimary(), false);
     QCOMPARE(external->isEnabled(), true);
-    QCOMPARE(external->position(), QPoint(0, 0));
+    QCOMPARE(external->position(), QPoint(1280, 0));
+    QCOMPARE(external->replicationSource(), 1);
 
     // Extend to left
     config = generator->displaySwitch(Generator::ExtendToLeft);
@@ -403,11 +274,11 @@ void testScreenConfig::switchDisplayTwoScreens()
     QCOMPARE(laptop->auto_mode()->id(), QLatin1String("3"));
     QCOMPARE(laptop->isPrimary(), true);
     QCOMPARE(laptop->isEnabled(), true);
-    QCOMPARE(laptop->position(), QPoint(1920, 0));
+    QCOMPARE(laptop->position(), QPoint(0, 0));
     QCOMPARE(external->auto_mode()->id(), QLatin1String("5"));
     QCOMPARE(external->isPrimary(), false);
     QCOMPARE(external->isEnabled(), true);
-    QCOMPARE(external->position(), QPoint(0, 0));
+    QCOMPARE(external->position(), QPoint(-1920, 0));
 
     // Disable embedded,. enable external
     config = generator->displaySwitch(Generator::TurnOffEmbedded);
@@ -422,15 +293,7 @@ void testScreenConfig::switchDisplayTwoScreens()
 
     // Enable embedded, disable external
     config = generator->displaySwitch(Generator::TurnOffExternal);
-    laptop = config->outputs().value(1);
-    external = config->outputs().value(2);
-    ;
-    QCOMPARE(laptop->auto_mode()->id(), QLatin1String("3"));
-    QCOMPARE(laptop->isPrimary(), true);
-    QCOMPARE(laptop->isEnabled(), true);
-    QCOMPARE(laptop->position(), QPoint(0, 0));
-    ;
-    QCOMPARE(external->isEnabled(), false);
+    QVERIFY(!config);
 
     // Extend to right
     config = generator->displaySwitch(Generator::ExtendToRight);
@@ -453,7 +316,6 @@ void testScreenConfig::switchDisplayTwoScreensNoCommonMode()
 
     Generator* generator = Generator::self();
     generator->setCurrentConfig(currentConfig);
-    qDebug() << "MEH MOH";
     ConfigPtr config = generator->displaySwitch(Generator::Clone);
     OutputPtr laptop = config->outputs().value(1);
     OutputPtr external = config->outputs().value(2);

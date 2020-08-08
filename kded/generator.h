@@ -45,7 +45,7 @@ public:
 
     void setCurrentConfig(const Disman::ConfigPtr& currentConfig);
 
-    Disman::ConfigPtr idealConfig(const Disman::ConfigPtr& currentConfig);
+    Disman::ConfigPtr idealConfig(Disman::ConfigPtr const& config);
     Disman::ConfigPtr displaySwitch(DisplaySwitchAction iteration);
 
     void setForceLaptop(bool force);
@@ -59,19 +59,7 @@ Q_SIGNALS:
 private:
     Generator();
 
-    void prepare(Disman::ConfigPtr& config);
-
-    Disman::ConfigPtr fallbackIfNeeded(const Disman::ConfigPtr& config);
-
-    void cloneScreens(Disman::OutputList& connectedOutputs);
-    void laptop(Disman::OutputList& connectedOutputs);
-    void singleOutput(Disman::OutputList& connectedOutputs);
-    void extendToRight(Disman::OutputList& connectedOutputs);
-
-    double bestScaleForOutput(const Disman::OutputPtr& output);
-
-    Disman::OutputPtr biggestOutput(const Disman::OutputList& connectedOutputs);
-    Disman::OutputPtr embeddedOutput(const Disman::OutputList& connectedOutputs);
+    Disman::ConfigPtr laptop(Disman::ConfigPtr const& config);
 
     bool isLaptop() const;
     bool isLidClosed() const;
