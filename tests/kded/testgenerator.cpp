@@ -66,6 +66,7 @@ Disman::ConfigPtr testScreenConfig::loadConfig(const QByteArray& fileName)
 
 void testScreenConfig::initTestCase()
 {
+    qputenv("DISMAN_BACKEND_INPROCESS", "1");
     qputenv("DISMAN_LOGGING", "false");
     setenv("DISMAN_BACKEND", "Fake", 1);
 }
