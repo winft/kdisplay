@@ -49,7 +49,7 @@ K_PLUGIN_CLASS_WITH_JSON(KDisplayDaemon, "kdisplay.json")
 
 KDisplayDaemon::KDisplayDaemon(QObject* parent, const QList<QVariant>&)
     : KDEDModule(parent)
-    , m_monitoring(false)
+    , m_monitoring(true)
     , m_changeCompressor(new QTimer(this))
     , m_lidClosedTimer(new QTimer(this))
     , m_orientationSensor(new OrientationSensor(this))
@@ -190,9 +190,7 @@ void KDisplayDaemon::doApplyConfig(std::unique_ptr<Config> config)
 {
     m_monitoredConfig = std::move(config);
 
-    m_orientationSensor->setEnabled(m_monitoredConfig->autoRotationRequested());
     refreshConfig();
-    updateOrientation();
 }
 
 void KDisplayDaemon::refreshConfig()
@@ -219,6 +217,8 @@ void KDisplayDaemon::applyConfig()
 {
     qCDebug(KDISPLAY_KDED) << "Applying config";
     applyIdealConfig();
+    m_orientationSensor->setEnabled(m_monitoredConfig->autoRotationRequested());
+    updateOrientation();
 }
 
 void KDisplayDaemon::applyLayoutPreset(const QString& presetName)
