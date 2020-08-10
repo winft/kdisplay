@@ -29,6 +29,7 @@ ColumnLayout {
         twinFormLayouts: globalSettingsLayout
 
         Controls.CheckBox {
+           id: enabled_checkbox
            text: i18n("Enabled")
            checked: element.enabled
            onClicked: element.enabled = checked
@@ -36,10 +37,16 @@ ColumnLayout {
         }
 
         Controls.CheckBox {
+           id: primary_checkbox
            text: i18n("Primary")
            checked: element.primary
            onClicked: element.primary = checked
            visible: kcm.primaryOutputSupported && kcm.outputModel.rowCount() > 1
+        }
+
+        Item {
+            visible: primary_checkbox.visible || enabled_checkbox.visible
+            Kirigami.FormData.isSection: false
         }
 
         RowLayout {
@@ -84,7 +91,15 @@ ColumnLayout {
             }
         }
 
+        Item {
+            Kirigami.FormData.isSection: false
+        }
+
         Orientation {}
+
+        Item {
+            Kirigami.FormData.isSection: false
+        }
 
         ColumnLayout {
             Kirigami.FormData.label: i18n("Resolution:")
@@ -107,6 +122,10 @@ ColumnLayout {
                                   element.resolutionIndex : -1
                 onActivated: element.resolutionIndex = currentIndex
             }
+        }
+
+        Item {
+            Kirigami.FormData.isSection: false
         }
 
         ColumnLayout {
