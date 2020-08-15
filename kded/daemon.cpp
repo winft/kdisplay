@@ -188,6 +188,10 @@ void KDisplayDaemon::doApplyConfig(const Disman::ConfigPtr& config)
 
 void KDisplayDaemon::doApplyConfig(std::unique_ptr<Config> config)
 {
+    qCWarning(KDISPLAY_KDED)
+        << "Currently all KDisplay daemon config control is disabled. Doing nothing";
+    return;
+
     m_monitoredConfig = std::move(config);
 
     refreshConfig();
@@ -307,6 +311,10 @@ void KDisplayDaemon::configChanged()
     qCDebug(KDISPLAY_KDED) << "Change detected";
     m_monitoredConfig->log();
 
+    qCWarning(KDISPLAY_KDED)
+        << "Currently all KDisplay daemon config control is disabled. Doing nothing";
+    return;
+
     // Modes may have changed, fix-up current mode id
     bool changed = false;
     Q_FOREACH (const Disman::OutputPtr& output, m_monitoredConfig->data()->outputs()) {
@@ -365,6 +373,11 @@ void KDisplayDaemon::lidClosedChanged(bool lidIsClosed)
         return;
     } else {
         qCDebug(KDISPLAY_KDED) << "Lid opened!";
+
+        qCWarning(KDISPLAY_KDED)
+            << "Currently all KDisplay daemon config control is disabled. Doing nothing";
+        return;
+
         // We should have a config with "_lidOpened" suffix lying around. If not,
         // then the configuration has changed while the lid was closed and we just
         // use applyConfig() and see what we can do ...
@@ -392,6 +405,11 @@ void KDisplayDaemon::lidClosedTimeout()
 
     qCDebug(KDISPLAY_KDED)
         << "Lid closed without system going to suspend -> turning off the screen";
+
+    qCWarning(KDISPLAY_KDED)
+        << "Currently all KDisplay daemon config control is disabled. Doing nothing";
+    return;
+
     for (Disman::OutputPtr& output : m_monitoredConfig->data()->outputs()) {
         if (output->type() == Disman::Output::Panel) {
             if (output->isEnabled()) {
