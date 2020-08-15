@@ -180,22 +180,20 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
 {
     qCDebug(KDISPLAY_KDED) << "Display Switch";
 
+    auto const outputs_cnt = m_currentConfig->outputs().size();
+    if (outputs_cnt < 2) {
+        qCDebug(KDISPLAY_KDED) << "Only one output connected. Display Switch not applicable.";
+        return m_currentConfig;
+    }
+    if (outputs_cnt > 2) {
+        qCDebug(KDISPLAY_KDED) << "More than two outputs connected. Display Switch not applicable.";
+        return m_currentConfig;
+    }
+
     Disman::Generator generator(m_currentConfig);
 
     auto config = generator.config();
     Q_ASSERT(config);
-
-    auto connectedOutputs = config->outputs();
-
-    // There's not much else we can do with only one output
-    if (connectedOutputs.count() < 2) {
-        return config;
-    }
-
-    // We cannot try all possible combinations with two and more outputs
-    if (connectedOutputs.count() > 2) {
-        return m_currentConfig;
-    }
 
     auto success = false;
     switch (action) {
