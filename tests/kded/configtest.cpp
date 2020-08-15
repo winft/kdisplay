@@ -132,9 +132,9 @@ void TestConfig::testSimpleConfig()
 
     auto config = configWrapper->data();
     QVERIFY(config);
-    QCOMPARE(config->connectedOutputs().count(), 2);
+    QCOMPARE(config->outputs().count(), 2);
 
-    auto output = config->connectedOutputs().first();
+    auto output = config->outputs().first();
     QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
     QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-4"));
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
@@ -143,7 +143,7 @@ void TestConfig::testSimpleConfig()
     QCOMPARE(output->position(), QPoint(0, 0));
     QCOMPARE(output->isPrimary(), true);
 
-    auto output2 = config->connectedOutputs().last();
+    auto output2 = config->outputs().last();
     QCOMPARE(output2->name(), QLatin1String("OUTPUT-2"));
     QCOMPARE(output2->auto_mode()->id(), QLatin1String("MODE-4"));
     QCOMPARE(output2->auto_mode()->size(), QSize(1920, 1280));
@@ -164,9 +164,9 @@ void TestConfig::testTwoScreenConfig()
     auto config = configWrapper->data();
     QVERIFY(config);
 
-    QCOMPARE(config->connectedOutputs().count(), 2);
+    QCOMPARE(config->outputs().count(), 2);
 
-    auto output = config->connectedOutputs().first();
+    auto output = config->outputs().first();
     QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
     QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-4"));
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
@@ -175,7 +175,7 @@ void TestConfig::testTwoScreenConfig()
     QCOMPARE(output->position(), QPoint(0, 0));
     QCOMPARE(output->isPrimary(), true);
 
-    output = config->connectedOutputs().last();
+    output = config->outputs().last();
     QCOMPARE(output->name(), QLatin1String("OUTPUT-2"));
     QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-3"));
     QCOMPARE(output->auto_mode()->size(), QSize(1280, 1024));
@@ -196,9 +196,9 @@ void TestConfig::testRotatedScreenConfig()
     auto config = configWrapper->data();
     QVERIFY(config);
 
-    QCOMPARE(config->connectedOutputs().count(), 2);
+    QCOMPARE(config->outputs().count(), 2);
 
-    auto output = config->connectedOutputs().first();
+    auto output = config->outputs().first();
     QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
     QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-4"));
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
@@ -207,7 +207,7 @@ void TestConfig::testRotatedScreenConfig()
     QCOMPARE(output->position(), QPoint(0, 0));
     QCOMPARE(output->isPrimary(), true);
 
-    output = config->connectedOutputs().last();
+    output = config->outputs().last();
     QCOMPARE(output->name(), QLatin1String("OUTPUT-2"));
     QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-3"));
     QCOMPARE(output->auto_mode()->size(), QSize(1280, 1024));
@@ -228,9 +228,9 @@ void TestConfig::testDisabledScreenConfig()
     auto config = configWrapper->data();
     QVERIFY(config);
 
-    QCOMPARE(config->connectedOutputs().count(), 2);
+    QCOMPARE(config->outputs().count(), 2);
 
-    auto output = config->connectedOutputs().first();
+    auto output = config->outputs().first();
     QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
     QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-4"));
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
@@ -239,7 +239,7 @@ void TestConfig::testDisabledScreenConfig()
     QCOMPARE(output->position(), QPoint(0, 0));
     QCOMPARE(output->isPrimary(), true);
 
-    output = config->connectedOutputs().last();
+    output = config->outputs().last();
     QCOMPARE(output->name(), QLatin1String("OUTPUT-2"));
     QCOMPARE(output->isEnabled(), false);
 
@@ -414,8 +414,8 @@ void TestConfig::testIdenticalOutputs()
     QVERIFY(config2);
     QVERIFY(config != config2);
 
-    QCOMPARE(config2->connectedOutputs().count(), 6);
-    Q_FOREACH (auto output, config2->connectedOutputs()) {
+    QCOMPARE(config2->outputs().count(), 6);
+    Q_FOREACH (auto output, config2->outputs()) {
         QVERIFY(positions.keys().contains(output->name()));
         QVERIFY(output->name() != output->hash());
         QCOMPARE(positions[output->name()], output->position());
@@ -443,14 +443,14 @@ void TestConfig::testMoveConfig()
 
     // Basic assumptions for the remainder of our tests, this is the situation where the lid is
     // opened
-    QCOMPARE(config->connectedOutputs().count(), 2);
+    QCOMPARE(config->outputs().count(), 2);
 
-    auto output = config->connectedOutputs().first();
+    auto output = config->outputs().first();
     QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->isPrimary(), true);
 
-    auto output2 = config->connectedOutputs().last();
+    auto output2 = config->outputs().last();
     QCOMPARE(output2->name(), QLatin1String("OUTPUT-2"));
     QCOMPARE(output2->isEnabled(), true);
     QCOMPARE(output2->isPrimary(), false);
@@ -492,12 +492,12 @@ void TestConfig::testMoveConfig()
     // Make sure the laptop panel is enabled and primary again
     config = configWrapper->data();
 
-    output = config->connectedOutputs().first();
+    output = config->outputs().first();
     QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->isPrimary(), true);
 
-    output2 = config->connectedOutputs().last();
+    output2 = config->outputs().last();
     QCOMPARE(output2->name(), QLatin1String("OUTPUT-2"));
     QCOMPARE(output2->isEnabled(), true);
     QCOMPARE(output2->isPrimary(), false);

@@ -286,7 +286,7 @@ void KDisplayDaemon::applyOsdAction(Disman::OsdAction::Action action)
 
 void KDisplayDaemon::applyIdealConfig()
 {
-    const bool showOsd = m_monitoredConfig->data()->connectedOutputs().count() > 1 && !m_startingUp
+    const bool showOsd = m_monitoredConfig->data()->outputs().count() > 1 && !m_startingUp
         && m_monitoredConfig->data()->origin() == Disman::Config::Origin::generated;
 
     if (auto config = Generator::self()->idealConfig(m_monitoredConfig->data())) {
@@ -352,7 +352,7 @@ void KDisplayDaemon::lidClosedChanged(bool lidIsClosed)
 {
     // Ignore this when we don't have any external monitors, we can't turn off our
     // only screen
-    if (m_monitoredConfig->data()->connectedOutputs().count() == 1) {
+    if (m_monitoredConfig->data()->outputs().count() == 1) {
         return;
     }
 

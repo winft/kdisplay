@@ -185,7 +185,7 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
     auto config = generator.config();
     Q_ASSERT(config);
 
-    auto connectedOutputs = config->connectedOutputs();
+    auto connectedOutputs = config->outputs();
 
     // There's not much else we can do with only one output
     if (connectedOutputs.count() < 2) {

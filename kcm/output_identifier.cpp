@@ -36,7 +36,7 @@ OutputIdentifier::OutputIdentifier(Disman::ConfigPtr config, QObject* parent)
     const QString qmlPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                                    QStringLiteral(QML_PATH "OutputIdentifier.qml"));
 
-    for (const auto& output : config->connectedOutputs()) {
+    for (const auto& output : config->outputs()) {
         if (!output->auto_mode()) {
             continue;
         }

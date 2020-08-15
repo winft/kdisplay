@@ -96,7 +96,7 @@ void ConfigHandler::checkNeedsSave()
         }
     }
 
-    for (const auto& output : m_config->connectedOutputs()) {
+    for (const auto& output : m_config->outputs()) {
         const QString hash = output->hash();
         for (const auto& initialOutput : m_initialConfig->outputs()) {
             if (hash != initialOutput->hash()) {
@@ -134,7 +134,7 @@ QSize ConfigHandler::screenSize() const
     int width = 0, height = 0;
     QSize size;
 
-    for (const auto& output : m_config->connectedOutputs()) {
+    for (const auto& output : m_config->outputs()) {
         if (!output->isPositionable()) {
             continue;
         }
@@ -200,7 +200,7 @@ Disman::Output::Retention ConfigHandler::getRetention() const
         return ret;
     }
 
-    const auto outputs = m_config->connectedOutputs();
+    const auto outputs = m_config->outputs();
     if (outputs.isEmpty()) {
         return ret;
     }
@@ -246,7 +246,7 @@ void ConfigHandler::setRetention(int retention)
     }
 
     auto ret = static_cast<Retention>(retention);
-    for (auto const& output : m_config->connectedOutputs()) {
+    for (auto const& output : m_config->outputs()) {
         output->set_retention(ret);
     }
     checkNeedsSave();
