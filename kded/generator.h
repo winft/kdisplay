@@ -15,81 +15,62 @@
  *  along with this program; if not, write to the Free Software                      *
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA   *
  *************************************************************************************/
-
-#ifndef KDED_GENERATOR_H
-#define KDED_GENERATOR_H
+#pragma once
 
 #include <QObject>
 
-#include <disman/output.h>
 #include <disman/mode.h>
+#include <disman/output.h>
 
 namespace Disman
 {
-    class Config;
+class Config;
 }
+
 class Generator : public QObject
 {
     Q_OBJECT
-    public:
-        enum DisplaySwitchAction {
-            None = 0,
-            Clone = 1,
-            ExtendToLeft = 2,
-            TurnOffEmbedded = 3,
-            TurnOffExternal = 4,
-            ExtendToRight = 5,
-        };
+public:
+    enum DisplaySwitchAction {
+        None = 0,
+        Clone = 1,
+        ExtendToLeft = 2,
+        TurnOffEmbedded = 3,
+        TurnOffExternal = 4,
+        ExtendToRight = 5,
+    };
 
-        static Generator* self();
-        static void destroy();
+    static Generator* self();
+    static void destroy();
 
-        void setCurrentConfig(const Disman::ConfigPtr &currentConfig);
+    void setCurrentConfig(const Disman::ConfigPtr& currentConfig);
 
-        Disman::ConfigPtr idealConfig(const Disman::ConfigPtr &currentConfig);
-        Disman::ConfigPtr displaySwitch(DisplaySwitchAction iteration);
+    Disman::ConfigPtr idealConfig(Disman::ConfigPtr const& config);
+    Disman::ConfigPtr displaySwitch(DisplaySwitchAction iteration);
 
-        void setForceLaptop(bool force);
-        void setForceLidClosed(bool force);
-        void setForceDocked(bool force);
-        void setForceNotLaptop(bool force);
+    void setForceLaptop(bool force);
+    void setForceLidClosed(bool force);
+    void setForceDocked(bool force);
+    void setForceNotLaptop(bool force);
 
-        static Disman::ModePtr biggestMode(const Disman::ModeList &modes);
+Q_SIGNALS:
+    void ready();
 
-    Q_SIGNALS:
-        void ready();
+private:
+    Generator();
 
-    private:
-        explicit Generator();
-        ~Generator() override;
+    Disman::ConfigPtr laptop(Disman::ConfigPtr const& config);
 
-        Disman::ConfigPtr fallbackIfNeeded(const Disman::ConfigPtr &config);
+    bool isLaptop() const;
+    bool isLidClosed() const;
+    bool isDocked() const;
 
-        void cloneScreens(Disman::OutputList &connectedOutputs);
-        void laptop(Disman::OutputList &connectedOutputs);
-        void singleOutput(Disman::OutputList &connectedOutputs);
-        void extendToRight(Disman::OutputList &connectedOutputs);
+    bool m_forceLaptop;
+    bool m_forceLidClosed;
+    bool m_forceNotLaptop;
+    bool m_forceDocked;
 
-        Disman::ModePtr bestModeForSize(const Disman::ModeList& modes, const QSize &size);
-        Disman::ModePtr bestModeForOutput(const Disman::OutputPtr &output);
-        qreal bestScaleForOutput(const Disman::OutputPtr &output);
+    Disman::ConfigPtr m_currentConfig;
 
-        Disman::OutputPtr biggestOutput(const Disman::OutputList &connectedOutputs);
-        Disman::OutputPtr embeddedOutput(const Disman::OutputList &connectedOutputs);
-        void disableAllDisconnectedOutputs(const Disman::OutputList &connectedOutputs);
-
-        bool isLaptop() const;
-        bool isLidClosed() const;
-        bool isDocked() const;
-
-        bool m_forceLaptop;
-        bool m_forceLidClosed;
-        bool m_forceNotLaptop;
-        bool m_forceDocked;
-
-        Disman::ConfigPtr m_currentConfig;
-
-        static Generator* instance;
+    static Generator* instance;
 };
-
-#endif //KDED_GENERATOR_H

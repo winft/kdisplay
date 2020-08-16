@@ -16,12 +16,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kcm.h"
 
+#include "../common/orientation_sensor.h"
 #include "config_handler.h"
 #include "kcm_kdisplay_debug.h"
 #include "output_identifier.h"
 #include "output_model.h"
-#include "../common/control.h"
-#include "../common/orientation_sensor.h"
 
 #include <disman/config.h>
 #include <disman/getconfigoperation.h>
@@ -38,46 +37,43 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QTimer>
 
-K_PLUGIN_FACTORY_WITH_JSON(KCMDisplayConfigurationFactory, "kcm_kdisplay.json",
+K_PLUGIN_FACTORY_WITH_JSON(KCMDisplayConfigurationFactory,
+                           "kcm_kdisplay.json",
                            registerPlugin<KCMKDisplay>();)
 
 using namespace Disman;
 
-KCMKDisplay::KCMKDisplay(QObject *parent, const QVariantList &args)
+KCMKDisplay::KCMKDisplay(QObject* parent, const QVariantList& args)
     : KQuickAddons::ConfigModule(parent, args)
 {
     qmlRegisterType<OutputModel>();
-    qmlRegisterType<Disman::Output>("org.kwinft.private.kcm.kdisplay",
-                                     1, 0,
-                                     "Output");
-    qmlRegisterUncreatableType<Control>("org.kwinft.private.kcm.kdisplay",
-                                        1, 0, "Control",
-            QStringLiteral("Provides only the OutputRetention enum class"));
+    qmlRegisterType<Disman::Output>("org.kwinft.private.kcm.kdisplay", 1, 0, "Output");
+
     Log::instance();
 
-    KAboutData *about = new KAboutData(QStringLiteral("kcm_kdisplay"),
+    KAboutData* about = new KAboutData(QStringLiteral("kcm_kdisplay"),
                                        i18n("Display Configuration"),
                                        QStringLiteral(KDISPLAY_VERSION),
                                        i18n("Manage and configure monitors and displays"),
                                        KAboutLicense::GPL,
                                        i18n("Copyright © 2019 Roman Gilg"));
-    about->addAuthor(i18n("Roman Gilg"),
-                    i18n("Maintainer"),
-                    QStringLiteral("subdiff@gmail.com"));
+    about->addAuthor(i18n("Roman Gilg"), i18n("Maintainer"), QStringLiteral("subdiff@gmail.com"));
     setAboutData(about);
     setButtons(Apply);
 
     m_loadCompressor = new QTimer(this);
     m_loadCompressor->setInterval(1000);
     m_loadCompressor->setSingleShot(true);
-    connect (m_loadCompressor, &QTimer::timeout, this, &KCMKDisplay::load);
+    connect(m_loadCompressor, &QTimer::timeout, this, &KCMKDisplay::load);
 
     m_orientationSensor = new OrientationSensor(this);
-    connect(m_orientationSensor, &OrientationSensor::availableChanged,
-            this, &KCMKDisplay::orientationSensorAvailableChanged);
+    connect(m_orientationSensor,
+            &OrientationSensor::availableChanged,
+            this,
+            &KCMKDisplay::orientationSensorAvailableChanged);
 }
 
-void KCMKDisplay::configReady(ConfigOperation *op)
+void KCMKDisplay::configReady(ConfigOperation* op)
 {
     qCDebug(KDISPLAY_KCM) << "Reading in config now.";
     if (op->hasError()) {
@@ -87,9 +83,8 @@ void KCMKDisplay::configReady(ConfigOperation *op)
     }
 
     Disman::ConfigPtr config = qobject_cast<GetConfigOperation*>(op)->config();
-    const bool autoRotationSupported =
-            config->supportedFeatures() & (Disman::Config::Feature::AutoRotation
-                                           | Disman::Config::Feature::TabletMode);
+    const bool autoRotationSupported = config->supportedFeatures()
+        & (Disman::Config::Feature::AutoRotation | Disman::Config::Feature::TabletMode);
     m_orientationSensor->setEnabled(autoRotationSupported);
 
     m_config->setConfig(config);
@@ -99,6 +94,7 @@ void KCMKDisplay::configReady(ConfigOperation *op)
     Q_EMIT outputReplicationSupportedChanged();
     Q_EMIT tabletModeAvailableChanged();
     Q_EMIT autoRotationSupportedChanged();
+    Q_EMIT outputRetentionChanged();
 }
 
 void KCMKDisplay::forceSave()
@@ -121,25 +117,26 @@ void KCMKDisplay::doSave(bool force)
     auto config = m_config->config();
 
     bool atLeastOneEnabledOutput = false;
-    for (const Disman::OutputPtr &output : config->outputs()) {
-        Disman::ModePtr mode = output->currentMode();
+    for (const Disman::OutputPtr& output : config->outputs()) {
+        Disman::ModePtr mode = output->auto_mode();
 
         atLeastOneEnabledOutput |= output->isEnabled();
 
-        qCDebug(KDISPLAY_KCM) << output->name() << output->id()
-                             << output.data() << "\n"
-                << "	Connected:" << output->isConnected() << "\n"
-                << "	Enabled:" << output->isEnabled() << "\n"
-                << "	Primary:" << output->isPrimary() << "\n"
-                << "	Rotation:" << output->rotation() << "\n"
-                << "	Mode:"
-                << (mode ? mode->name() : QStringLiteral("unknown"))
-                << "@" << (mode ? mode->refreshRate() : 0.0) << "Hz" << "\n"
-                << "    Position:" << output->position().x()
-                                   << "x" << output->position().y() << "\n"
-                << "    Scale:" << (perOutputScaling() ? QString::number(output->scale()) :
-                                                         QStringLiteral("global")) << "\n"
-                << "    Replicates:" << (output->replicationSource() == 0 ? "no" : "yes");
+        qCDebug(KDISPLAY_KCM) << output->name() << output->id() << output.data() << "\n"
+                              << "	Enabled:" << output->isEnabled() << "\n"
+                              << "	Primary:" << output->isPrimary() << "\n"
+                              << "	Rotation:" << output->rotation() << "\n"
+                              << "	Mode:" << (mode ? mode->name() : QStringLiteral("unknown"))
+                              << "@" << (mode ? mode->refreshRate() : 0.0) << "Hz"
+                              << "\n"
+                              << "    Position:" << output->position().x() << "x"
+                              << output->position().y() << "\n"
+                              << "    Scale:"
+                              << (perOutputScaling() ? QString::number(output->scale())
+                                                     : QStringLiteral("global"))
+                              << "\n"
+                              << "    Replicates:"
+                              << (output->replicationSource() == 0 ? "no" : "yes");
     }
 
     if (!atLeastOneEnabledOutput && !force) {
@@ -157,25 +154,22 @@ void KCMKDisplay::doSave(bool force)
     if (!perOutputScaling()) {
         writeGlobalScale();
     }
-    m_config->writeControl();
 
     // Store the current config, apply settings. Block until operation is
     // completed, otherwise ConfigModule might terminate before we get to
     // execute the Operation.
-    auto *op = new SetConfigOperation(config);
+    auto* op = new SetConfigOperation(config);
     op->exec();
 
     // The 1000ms is a legacy value tested to work for randr having
     // enough time to change configuration.
-    QTimer::singleShot(1000, this,
-        [this] () {
-            if (!m_config) {
-                setNeedsSave(false);
-                return;
-            }
-            m_config->updateInitialData();
+    QTimer::singleShot(1000, this, [this]() {
+        if (!m_config) {
+            setNeedsSave(false);
+            return;
         }
-    );
+        m_config->updateInitialData();
+    });
 }
 
 bool KCMKDisplay::backendReady() const
@@ -206,11 +200,9 @@ void KCMKDisplay::identifyOutputs()
         return;
     }
     m_outputIdentifier.reset(new OutputIdentifier(m_config->initialConfig(), this));
-    connect(m_outputIdentifier.get(), &OutputIdentifier::identifiersFinished,
-            this, [this]() {
+    connect(m_outputIdentifier.get(), &OutputIdentifier::identifiersFinished, this, [this]() {
         m_outputIdentifier.reset();
     });
-
 }
 
 QSize KCMKDisplay::normalizeScreen() const
@@ -231,8 +223,7 @@ bool KCMKDisplay::perOutputScaling() const
     if (!m_config || !m_config->config()) {
         return false;
     }
-    return m_config->config()->supportedFeatures().testFlag(Config::Feature::
-                                                            PerOutputScaling);
+    return m_config->config()->supportedFeatures().testFlag(Config::Feature::PerOutputScaling);
 }
 
 bool KCMKDisplay::primaryOutputSupported() const
@@ -240,8 +231,7 @@ bool KCMKDisplay::primaryOutputSupported() const
     if (!m_config || !m_config->config()) {
         return false;
     }
-    return m_config->config()->supportedFeatures().testFlag(Config::Feature::
-                                                            PrimaryDisplay);
+    return m_config->config()->supportedFeatures().testFlag(Config::Feature::PrimaryDisplay);
 }
 
 bool KCMKDisplay::outputReplicationSupported() const
@@ -249,8 +239,7 @@ bool KCMKDisplay::outputReplicationSupported() const
     if (!m_config || !m_config->config()) {
         return false;
     }
-    return m_config->config()->supportedFeatures().testFlag(Config::Feature::
-                                                            OutputReplication);
+    return m_config->config()->supportedFeatures().testFlag(Config::Feature::OutputReplication);
 }
 
 bool KCMKDisplay::autoRotationSupported() const
@@ -258,8 +247,8 @@ bool KCMKDisplay::autoRotationSupported() const
     if (!m_config || !m_config->config()) {
         return false;
     }
-    return m_config->config()->supportedFeatures() & (Disman::Config::Feature::AutoRotation
-                                                      | Disman::Config::Feature::TabletMode);
+    return m_config->config()->supportedFeatures()
+        & (Disman::Config::Feature::AutoRotation | Disman::Config::Feature::TabletMode);
 }
 
 bool KCMKDisplay::orientationSensorAvailable() const
@@ -305,7 +294,7 @@ void KCMKDisplay::load()
     // signal its disappearance first before deleting and replacing it.
     // We take the m_config pointer so outputModel() will return null,
     // gracefully cleaning up the QML side and only then we will delete it.
-    auto *oldConfig = m_config.release();
+    auto* oldConfig = m_config.release();
     if (oldConfig) {
         emit outputModelChanged();
         delete oldConfig;
@@ -313,32 +302,36 @@ void KCMKDisplay::load()
 
     m_config.reset(new ConfigHandler(this));
     Q_EMIT perOutputScalingChanged();
-    connect (m_config.get(), &ConfigHandler::outputModelChanged,
-             this, &KCMKDisplay::outputModelChanged);
-    connect (m_config.get(), &ConfigHandler::outputConnect,
-             this, [this](bool connected) {
-
+    connect(
+        m_config.get(), &ConfigHandler::outputModelChanged, this, &KCMKDisplay::outputModelChanged);
+    connect(m_config.get(), &ConfigHandler::outputConnect, this, [this](bool connected) {
         Q_EMIT outputConnect(connected);
         setBackendReady(false);
 
         // Reload settings delayed such that daemon can update output values.
         m_loadCompressor->start();
     });
-    connect (m_config.get(), &ConfigHandler::screenNormalizationUpdate,
-             this, &KCMKDisplay::setScreenNormalized);
-    connect (m_config.get(), &ConfigHandler::retentionChanged,
-             this, &KCMKDisplay::outputRetentionChanged);
+    connect(m_config.get(),
+            &ConfigHandler::screenNormalizationUpdate,
+            this,
+            &KCMKDisplay::setScreenNormalized);
+    connect(m_config.get(),
+            &ConfigHandler::retentionChanged,
+            this,
+            &KCMKDisplay::outputRetentionChanged);
 
     // This is a queued connection so that we can fire the event from
     // within the save() call in case it failed.
-    connect (m_config.get(), &ConfigHandler::needsSaveChecked,
-             this, &KCMKDisplay::continueNeedsSaveCheck, Qt::QueuedConnection);
+    connect(m_config.get(),
+            &ConfigHandler::needsSaveChecked,
+            this,
+            &KCMKDisplay::continueNeedsSaveCheck,
+            Qt::QueuedConnection);
 
-    connect (m_config.get(), &ConfigHandler::changed,
-             this, &KCMKDisplay::changed);
+    connect(m_config.get(), &ConfigHandler::changed, this, &KCMKDisplay::changed);
 
-    connect(new GetConfigOperation(), &GetConfigOperation::finished,
-            this, &KCMKDisplay::configReady);
+    connect(
+        new GetConfigOperation(), &GetConfigOperation::finished, this, &KCMKDisplay::configReady);
 
     Q_EMIT changed();
 }
@@ -375,8 +368,9 @@ void KCMKDisplay::writeGlobalScale()
     // Scaling the fonts makes sense if you don't also set a font DPI, but we NEED to set a font
     // DPI for both PlasmaShell which does it's own thing, and for KDE4/GTK2 applications.
     QString screenFactors;
-    for (const auto &output: m_config->config()->outputs()) {
-        screenFactors.append(output->name() + QLatin1Char('=') + QString::number(m_globalScale) + QLatin1Char(';'));
+    for (const auto& output : m_config->config()->outputs()) {
+        screenFactors.append(output->name() + QLatin1Char('=') + QString::number(m_globalScale)
+                             + QLatin1Char(';'));
     }
     config->group("KScreen").writeEntry("ScreenScaleFactors", screenFactors);
 
@@ -384,7 +378,7 @@ void KCMKDisplay::writeGlobalScale()
     auto fontConfigGroup = fontConfig.group("General");
 
     if (qFuzzyCompare(m_globalScale, 1.0)) {
-        //if dpi is the default (96) remove the entry rather than setting it
+        // if dpi is the default (96) remove the entry rather than setting it
         QProcess proc;
         proc.start(QStringLiteral("xrdb -quiet -remove -nocpp"));
         if (proc.waitForStarted()) {
@@ -444,6 +438,5 @@ void KCMKDisplay::setOutputRetention(int retention)
     }
     m_config->setRetention(retention);
 }
-
 
 #include "kcm.moc"

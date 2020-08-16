@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace PlasmaQuick
 {
-    class Dialog;
+class Dialog;
 }
 
 class OutputIdentifier : public QObject
@@ -30,14 +30,14 @@ class OutputIdentifier : public QObject
     Q_OBJECT
 
 public:
-    explicit OutputIdentifier (Disman::ConfigPtr config, QObject *parent = nullptr);
+    explicit OutputIdentifier(Disman::ConfigPtr config, QObject* parent = nullptr);
     ~OutputIdentifier() override;
 
 Q_SIGNALS:
     void identifiersFinished();
 
 protected:
-  bool eventFilter(QObject *object, QEvent *event) override;
+    bool eventFilter(QObject* object, QEvent* event) override;
 
 private:
     QVector<PlasmaQuick::Dialog*> m_views;

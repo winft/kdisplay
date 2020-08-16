@@ -16,7 +16,6 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-
 #include "osd.h"
 
 #include "kdisplay_daemon_debug.h"
@@ -35,18 +34,13 @@
 
 using namespace Disman;
 
-Osd::Osd(const Disman::OutputPtr &output, QObject *parent)
+Osd::Osd(const Disman::OutputPtr& output, QObject* parent)
     : QObject(parent)
     , m_output(output)
 {
-    connect(output.data(), &Disman::Output::isConnectedChanged,
-            this, &Osd::onOutputAvailabilityChanged);
-    connect(output.data(), &Disman::Output::isEnabledChanged,
-            this, &Osd::onOutputAvailabilityChanged);
-    connect(output.data(), &Disman::Output::currentModeIdChanged,
-            this, &Osd::updatePosition);
-    connect(output.data(), &Disman::Output::destroyed,
-            this, &Osd::hideOsd);
+    connect(output.data(), &Disman::Output::updated, this, &Osd::maybe_hide);
+    connect(output.data(), &Disman::Output::updated, this, &Osd::updatePosition);
+    connect(output.data(), &Disman::Output::destroyed, this, &Osd::hideOsd);
 }
 
 Osd::~Osd()
@@ -59,7 +53,9 @@ bool Osd::initOsd()
         return true;
     }
 
-    const QString osdPath = QStandardPaths::locate(QStandardPaths::QStandardPaths::GenericDataLocation, QStringLiteral("kded_kdisplay/qml/Osd.qml"));
+    const QString osdPath
+        = QStandardPaths::locate(QStandardPaths::QStandardPaths::GenericDataLocation,
+                                 QStringLiteral("kded_kdisplay/qml/Osd.qml"));
     if (osdPath.isEmpty()) {
         qCWarning(KDISPLAY_KDED) << "Failed to find OSD QML file" << osdPath;
         return false;
@@ -80,17 +76,16 @@ bool Osd::initOsd()
     m_osdTimer->setSingleShot(true);
     connect(m_osdTimer, &QTimer::timeout, this, &Osd::hideOsd);
     return true;
-
 }
 
-void Osd::showGenericOsd(const QString &icon, const QString &text)
+void Osd::showGenericOsd(const QString& icon, const QString& text)
 {
     if (!initOsd()) {
         return;
     }
 
     m_outputGeometry = m_output->geometry();
-    auto *rootObject = m_osdObject->rootObject();
+    auto* rootObject = m_osdObject->rootObject();
     rootObject->setProperty("itemSource", QStringLiteral("OsdItem.qml"));
     rootObject->setProperty("infoText", text);
     rootObject->setProperty("icon", icon);
@@ -98,7 +93,7 @@ void Osd::showGenericOsd(const QString &icon, const QString &text)
     showOsd();
 }
 
-void Osd::showOutputIdentifier(const Disman::OutputPtr &output)
+void Osd::showOutputIdentifier(const Disman::OutputPtr& output)
 {
     if (!initOsd()) {
         return;
@@ -106,8 +101,8 @@ void Osd::showOutputIdentifier(const Disman::OutputPtr &output)
 
     m_outputGeometry = output->geometry();
 
-    auto *rootObject = m_osdObject->rootObject();
-    auto mode = output->currentMode();
+    auto* rootObject = m_osdObject->rootObject();
+    auto mode = output->auto_mode();
     QSize realSize = mode->size();
     if (!output->isHorizontal()) {
         realSize.transpose();
@@ -121,7 +116,9 @@ void Osd::showOutputIdentifier(const Disman::OutputPtr &output)
 void Osd::showActionSelector()
 {
     if (!m_osdActionSelector) {
-        const QString osdPath = QStandardPaths::locate(QStandardPaths::QStandardPaths::GenericDataLocation, QStringLiteral("kded_kdisplay/qml/OsdSelector.qml"));
+        const QString osdPath
+            = QStandardPaths::locate(QStandardPaths::QStandardPaths::GenericDataLocation,
+                                     QStringLiteral("kded_kdisplay/qml/OsdSelector.qml"));
         if (osdPath.isEmpty()) {
             qCWarning(KDISPLAY_KDED) << "Failed to find action selector OSD QML file" << osdPath;
             return;
@@ -136,11 +133,10 @@ void Osd::showActionSelector()
             return;
         }
 
-        auto *rootObject = m_osdActionSelector->rootObject();
-        connect(rootObject, SIGNAL(clicked(int)),
-                this, SLOT(onOsdActionSelected(int)));
+        auto* rootObject = m_osdActionSelector->rootObject();
+        connect(rootObject, SIGNAL(clicked(int)), this, SLOT(onOsdActionSelected(int)));
     }
-    if (auto *rootObject = m_osdActionSelector->rootObject()) {
+    if (auto* rootObject = m_osdActionSelector->rootObject()) {
         // On wayland, we use m_output to set an action on OSD position
         if (qGuiApp->platformName() == QLatin1String("wayland")) {
             rootObject->setProperty("screenGeometry", m_output->geometry());
@@ -157,9 +153,9 @@ void Osd::onOsdActionSelected(int action)
     hideOsd();
 }
 
-void Osd::onOutputAvailabilityChanged()
+void Osd::maybe_hide()
 {
-    if (!m_output || !m_output->isConnected() || !m_output->isEnabled() || !m_output->currentMode()) {
+    if (!m_output || !m_output->isEnabled() || !m_output->auto_mode()) {
         hideOsd();
     }
 }
@@ -175,7 +171,7 @@ void Osd::updatePosition()
         hideOsd();
     }
 
-    auto *rootObject = m_osdObject->rootObject();
+    auto* rootObject = m_osdObject->rootObject();
 
     const int dialogWidth = rootObject->property("width").toInt();
     const int dialogHeight = rootObject->property("height").toInt();
@@ -192,7 +188,7 @@ void Osd::showOsd()
 {
     m_osdTimer->stop();
 
-    auto *rootObject = m_osdObject->rootObject();
+    auto* rootObject = m_osdObject->rootObject();
 
     // only animate on X11, wayland plugin doesn't support this and
     // pukes loads of warnings into our logs
@@ -214,12 +210,12 @@ void Osd::showOsd()
 void Osd::hideOsd()
 {
     if (m_osdActionSelector) {
-        if (auto *rootObject = m_osdActionSelector->rootObject()) {
+        if (auto* rootObject = m_osdActionSelector->rootObject()) {
             rootObject->setProperty("visible", false);
         }
     }
     if (m_osdObject) {
-        if (auto *rootObject = m_osdObject->rootObject()) {
+        if (auto* rootObject = m_osdObject->rootObject()) {
             rootObject->setProperty("visible", false);
         }
     }

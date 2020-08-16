@@ -18,40 +18,38 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-
 #include "osdaction.h"
 
 #include <KLocalizedString>
 
 using namespace Disman;
 
-OsdAction::OsdAction(QObject *parent)
+OsdAction::OsdAction(QObject* parent)
     : QObject(parent)
 {
 }
 
 QVector<int> OsdAction::actionOrder() const
 {
-    return {
-        SwitchToExternal,
-        SwitchToInternal,
-        Clone,
-        ExtendLeft,
-        ExtendRight,
-        NoAction
-    };
+    return {SwitchToExternal, SwitchToInternal, Clone, ExtendLeft, ExtendRight, NoAction};
 }
 
 QString OsdAction::actionLabel(OsdAction::Action action) const
 {
     switch (action) {
     // this is built by both daemon and plasmoid, needs explicit translation domain here
-    case SwitchToExternal: return i18nd("kdisplay", "Switch to external screen");
-    case SwitchToInternal: return i18nd("kdisplay", "Switch to laptop screen");
-    case Clone: return i18nd("kdisplay", "Unify outputs");
-    case ExtendLeft: return i18nd("kdisplay", "Extend to left");
-    case ExtendRight: return i18nd("kdisplay", "Extend to right");
-    case NoAction: return i18nd("kdisplay", "Leave unchanged");
+    case SwitchToExternal:
+        return i18nd("kdisplay", "Switch to external screen");
+    case SwitchToInternal:
+        return i18nd("kdisplay", "Switch to laptop screen");
+    case Clone:
+        return i18nd("kdisplay", "Unify outputs");
+    case ExtendLeft:
+        return i18nd("kdisplay", "Extend to left");
+    case ExtendRight:
+        return i18nd("kdisplay", "Extend to right");
+    case NoAction:
+        return i18nd("kdisplay", "Leave unchanged");
     }
 
     Q_UNREACHABLE();
@@ -61,12 +59,18 @@ QString OsdAction::actionLabel(OsdAction::Action action) const
 QString OsdAction::actionIconName(OsdAction::Action action) const
 {
     switch (action) {
-    case SwitchToExternal: return QStringLiteral("osd-shutd-laptop");
-    case SwitchToInternal: return QStringLiteral("osd-shutd-screen");
-    case Clone: return QStringLiteral("osd-duplicate");
-    case ExtendLeft: return QStringLiteral("osd-sbs-left");
-    case ExtendRight: return QStringLiteral("osd-sbs-sright");
-    case NoAction: return QStringLiteral("dialog-cancel");
+    case SwitchToExternal:
+        return QStringLiteral("osd-shutd-laptop");
+    case SwitchToInternal:
+        return QStringLiteral("osd-shutd-screen");
+    case Clone:
+        return QStringLiteral("osd-duplicate");
+    case ExtendLeft:
+        return QStringLiteral("osd-sbs-left");
+    case ExtendRight:
+        return QStringLiteral("osd-sbs-sright");
+    case NoAction:
+        return QStringLiteral("dialog-cancel");
     }
 
     Q_UNREACHABLE();

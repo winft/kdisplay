@@ -155,14 +155,14 @@ ColumnLayout {
                 id: globalRetentionRadio
                 text: i18n("For any display arrangement")
                 checked: !individualRetentionRadio.checked
-                onClicked: kcm.outputRetention = KDisplay.Control.Global
+                onClicked: kcm.outputRetention = KDisplay.Output.Retention.Global
             }
 
             Controls.RadioButton {
                 id: individualRetentionRadio
                 text: i18n("For only this specific display arrangement")
-                checked: kcm.outputRetention === KDisplay.Control.Individual
-                onClicked: kcm.outputRetention = KDisplay.Control.Individual
+                checked: kcm.outputRetention === KDisplay.Output.Retention.Individual
+                onClicked: kcm.outputRetention = KDisplay.Output.Retention.Individual
             }
         }
     }

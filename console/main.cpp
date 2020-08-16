@@ -15,24 +15,23 @@
  *  along with this program; if not, write to the Free Software                      *
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA   *
  *************************************************************************************/
-
 #include <unistd.h>
 
-#include <QProcess>
-#include <QCommandLineParser>
-#include <QGuiApplication>
-#include <QDateTime>
 #include <KAboutData>
 #include <KLocalizedString>
+#include <QCommandLineParser>
+#include <QDateTime>
+#include <QGuiApplication>
+#include <QProcess>
 
-#include <disman/getconfigoperation.h>
 #include <disman/config.h>
+#include <disman/getconfigoperation.h>
 
 #include "console.h"
 
 using namespace std;
 
-void configReceived(Disman::ConfigOperation *op)
+void configReceived(Disman::ConfigOperation* op)
 {
 
     const Disman::ConfigPtr config = qobject_cast<Disman::GetConfigOperation*>(op)->config();
@@ -41,17 +40,18 @@ void configReceived(Disman::ConfigOperation *op)
     const qint64 msecs = QDateTime::currentMSecsSinceEpoch() - op->property("start").toLongLong();
     qDebug() << "Received config. Took" << msecs << "milliseconds";
 
-    Console *console = new Console(config);
+    Console* console = new Console(config);
 
     if (command.isEmpty()) {
         console->printConfig();
         console->monitorAndPrint();
     } else if (command == QLatin1String("monitor")) {
-        QTextStream(stdout) << "Remember to enable KSRandR or KSRandR11 in kdebugdialog" << endl;
-        //Print config so that we have some pivot data
+        QTextStream(stdout) << "Remember to enable KSRandR or KSRandR11 in kdebugdialog"
+                            << Qt::endl;
+        // Print config so that we have some pivot data
         console->printConfig();
         console->monitor();
-        //Do nothing, enable backend output to see debug
+        // Do nothing, enable backend output to see debug
     } else if (command == QLatin1String("outputs")) {
         console->printConfig();
         qApp->quit();
@@ -59,15 +59,18 @@ void configReceived(Disman::ConfigOperation *op)
         console->printSerializations();
         qApp->quit();
     } else if (command == QLatin1String("bug")) {
-        QTextStream(stdout) << QStringLiteral("\n========================xrandr --verbose==========================\n");
+        QTextStream(stdout) << QStringLiteral(
+            "\n========================xrandr --verbose==========================\n");
         QProcess proc;
         proc.setProcessChannelMode(QProcess::MergedChannels);
         proc.start(QStringLiteral("xrandr"), QStringList(QStringLiteral("--verbose")));
         proc.waitForFinished();
         QTextStream(stdout) << proc.readAll().data();
-        QTextStream(stdout) << QStringLiteral("\n========================Outputs===================================\n");
+        QTextStream(stdout) << QStringLiteral(
+            "\n========================Outputs===================================\n");
         console->printConfig();
-        QTextStream(stdout) << QStringLiteral("\n========================Configurations============================\n");
+        QTextStream(stdout) << QStringLiteral(
+            "\n========================Configurations============================\n");
         console->printSerializations();
         qApp->quit();
     } else if (command == QLatin1String("json")) {
@@ -79,20 +82,27 @@ void configReceived(Disman::ConfigOperation *op)
     }
 }
 
-
-int main (int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     dup2(1, 2);
 
     QGuiApplication app(argc, argv);
-    KAboutData aboutData(QStringLiteral("kdisplay-console"), i18n("KDisplay Console"), QStringLiteral("1.0"), i18n("KDisplay Console"),
-    KAboutLicense::GPL, i18n("(c) 2020"));
+    KAboutData aboutData(QStringLiteral("kdisplay-console"),
+                         i18n("KDisplay Console"),
+                         QStringLiteral("1.0"),
+                         i18n("KDisplay Console"),
+                         KAboutLicense::GPL,
+                         i18n("(c) 2020"));
     KAboutData::setApplicationData(aboutData);
 
-    aboutData.addAuthor(i18n("Roman Gilg"), i18n("Maintainer"), QStringLiteral("subdiff@gmail.com"),
-        QStringLiteral("https://subdiff.org"));
-    aboutData.addAuthor(i18n("Alejandro Fiestas Olivares"), i18n("Developer"), QStringLiteral("afiestas@kde.org"),
-        QStringLiteral("http://www.afiestas.org/"));
+    aboutData.addAuthor(i18n("Roman Gilg"),
+                        i18n("Maintainer"),
+                        QStringLiteral("subdiff@gmail.com"),
+                        QStringLiteral("https://subdiff.org"));
+    aboutData.addAuthor(i18n("Alejandro Fiestas Olivares"),
+                        i18n("Developer"),
+                        QStringLiteral("afiestas@kde.org"),
+                        QStringLiteral("http://www.afiestas.org/"));
 
     QCommandLineParser parser;
     parser.setApplicationDescription(
@@ -104,9 +114,11 @@ int main (int argc, char *argv[])
              "  monitor         Monitor for changes\n"
              "  json            Show current KDisplay config"));
     parser.addHelpOption();
-    parser.addPositionalArgument(QStringLiteral("command"), i18n("Command to execute"),
+    parser.addPositionalArgument(QStringLiteral("command"),
+                                 i18n("Command to execute"),
                                  QStringLiteral("bug|config|outputs|monitor|json"));
-    parser.addPositionalArgument(QStringLiteral("[args...]"), i18n("Arguments for the specified command"));
+    parser.addPositionalArgument(QStringLiteral("[args...]"),
+                                 i18n("Arguments for the specified command"));
 
     parser.process(app);
 
@@ -120,10 +132,9 @@ int main (int argc, char *argv[])
     auto op = new Disman::GetConfigOperation();
     op->setProperty("command", command);
     op->setProperty("start", QDateTime::currentMSecsSinceEpoch());
-    QObject::connect(op, &Disman::GetConfigOperation::finished,
-                     [&](Disman::ConfigOperation *op) {
-                          configReceived(op);
-                      });
+    QObject::connect(op, &Disman::GetConfigOperation::finished, [&](Disman::ConfigOperation* op) {
+        configReceived(op);
+    });
 
     app.exec();
 }

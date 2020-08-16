@@ -15,12 +15,10 @@
  *  License along with this library; if not, write to the Free Software              *
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA       *
  *************************************************************************************/
-
 #ifndef KSCREEN_OSDTEST_H
 #define KSCREEN_OSDTEST_H
 
 #include <QObject>
-
 
 namespace Disman
 {
@@ -31,18 +29,18 @@ class OsdTest : public QObject
     Q_OBJECT
 
 public:
-    explicit OsdTest(QObject *parent = nullptr);
+    explicit OsdTest(QObject* parent = nullptr);
     ~OsdTest() override;
 
     void setUseDBus(bool yesno);
 
-    void showGenericOsd(const QString &icon, const QString &message);
+    void showGenericOsd(const QString& icon, const QString& message);
     void showOutputIdentifiers();
     void showActionSelector();
 
 private:
-    OsdManager *getOsdManager();
-    OsdManager *m_osdManager = nullptr;
+    OsdManager* getOsdManager();
+    OsdManager* m_osdManager = nullptr;
     bool m_useDBus = false;
 };
 

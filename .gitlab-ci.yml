@@ -35,6 +35,13 @@ Message lint:
     paths:
       - node_modules/
 
+clang-format:
+  stage: Compliance
+  image: ${IMAGE_BASE}-master:latest
+  script:
+    # Run clang-format via wrapper script.
+    - bash ci/compliance/clang-format.sh
+
 
 .common-master: &common-master
   image: ${IMAGE_BASE}-master:latest

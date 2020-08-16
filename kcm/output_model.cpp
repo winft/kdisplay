@@ -24,26 +24,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QRect>
 
-OutputModel::OutputModel(ConfigHandler *configHandler)
+OutputModel::OutputModel(ConfigHandler* configHandler)
     : QAbstractListModel(configHandler)
     , m_config(configHandler)
 {
     connect(this, &OutputModel::dataChanged, this, &OutputModel::changed);
 }
 
-int OutputModel::rowCount(const QModelIndex &parent) const
+int OutputModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
     return m_outputs.count();
 }
 
-QVariant OutputModel::data(const QModelIndex &index, int role) const
+QVariant OutputModel::data(const QModelIndex& index, int role) const
 {
     if (index.row() < 0 || index.row() >= m_outputs.count()) {
         return QVariant();
     }
 
-    const Disman::OutputPtr &output = m_outputs[index.row()].ptr;
+    const Disman::OutputPtr& output = m_outputs[index.row()].ptr;
     switch (role) {
     case Qt::DisplayRole:
         return Utils::outputName(output);
@@ -59,10 +59,14 @@ QVariant OutputModel::data(const QModelIndex &index, int role) const
         return m_outputs[index.row()].pos;
     case NormalizedPositionRole:
         return output->geometry().topLeft();
+    case AutoResolutionRole:
+        return output->auto_resolution();
+    case AutoRefreshRateRole:
+        return output->auto_refresh_rate();
     case AutoRotateRole:
-        return m_config->autoRotate(output);
+        return output->auto_rotate();
     case AutoRotateOnlyInTabletModeRole:
-        return m_config->autoRotateOnlyInTabletMode(output);
+        return output->auto_rotate_only_in_tablet_mode();
     case RotationRole:
         return output->rotation();
     case ScaleRole:
@@ -81,22 +85,26 @@ QVariant OutputModel::data(const QModelIndex &index, int role) const
         return replicasModel(output);
     case RefreshRatesRole:
         QVariantList ret;
-        for (const auto rate : refreshRates(output)) {
-            ret << i18n("%1 Hz", int(rate + 0.5));
+        for (auto rate : refreshRates(output)) {
+            if (output->auto_refresh_rate()) {
+                // We just show rounded values when not manual selecting a rate.
+                ret << i18n("≈ %1 Hz", static_cast<int>(rate + 0.5));
+            } else {
+                ret << i18n("%1 Hz", rate);
+            }
         }
         return ret;
     }
     return QVariant();
 }
 
-bool OutputModel::setData(const QModelIndex &index,
-                          const QVariant &value, int role)
+bool OutputModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (index.row() < 0 || index.row() >= m_outputs.count()) {
         return false;
     }
 
-    Output &output = m_outputs[index.row()];
+    Output& output = m_outputs[index.row()];
     switch (role) {
     case PositionRole:
         if (value.canConvert<QPoint>()) {
@@ -139,6 +147,16 @@ bool OutputModel::setData(const QModelIndex &index,
             return setRefreshRate(index.row(), value.toInt());
         }
         break;
+    case AutoResolutionRole:
+        if (value.canConvert<bool>()) {
+            return setAutoResolution(index.row(), value.value<bool>());
+        }
+        break;
+    case AutoRefreshRateRole:
+        if (value.canConvert<bool>()) {
+            return setAutoRefreshRate(index.row(), value.value<bool>());
+        }
+        break;
     case AutoRotateRole:
         if (value.canConvert<bool>()) {
             return setAutoRotate(index.row(), value.value<bool>());
@@ -151,8 +169,7 @@ bool OutputModel::setData(const QModelIndex &index,
         break;
     case RotationRole:
         if (value.canConvert<Disman::Output::Rotation>()) {
-            return setRotation(index.row(),
-                               value.value<Disman::Output::Rotation>());
+            return setRotation(index.row(), value.value<Disman::Output::Rotation>());
         }
         break;
     case ReplicationSourceIndexRole:
@@ -165,7 +182,6 @@ bool OutputModel::setData(const QModelIndex &index,
         const qreal scale = value.toReal(&ok);
         if (ok && !qFuzzyCompare(output.ptr->scale(), scale)) {
             output.ptr->setScale(scale);
-            m_config->setScale(output.ptr, scale);
             Q_EMIT sizeChanged();
             Q_EMIT dataChanged(index, index, {role, SizeRole});
             return true;
@@ -175,7 +191,8 @@ bool OutputModel::setData(const QModelIndex &index,
     return false;
 }
 
-QHash<int, QByteArray> OutputModel::roleNames() const {
+QHash<int, QByteArray> OutputModel::roleNames() const
+{
     QHash<int, QByteArray> roles = QAbstractItemModel::roleNames();
     roles[EnabledRole] = "enabled";
     roles[InternalRole] = "internal";
@@ -183,6 +200,8 @@ QHash<int, QByteArray> OutputModel::roleNames() const {
     roles[SizeRole] = "size";
     roles[PositionRole] = "position";
     roles[NormalizedPositionRole] = "normalizedPosition";
+    roles[AutoResolutionRole] = "autoResolution";
+    roles[AutoRefreshRateRole] = "autoRefreshRate";
     roles[AutoRotateRole] = "autoRotate";
     roles[AutoRotateOnlyInTabletModeRole] = "autoRotateOnlyInTabletMode";
     roles[RotationRole] = "rotation";
@@ -197,7 +216,7 @@ QHash<int, QByteArray> OutputModel::roleNames() const {
     return roles;
 }
 
-void OutputModel::add(const Disman::OutputPtr &output)
+void OutputModel::add(const Disman::OutputPtr& output)
 {
     const int insertPos = m_outputs.count();
     Q_EMIT beginInsertRows(QModelIndex(), insertPos, insertPos);
@@ -208,8 +227,7 @@ void OutputModel::add(const Disman::OutputPtr &output)
         if (output->position().x() < pos.x()) {
             break;
         }
-        if (output->position().x() == pos.x() &&
-                output->position().y() < pos.y()) {
+        if (output->position().x() == pos.x() && output->position().y() < pos.y()) {
             break;
         }
         i++;
@@ -223,8 +241,7 @@ void OutputModel::add(const Disman::OutputPtr &output)
     }
     m_outputs.insert(i, Output(output, pos));
 
-    connect(output.data(), &Disman::Output::isPrimaryChanged,
-            this, [this, output](){
+    connect(output.data(), &Disman::Output::isPrimaryChanged, this, [this, output]() {
         roleChanged(output->id(), PrimaryRole);
     });
     Q_EMIT endInsertRows();
@@ -237,16 +254,14 @@ void OutputModel::add(const Disman::OutputPtr &output)
         QModelIndex index = createIndex(j, 0);
         // Calling this directly ignores possible optimization when the
         // refresh rate hasn't changed in fact. But that's ok.
-        Q_EMIT dataChanged(index, index, {ReplicationSourceModelRole,
-                                          ReplicationSourceIndexRole});
+        Q_EMIT dataChanged(index, index, {ReplicationSourceModelRole, ReplicationSourceIndexRole});
     }
 }
 
 void OutputModel::remove(int outputId)
 {
-    auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
-                           [outputId](const Output &output) {
-            return output.ptr->id() == outputId;
+    auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [outputId](const Output& output) {
+        return output.ptr->id() == outputId;
     });
     if (it != m_outputs.end()) {
         const int index = it - m_outputs.begin();
@@ -256,11 +271,11 @@ void OutputModel::remove(int outputId)
     }
 }
 
-void OutputModel::resetPosition(const Output &output)
+void OutputModel::resetPosition(const Output& output)
 {
     if (output.posReset.x() < 0) {
         // KCM was closed in between.
-        for (const Output &out : m_outputs) {
+        for (const Output& out : m_outputs) {
             if (out.ptr->id() == output.ptr->id()) {
                 continue;
             }
@@ -269,13 +284,13 @@ void OutputModel::resetPosition(const Output &output)
             }
         }
     } else {
-        output.ptr->setPosition(/*output.ptr->position() - */output.posReset);
+        output.ptr->setPosition(/*output.ptr->position() - */ output.posReset);
     }
 }
 
 bool OutputModel::setEnabled(int outputIndex, bool enable)
 {
-    Output &output = m_outputs[outputIndex];
+    Output& output = m_outputs[outputIndex];
 
     if (output.ptr->isEnabled() == enable) {
         return false;
@@ -297,102 +312,97 @@ bool OutputModel::setEnabled(int outputIndex, bool enable)
     return true;
 }
 
-inline
-bool refreshRateCompare(float rate1, float rate2)
+inline bool refreshRateCompare(float rate1, float rate2)
 {
-    return qAbs(rate1 - rate2) < 0.5;
+    return qFuzzyCompare(rate1, rate2);
 }
 
 bool OutputModel::setResolution(int outputIndex, int resIndex)
 {
-    const Output &output = m_outputs[outputIndex];
+    const Output& output = m_outputs[outputIndex];
     const auto resolutionList = resolutions(output.ptr);
     if (resIndex < 0 || resIndex >= resolutionList.size()) {
         return false;
     }
     const QSize size = resolutionList[resIndex];
 
-    const float oldRate = output.ptr->currentMode() ? output.ptr->currentMode()->refreshRate() :
-                                                      -1;
-    const auto modes = output.ptr->modes();
+    output.ptr->set_resolution(size);
 
-    auto modeIt = std::find_if(modes.begin(), modes.end(),
-                 [size, oldRate](const Disman::ModePtr &mode) {
-        // TODO: we don't want to compare against old refresh rate if
-        //       refresh rate selection is auto.
-        return mode->size() == size &&
-                refreshRateCompare(mode->refreshRate(), oldRate);
-    });
+    if (!output.ptr->auto_refresh_rate()) {
+        // If the refresh rate is automatically determined we can just let Disman do the work,
+        // but here we try with the old rate first.
+        if (!output.ptr->commanded_mode()) {
+            // The new resolution does not support the previous refresh rate. We must change that.
+            // We choose the highest one.
+            output.ptr->set_refresh_rate(output.ptr->best_refresh_rate(size));
 
-    if (modeIt == modes.end()) {
-        // New resolution does not support previous refresh rate.
-        // Get the highest one instead.
-        float bestRefreshRate = 0;
-        auto it = modes.begin();
-        while (it != modes.end()) {
-            if ((*it)->size() == size && (*it)->refreshRate() > bestRefreshRate) {
-                modeIt = it;
-            }
-            it++;
+            // Disman guarantees us to have a mode commanded now.
+            assert(output.ptr->commanded_mode());
+            assert(output.ptr->commanded_mode() == output.ptr->auto_mode());
         }
     }
-    Q_ASSERT(modeIt != modes.end());
-
-    const auto id = (*modeIt)->id();
-    if (output.ptr->currentModeId() == id) {
-        return false;
-    }
-    output.ptr->setCurrentModeId(id);
 
     QModelIndex index = createIndex(outputIndex, 0);
+
     // Calling this directly ignores possible optimization when the
     // refresh rate hasn't changed in fact. But that's ok.
-    Q_EMIT dataChanged(index, index, {ResolutionIndexRole,
-                                      SizeRole,
-                                      RefreshRateIndexRole});
+    Q_EMIT dataChanged(
+        index, index, {ResolutionIndexRole, SizeRole, RefreshRatesRole, RefreshRateIndexRole});
     Q_EMIT sizeChanged();
     return true;
 }
 
 bool OutputModel::setRefreshRate(int outputIndex, int refIndex)
 {
-    const Output &output = m_outputs[outputIndex];
+    const Output& output = m_outputs[outputIndex];
     const auto rates = refreshRates(output.ptr);
     if (refIndex < 0 || refIndex >= rates.size()) {
         return false;
     }
     const float refreshRate = rates[refIndex];
+    output.ptr->set_refresh_rate(refreshRate);
 
-    const auto modes = output.ptr->modes();
-    const auto oldMode = output.ptr->currentMode();
-
-    auto modeIt = std::find_if(modes.begin(), modes.end(),
-                 [oldMode, refreshRate](const Disman::ModePtr &mode) {
-        // TODO: we don't want to compare against old refresh rate if
-        //       refresh rate selection is auto.
-        return mode->size() == oldMode->size() &&
-                refreshRateCompare(mode->refreshRate(), refreshRate);
-    });
-    Q_ASSERT(modeIt != modes.end());
-
-    if (refreshRateCompare(oldMode->refreshRate(), (*modeIt)->refreshRate())) {
-        // no change
-        return false;
-    }
-    output.ptr->setCurrentModeId((*modeIt)->id());
     QModelIndex index = createIndex(outputIndex, 0);
     Q_EMIT dataChanged(index, index, {RefreshRateIndexRole});
     return true;
 }
 
-bool OutputModel::setAutoRotate(int outputIndex, bool value)
+bool OutputModel::setAutoResolution(int outputIndex, bool value)
 {
-    Output &output = m_outputs[outputIndex];
+    Output& output = m_outputs[outputIndex];
 
-    if (m_config->autoRotate(output.ptr) == value) {
+    if (output.ptr->auto_resolution() == value) {
         return false;
     }
-    m_config->setAutoRotate(output.ptr, value);
+    output.ptr->set_auto_resolution(value);
+
+    QModelIndex index = createIndex(outputIndex, 0);
+    Q_EMIT dataChanged(index, index, {AutoResolutionRole, ResolutionIndexRole, SizeRole});
+    return true;
+}
+
+bool OutputModel::setAutoRefreshRate(int outputIndex, bool value)
+{
+    Output& output = m_outputs[outputIndex];
+
+    if (output.ptr->auto_refresh_rate() == value) {
+        return false;
+    }
+    output.ptr->set_auto_refresh_rate(value);
+
+    QModelIndex index = createIndex(outputIndex, 0);
+    Q_EMIT dataChanged(index, index, {AutoRefreshRateRole, RefreshRateIndexRole, RefreshRatesRole});
+    return true;
+}
+
+bool OutputModel::setAutoRotate(int outputIndex, bool value)
+{
+    Output& output = m_outputs[outputIndex];
+
+    if (output.ptr->auto_rotate() == value) {
+        return false;
+    }
+    output.ptr->set_auto_rotate(value);
 
     QModelIndex index = createIndex(outputIndex, 0);
     Q_EMIT dataChanged(index, index, {AutoRotateRole});
@@ -401,12 +411,12 @@ bool OutputModel::setAutoRotate(int outputIndex, bool value)
 
 bool OutputModel::setAutoRotateOnlyInTabletMode(int outputIndex, bool value)
 {
-    Output &output = m_outputs[outputIndex];
+    Output& output = m_outputs[outputIndex];
 
-    if (m_config->autoRotateOnlyInTabletMode(output.ptr) == value) {
+    if (output.ptr->auto_rotate_only_in_tablet_mode() == value) {
         return false;
     }
-    m_config->setAutoRotateOnlyInTabletMode(output.ptr, value);
+    output.ptr->set_auto_rotate_only_in_tablet_mode(value);
 
     QModelIndex index = createIndex(outputIndex, 0);
     Q_EMIT dataChanged(index, index, {AutoRotateOnlyInTabletModeRole});
@@ -415,12 +425,10 @@ bool OutputModel::setAutoRotateOnlyInTabletMode(int outputIndex, bool value)
 
 bool OutputModel::setRotation(int outputIndex, Disman::Output::Rotation rotation)
 {
-    const Output &output = m_outputs[outputIndex];
+    const Output& output = m_outputs[outputIndex];
 
-    if (rotation != Disman::Output::None
-            && rotation != Disman::Output::Left
-            && rotation != Disman::Output::Inverted
-            && rotation != Disman::Output::Right) {
+    if (rotation != Disman::Output::None && rotation != Disman::Output::Left
+        && rotation != Disman::Output::Inverted && rotation != Disman::Output::Right) {
         return false;
     }
     if (output.ptr->rotation() == rotation) {
@@ -432,12 +440,11 @@ bool OutputModel::setRotation(int outputIndex, Disman::Output::Rotation rotation
     Q_EMIT dataChanged(index, index, {RotationRole, SizeRole});
     Q_EMIT sizeChanged();
     return true;
-
 }
 
-int OutputModel::resolutionIndex(const Disman::OutputPtr &output) const
+int OutputModel::resolutionIndex(const Disman::OutputPtr& output) const
 {
-    const QSize currentResolution = output->enforcedModeSize();
+    const QSize currentResolution = output->auto_mode()->size();
 
     if (!currentResolution.isValid()) {
         return 0;
@@ -445,28 +452,22 @@ int OutputModel::resolutionIndex(const Disman::OutputPtr &output) const
 
     const auto sizes = resolutions(output);
 
-    const auto it = std::find_if(sizes.begin(),
-                                 sizes.end(),
-                                 [currentResolution](const QSize &size) {
-        return size == currentResolution;
-    });
+    const auto it
+        = std::find_if(sizes.begin(), sizes.end(), [currentResolution](const QSize& size) {
+              return size == currentResolution;
+          });
     if (it == sizes.end()) {
         return -1;
     }
     return it - sizes.begin();
 }
 
-int OutputModel::refreshRateIndex(const Disman::OutputPtr &output) const
+int OutputModel::refreshRateIndex(const Disman::OutputPtr& output) const
 {
-    if (!output->currentMode()) {
-        return 0;
-    }
     const auto rates = refreshRates(output);
-    const float currentRate = output->currentMode()->refreshRate();
+    const float currentRate = output->auto_mode()->refreshRate();
 
-    const auto it = std::find_if(rates.begin(),
-                                 rates.end(),
-                                 [currentRate](float rate) {
+    const auto it = std::find_if(rates.begin(), rates.end(), [currentRate](float rate) {
         return refreshRateCompare(rate, currentRate);
     });
     if (it == rates.end()) {
@@ -475,17 +476,18 @@ int OutputModel::refreshRateIndex(const Disman::OutputPtr &output) const
     return it - rates.begin();
 }
 
-static int greatestCommonDivisor(int a, int b) {
+static int greatestCommonDivisor(int a, int b)
+{
     if (b == 0) {
         return a;
     }
     return greatestCommonDivisor(b, a % b);
 }
 
-QVariantList OutputModel::resolutionsStrings(const Disman::OutputPtr &output) const
+QVariantList OutputModel::resolutionsStrings(const Disman::OutputPtr& output) const
 {
     QVariantList ret;
-    for (const QSize &size : resolutions(output)) {
+    for (const QSize& size : resolutions(output)) {
         int divisor = greatestCommonDivisor(size.width(), size.height());
 
         // Prefer "16:10" over "8:5"
@@ -493,7 +495,8 @@ QVariantList OutputModel::resolutionsStrings(const Disman::OutputPtr &output) co
             divisor /= 2;
         }
 
-        const QString text = i18nc("Width x height (aspect ratio)", "%1x%2 (%3:%4)",
+        const QString text = i18nc("Width x height (aspect ratio)",
+                                   "%1x%2 (%3:%4)",
                                    // Explicitly not have it add thousand-separators.
                                    QString::number(size.width()),
                                    QString::number(size.height()),
@@ -505,17 +508,17 @@ QVariantList OutputModel::resolutionsStrings(const Disman::OutputPtr &output) co
     return ret;
 }
 
-QVector<QSize> OutputModel::resolutions(const Disman::OutputPtr &output) const
+QVector<QSize> OutputModel::resolutions(const Disman::OutputPtr& output) const
 {
     QVector<QSize> hits;
 
-    for (const auto &mode : output->modes()) {
+    for (const auto& mode : output->modes()) {
         const QSize size = mode->size();
         if (!hits.contains(size)) {
             hits << size;
         }
     }
-    std::sort(hits.begin(), hits.end(), [](const QSize &a, const QSize &b) {
+    std::sort(hits.begin(), hits.end(), [](const QSize& a, const QSize& b) {
         if (a.width() > b.width()) {
             return true;
         }
@@ -527,56 +530,44 @@ QVector<QSize> OutputModel::resolutions(const Disman::OutputPtr &output) const
     return hits;
 }
 
-QVector<float> OutputModel::refreshRates(const Disman::OutputPtr
-                                                  &output) const
+QVector<float> OutputModel::refreshRates(const Disman::OutputPtr& output) const
 {
     QVector<float> hits;
 
-    QSize baseSize;
-    if (output->currentMode()) {
-        baseSize = output->currentMode()->size();
-    } else if (output->preferredMode()) {
-        baseSize = output->preferredMode()->size();
-    }
-    if (!baseSize.isValid()) {
-        return hits;
-    }
+    auto const resolution = output->auto_mode()->size();
 
-    for (const auto &mode : output->modes()) {
-        if (mode->size() != baseSize) {
+    for (auto const& mode : output->modes()) {
+        if (mode->size() != resolution) {
             continue;
         }
-        const float rate = mode->refreshRate();
-        if (std::find_if(hits.begin(), hits.end(),
-                         [rate](float r) {
-                             return refreshRateCompare(r, rate);
-                         }) != hits.end()) {
+        auto const rate = mode->refreshRate();
+        if (std::find_if(
+                hits.begin(), hits.end(), [rate](float r) { return refreshRateCompare(r, rate); })
+            != hits.end()) {
             continue;
         }
         hits << rate;
     }
+    std::sort(hits.begin(), hits.end());
+    std::reverse(hits.begin(), hits.end());
     return hits;
 }
 
-int OutputModel::replicationSourceId(const Output &output) const
+int OutputModel::replicationSourceId(const Output& output) const
 {
-    const Disman::OutputPtr source = m_config->replicationSource(output.ptr);
-    if (!source) {
-        return 0;
-    }
-    return source->id();
+    return output.ptr->replicationSource();
 }
 
-QStringList OutputModel::replicationSourceModel(const Disman::OutputPtr &output) const
+QStringList OutputModel::replicationSourceModel(const Disman::OutputPtr& output) const
 {
-    QStringList ret = { i18n("None") };
+    QStringList ret = {i18n("None")};
 
-    for (const auto &out : m_outputs) {
+    for (const auto& out : m_outputs) {
         if (out.ptr->id() != output->id()) {
             const int outSourceId = replicationSourceId(out);
             if (outSourceId == output->id()) {
                 // 'output' is already source for replication, can't be replica itself
-                return { i18n("Replicated by other output") };
+                return {i18n("Replicated by other output")};
             }
             if (outSourceId) {
                 // This 'out' is a replica. Can't be a replication source.
@@ -597,7 +588,7 @@ bool OutputModel::setReplicationSourceIndex(int outputIndex, int sourceIndex)
         return false;
     }
 
-    Output &output = m_outputs[outputIndex];
+    Output& output = m_outputs[outputIndex];
     const int oldSourceId = replicationSourceId(output);
 
     if (sourceIndex < 0) {
@@ -605,7 +596,7 @@ bool OutputModel::setReplicationSourceIndex(int outputIndex, int sourceIndex)
             // no change
             return false;
         }
-        m_config->setReplicationSource(output.ptr, nullptr);
+        output.ptr->setReplicationSource(0);
         resetPosition(output);
     } else {
         const auto source = m_outputs[sourceIndex].ptr;
@@ -613,7 +604,7 @@ bool OutputModel::setReplicationSourceIndex(int outputIndex, int sourceIndex)
             // no change
             return false;
         }
-        m_config->setReplicationSource(output.ptr, source);
+        output.ptr->setReplicationSource(source->id());
         output.posReset = output.ptr->position();
         output.ptr->setPosition(source->position());
     }
@@ -624,10 +615,10 @@ bool OutputModel::setReplicationSourceIndex(int outputIndex, int sourceIndex)
     Q_EMIT dataChanged(index, index, {ReplicationSourceIndexRole});
 
     if (oldSourceId != 0) {
-        auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
-                               [oldSourceId](const Output &out) {
-            return out.ptr->id() == oldSourceId;
-        });
+        auto it
+            = std::find_if(m_outputs.begin(), m_outputs.end(), [oldSourceId](const Output& out) {
+                  return out.ptr->id() == oldSourceId;
+              });
         if (it != m_outputs.end()) {
             QModelIndex index = createIndex(it - m_outputs.begin(), 0);
             Q_EMIT dataChanged(index, index, {ReplicationSourceModelRole, ReplicasModelRole});
@@ -647,7 +638,7 @@ int OutputModel::replicationSourceIndex(int outputIndex) const
         return 0;
     }
     for (int i = 0; i < m_outputs.size(); i++) {
-        const Output &output = m_outputs[i];
+        const Output& output = m_outputs[i];
         if (output.ptr->id() == sourceId) {
             return i + (outputIndex > i ? 1 : 0);
         }
@@ -655,11 +646,11 @@ int OutputModel::replicationSourceIndex(int outputIndex) const
     return 0;
 }
 
-QVariantList OutputModel::replicasModel(const Disman::OutputPtr &output) const
+QVariantList OutputModel::replicasModel(const Disman::OutputPtr& output) const
 {
     QVariantList ret;
     for (int i = 0; i < m_outputs.size(); i++) {
-        const Output &out = m_outputs[i];
+        const Output& out = m_outputs[i];
         if (out.ptr->id() != output->id()) {
             if (replicationSourceId(out) == output->id()) {
                 ret << i;
@@ -672,7 +663,7 @@ QVariantList OutputModel::replicasModel(const Disman::OutputPtr &output) const
 void OutputModel::roleChanged(int outputId, OutputRoles role)
 {
     for (int i = 0; i < m_outputs.size(); i++) {
-        Output &output = m_outputs[i];
+        Output& output = m_outputs[i];
         if (output.ptr->id() == outputId) {
             QModelIndex index = createIndex(i, 0);
             Q_EMIT dataChanged(index, index, {role});
@@ -681,7 +672,7 @@ void OutputModel::roleChanged(int outputId, OutputRoles role)
     }
 }
 
-bool OutputModel::positionable(const Output &output) const
+bool OutputModel::positionable(const Output& output) const
 {
     return output.ptr->isPositionable();
 }
@@ -692,7 +683,7 @@ void OutputModel::reposition()
     int y = 0;
 
     // Find first valid output.
-    for (const auto &out : m_outputs) {
+    for (const auto& out : m_outputs) {
         if (positionable(out)) {
             x = out.ptr->position().x();
             y = out.ptr->position().y();
@@ -704,7 +695,7 @@ void OutputModel::reposition()
         if (!positionable(m_outputs[i])) {
             continue;
         }
-        auto const &cmp = m_outputs[i].ptr->position();
+        auto const& cmp = m_outputs[i].ptr->position();
 
         if (cmp.x() < x) {
             x = cmp.x();
@@ -719,7 +710,7 @@ void OutputModel::reposition()
     }
 
     for (int i = 0; i < m_outputs.size(); i++) {
-        auto &out = m_outputs[i];
+        auto& out = m_outputs[i];
         out.ptr->setPosition(out.ptr->position() - QPoint(x, y));
         QModelIndex index = createIndex(i, 0);
         Q_EMIT dataChanged(index, index, {NormalizedPositionRole});
@@ -733,7 +724,7 @@ QPoint OutputModel::originDelta() const
     int y = 0;
 
     // Find first valid output.
-    for (const auto &out : m_outputs) {
+    for (const auto& out : m_outputs) {
         if (positionable(out)) {
             x = out.pos.x();
             y = out.pos.y();
@@ -745,7 +736,7 @@ QPoint OutputModel::originDelta() const
         if (!positionable(m_outputs[i])) {
             continue;
         }
-        auto const &cmp = m_outputs[i].pos;
+        auto const& cmp = m_outputs[i].pos;
 
         if (cmp.x() < x) {
             x = cmp.x();
@@ -761,7 +752,7 @@ void OutputModel::updatePositions()
 {
     const QPoint delta = originDelta();
     for (int i = 0; i < m_outputs.size(); i++) {
-        const auto &out = m_outputs[i];
+        const auto& out = m_outputs[i];
         if (!positionable(out)) {
             continue;
         }
@@ -778,7 +769,7 @@ void OutputModel::updatePositions()
 void OutputModel::updateOrder()
 {
     auto order = m_outputs;
-    std::sort(order.begin(), order.end(), [](const Output &a, const Output &b) {
+    std::sort(order.begin(), order.end(), [](const Output& a, const Output& b) {
         const int xDiff = b.ptr->position().x() - a.ptr->position().x();
         const int yDiff = b.ptr->position().y() - a.ptr->position().y();
         if (xDiff > 0) {
@@ -808,7 +799,7 @@ void OutputModel::updateOrder()
     // TODO: Could this be optimized by only outputs updating where replica indices changed?
     for (int i = 0; i < m_outputs.size(); i++) {
         QModelIndex index = createIndex(i, 0);
-        Q_EMIT dataChanged(index, index, { ReplicasModelRole });
+        Q_EMIT dataChanged(index, index, {ReplicasModelRole});
     }
 }
 
@@ -816,7 +807,7 @@ bool OutputModel::normalizePositions()
 {
     bool changed = false;
     for (int i = 0; i < m_outputs.size(); i++) {
-        auto &output = m_outputs[i];
+        auto& output = m_outputs[i];
         if (output.pos == output.ptr->position()) {
             continue;
         }
@@ -839,20 +830,18 @@ bool OutputModel::positionsNormalized() const
 
 const int s_snapArea = 80;
 
-bool isVerticalClose(const QRectF &rect1, const QRectF &rect2)
+bool isVerticalClose(const QRectF& rect1, const QRectF& rect2)
 {
-    if (rect2.top() - rect1.bottom() > s_snapArea ) {
+    if (rect2.top() - rect1.bottom() > s_snapArea) {
         return false;
     }
-    if (rect1.top() - rect2.bottom() > s_snapArea ) {
+    if (rect1.top() - rect2.bottom() > s_snapArea) {
         return false;
     }
     return true;
 }
 
-bool snapToRight(const QRectF &target,
-                              const QSizeF &size,
-                              QPoint &dest)
+bool snapToRight(const QRectF& target, const QSizeF& size, QPoint& dest)
 {
     if (qAbs(target.right() - dest.x()) < s_snapArea) {
         // In snap zone for left to right snap.
@@ -867,9 +856,7 @@ bool snapToRight(const QRectF &target,
     return false;
 }
 
-bool snapToLeft(const QRectF &target,
-                             const QSizeF &size,
-                             QPoint &dest)
+bool snapToLeft(const QRectF& target, const QSizeF& size, QPoint& dest)
 {
     if (qAbs(target.left() - dest.x()) < s_snapArea) {
         // In snap zone for left to left snap.
@@ -884,9 +871,7 @@ bool snapToLeft(const QRectF &target,
     return false;
 }
 
-bool snapToMiddle(const QRectF &target,
-                               const QSizeF &size,
-                               QPoint &dest)
+bool snapToMiddle(const QRectF& target, const QSizeF& size, QPoint& dest)
 {
     const int outputMid = dest.y() + size.height() / 2;
     const int targetMid = target.top() + target.height() / 2;
@@ -898,9 +883,7 @@ bool snapToMiddle(const QRectF &target,
     return false;
 }
 
-bool snapToTop(const QRectF &target,
-                            const QSizeF &size,
-                            QPoint &dest)
+bool snapToTop(const QRectF& target, const QSizeF& size, QPoint& dest)
 {
     if (qAbs(target.top() - dest.y()) < s_snapArea) {
         // In snap zone for bottom to top snap.
@@ -915,9 +898,7 @@ bool snapToTop(const QRectF &target,
     return false;
 }
 
-bool snapToBottom(const QRectF &target,
-                               const QSizeF &size,
-                               QPoint &dest)
+bool snapToBottom(const QRectF& target, const QSizeF& size, QPoint& dest)
 {
     if (qAbs(target.bottom() - dest.y()) < s_snapArea) {
         // In snap zone for top to bottom snap.
@@ -932,9 +913,7 @@ bool snapToBottom(const QRectF &target,
     return false;
 }
 
-bool snapVertical(const QRectF &target,
-                               const QSizeF &size,
-                               QPoint &dest)
+bool snapVertical(const QRectF& target, const QSizeF& size, QPoint& dest)
 {
     if (snapToMiddle(target, size, dest)) {
         return true;
@@ -948,10 +927,10 @@ bool snapVertical(const QRectF &target,
     return false;
 }
 
-void OutputModel::snap(const Output &output, QPoint &dest)
+void OutputModel::snap(const Output& output, QPoint& dest)
 {
     auto const size = output.ptr->geometry().size();
-    for (const Output &out : m_outputs) {
+    for (const Output& out : m_outputs) {
         if (out.ptr->id() == output.ptr->id()) {
             // Can not snap to itself.
             continue;

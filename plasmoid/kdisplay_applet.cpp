@@ -20,11 +20,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 #include "kdisplay_applet.h"
 
-#include <QQmlEngine> // for qmlRegisterType
 #include <QMetaEnum>
+#include <QQmlEngine> // for qmlRegisterType
 
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -38,29 +37,34 @@
 
 #include <algorithm>
 
-KDisplayApplet::KDisplayApplet(QObject *parent, const QVariantList &data)
+KDisplayApplet::KDisplayApplet(QObject* parent, const QVariantList& data)
     : Plasma::Applet(parent, data)
 {
-
 }
 
 KDisplayApplet::~KDisplayApplet() = default;
 
 void KDisplayApplet::init()
 {
-    qmlRegisterSingletonType<Disman::OsdAction>("org.kwinft.private.kdisplay", 1, 0, "OsdAction", [](QQmlEngine *, QJSEngine *) -> QObject* {
-        return new Disman::OsdAction();
-    });
+    qmlRegisterSingletonType<Disman::OsdAction>(
+        "org.kwinft.private.kdisplay", 1, 0, "OsdAction", [](QQmlEngine*, QJSEngine*) -> QObject* {
+            return new Disman::OsdAction();
+        });
 
-    connect(new Disman::GetConfigOperation(Disman::GetConfigOperation::NoEDID), &Disman::ConfigOperation::finished,
-            this, [this](Disman::ConfigOperation *op) {
-                m_screenConfiguration = qobject_cast<Disman::GetConfigOperation *>(op)->config();
+    connect(new Disman::GetConfigOperation(Disman::GetConfigOperation::NoEDID),
+            &Disman::ConfigOperation::finished,
+            this,
+            [this](Disman::ConfigOperation* op) {
+                m_screenConfiguration = qobject_cast<Disman::GetConfigOperation*>(op)->config();
 
                 Disman::ConfigMonitor::instance()->addConfig(m_screenConfiguration);
-                connect(Disman::ConfigMonitor::instance(), &Disman::ConfigMonitor::configurationChanged, this, &KDisplayApplet::checkOutputs);
+                connect(Disman::ConfigMonitor::instance(),
+                        &Disman::ConfigMonitor::configurationChanged,
+                        this,
+                        &KDisplayApplet::checkOutputs);
 
                 checkOutputs();
-    });
+            });
 }
 
 int KDisplayApplet::connectedOutputCount() const
@@ -78,12 +82,10 @@ void KDisplayApplet::applyLayoutPreset(Action action)
         return;
     }
 
-    QDBusMessage msg = QDBusMessage::createMethodCall(
-        QStringLiteral("org.kde.kded5"),
-        QStringLiteral("/modules/kdisplay"),
-        QStringLiteral("org.kwinft.kdisplay"),
-        QStringLiteral("applyLayoutPreset")
-    );
+    QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.kded5"),
+                                                      QStringLiteral("/modules/kdisplay"),
+                                                      QStringLiteral("org.kwinft.kdisplay"),
+                                                      QStringLiteral("applyLayoutPreset"));
 
     msg.setArguments({presetName});
 
@@ -99,9 +101,7 @@ void KDisplayApplet::checkOutputs()
     const int oldConnectedOutputCount = m_connectedOutputCount;
 
     const auto outputs = m_screenConfiguration->outputs();
-    m_connectedOutputCount = std::count_if(outputs.begin(), outputs.end(), [](const Disman::OutputPtr &output) {
-        return output->isConnected();
-    });
+    m_connectedOutputCount = outputs.size();
 
     if (m_connectedOutputCount != oldConnectedOutputCount) {
         emit connectedOutputCountChanged();

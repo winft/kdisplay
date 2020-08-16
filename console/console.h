@@ -15,7 +15,6 @@
  *  along with this program; if not, write to the Free Software                      *
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA   *
  *************************************************************************************/
-
 #ifndef CONSOLE_H
 #define CONSOLE_H
 
@@ -30,20 +29,20 @@ class Config;
 class Console : public QObject
 {
     Q_OBJECT
-    public:
-        explicit Console(const Disman::ConfigPtr &config);
-        ~Console() override;
+public:
+    explicit Console(const Disman::ConfigPtr& config);
+    ~Console() override;
 
-    public Q_SLOTS:
-        void printConfig();
-        void printJSONConfig();
-        QString typetoString(const Disman::Output::Type &type) const;
-        void printSerializations();
-        void monitor();
-        void monitorAndPrint();
+public Q_SLOTS:
+    void printConfig();
+    void printJSONConfig();
+    QString typetoString(const Disman::Output::Type& type) const;
+    void printSerializations();
+    void monitor();
+    void monitorAndPrint();
 
-    private:
-        Disman::ConfigPtr m_config;
+private:
+    Disman::ConfigPtr m_config;
 };
 
 #endif

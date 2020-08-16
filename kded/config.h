@@ -23,13 +23,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <memory>
 
-class ControlConfig;
-
 class Config : public QObject
 {
     Q_OBJECT
 public:
-    explicit Config(Disman::ConfigPtr config, QObject *parent = nullptr);
+    explicit Config(Disman::ConfigPtr config, QObject* parent = nullptr);
     ~Config() = default;
 
     QString id() const;
@@ -40,43 +38,39 @@ public:
     bool writeFile();
     bool writeOpenLidFile();
 
-    Disman::ConfigPtr data() const {
+    Disman::ConfigPtr data() const
+    {
         return m_data;
     }
 
-    void activateControlWatching();
     bool autoRotationRequested() const;
     void setDeviceOrientation(QOrientationReading::Orientation orientation);
     bool getAutoRotate() const;
     void setAutoRotate(bool value);
     void log();
 
-    void setValidityFlags(Disman::Config::ValidityFlags flags) {
+    void setValidityFlags(Disman::Config::ValidityFlags flags)
+    {
         m_validityFlags = flags;
     }
 
     bool canBeApplied() const;
 
-Q_SIGNALS:
-    void controlChanged();
-
 private:
     friend class TestConfig;
-
 
     QString createPath(const QString& fileName);
     QString path(const QString& fileName) const;
     QString fileName() const;
     QString openLidFileName() const;
 
-    std::unique_ptr<Config> readFile(const QString &fileName);
-    bool writeFile(const QString &filePath);
+    std::unique_ptr<Config> readFile(const QString& fileName);
+    bool writeFile(const QString& filePath);
 
     bool canBeApplied(Disman::ConfigPtr config) const;
 
     Disman::ConfigPtr m_data;
     Disman::Config::ValidityFlags m_validityFlags;
-    ControlConfig *m_control;
 
     static QString s_configsDirName;
     static QString s_fixedConfigFileName;

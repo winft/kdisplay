@@ -21,13 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <disman/configmonitor.h>
 #include <disman/getconfigoperation.h>
-#include <disman/output.h>
 
 #include <QRect>
 
 using namespace Disman;
 
-ConfigHandler::ConfigHandler(QObject *parent)
+ConfigHandler::ConfigHandler(QObject* parent)
     : QObject(parent)
 {
 }
@@ -36,92 +35,58 @@ void ConfigHandler::setConfig(Disman::ConfigPtr config)
 {
     m_config = config;
     m_initialConfig = m_config->clone();
-    m_initialControl.reset(new ControlConfig(m_initialConfig));
-
     Disman::ConfigMonitor::instance()->addConfig(m_config);
-    m_control.reset(new ControlConfig(config));
 
     m_outputs = new OutputModel(this);
-    connect(m_outputs, &OutputModel::positionChanged,
-            this, &ConfigHandler::checkScreenNormalization);
-    connect(m_outputs, &OutputModel::sizeChanged,
-            this, &ConfigHandler::checkScreenNormalization);
+    connect(
+        m_outputs, &OutputModel::positionChanged, this, &ConfigHandler::checkScreenNormalization);
+    connect(m_outputs, &OutputModel::sizeChanged, this, &ConfigHandler::checkScreenNormalization);
 
-    for (const Disman::OutputPtr &output : config->outputs()) {
+    for (const Disman::OutputPtr& output : config->outputs()) {
         initOutput(output);
     }
     m_lastNormalizedScreenSize = screenSize();
 
-    // TODO: put this into m_initialControl
-    m_initialRetention = getRetention();
-    Q_EMIT retentionChanged();
-
-    connect(m_outputs, &OutputModel::changed,
-            this, [this]() {
-                checkNeedsSave();
-                Q_EMIT changed();
+    connect(m_outputs, &OutputModel::changed, this, [this]() {
+        checkNeedsSave();
+        Q_EMIT changed();
     });
-    connect(m_config.data(), &Disman::Config::outputAdded,
-            this, [this]() { Q_EMIT outputConnect(true); });
-    connect(m_config.data(), &Disman::Config::outputRemoved,
-            this, [this]() { Q_EMIT outputConnect(false); });
-    connect(m_config.data(), &Disman::Config::primaryOutputChanged,
-            this, &ConfigHandler::primaryOutputChanged);
+    connect(m_config.data(), &Disman::Config::outputAdded, this, [this]() {
+        Q_EMIT outputConnect(true);
+    });
+    connect(m_config.data(), &Disman::Config::outputRemoved, this, [this]() {
+        Q_EMIT outputConnect(false);
+    });
+    connect(m_config.data(),
+            &Disman::Config::primaryOutputChanged,
+            this,
+            &ConfigHandler::primaryOutputChanged);
 
     Q_EMIT outputModelChanged();
 }
 
-void ConfigHandler::resetScale(const Disman::OutputPtr &output)
+void ConfigHandler::initOutput(const Disman::OutputPtr& output)
 {
-    // Load scale control (either not set, same or windowing system does not transmit scale).
-    const qreal scale = m_control->getScale(output);
-    if (scale > 0) {
-        output->setScale(scale);
-        for (auto initialOutput : m_initialConfig->outputs()) {
-            if (initialOutput->id() == output->id()) {
-                initialOutput->setScale(scale);
-                break;
-            }
-        }
-    }
-}
-
-void ConfigHandler::initOutput(const Disman::OutputPtr &output)
-{
-    if (output->isConnected()) {
-        resetScale(output);
-        m_outputs->add(output);
-    }
-    connect(output.data(), &Disman::Output::isConnectedChanged,
-            this, [this, output]() {
-        Q_EMIT outputConnect(output->isConnected());
-    });
+    m_outputs->add(output);
 }
 
 void ConfigHandler::updateInitialData()
 {
-    m_initialRetention = getRetention();
-    connect(new GetConfigOperation(), &GetConfigOperation::finished,
-            this, [this](ConfigOperation *op) {
-        if (op->hasError()) {
-            return;
-        }
-        m_initialConfig = qobject_cast<GetConfigOperation*>(op)->config();
-        for (auto output : m_config->outputs()) {
-            resetScale(output);
-        }
-        m_initialControl.reset(new ControlConfig(m_initialConfig));
-        checkNeedsSave();
-    });
+    connect(
+        new GetConfigOperation(), &GetConfigOperation::finished, this, [this](ConfigOperation* op) {
+            if (op->hasError()) {
+                return;
+            }
+            m_initialConfig = qobject_cast<GetConfigOperation*>(op)->config();
+            checkNeedsSave();
+        });
 }
 
 void ConfigHandler::checkNeedsSave()
 {
-    if (m_config->supportedFeatures() &
-            Disman::Config::Feature::PrimaryDisplay) {
+    if (m_config->supportedFeatures() & Disman::Config::Feature::PrimaryDisplay) {
         if (m_config->primaryOutput() && m_initialConfig->primaryOutput()) {
-            if (m_config->primaryOutput()->hashMd5() !=
-                    m_initialConfig->primaryOutput()->hashMd5() ) {
+            if (m_config->primaryOutput()->hash() != m_initialConfig->primaryOutput()->hash()) {
                 Q_EMIT needsSaveChecked(true);
                 return;
             }
@@ -131,15 +96,10 @@ void ConfigHandler::checkNeedsSave()
         }
     }
 
-    if (m_initialRetention != getRetention()) {
-        Q_EMIT needsSaveChecked(true);
-        return;
-    }
-
-    for (const auto &output : m_config->connectedOutputs()) {
-        const QString hash = output->hashMd5();
-        for (const auto &initialOutput : m_initialConfig->outputs()) {
-            if (hash != initialOutput->hashMd5()) {
+    for (const auto& output : m_config->outputs()) {
+        const QString hash = output->hash();
+        for (const auto& initialOutput : m_initialConfig->outputs()) {
+            if (hash != initialOutput->hash()) {
                 continue;
             }
             bool needsSave = false;
@@ -147,15 +107,17 @@ void ConfigHandler::checkNeedsSave()
                 needsSave = true;
             }
             if (output->isEnabled()) {
-                needsSave |= output->currentModeId() !=
-                                initialOutput->currentModeId()
-                             || output->position() != initialOutput->position()
-                             || output->scale() != initialOutput->scale()
-                             || output->rotation() != initialOutput->rotation()
-                             || output->replicationSource() != initialOutput->replicationSource()
-                             || autoRotate(output) != m_initialControl->getAutoRotate(output)
-                             || autoRotateOnlyInTabletMode(output)
-                                    != m_initialControl->getAutoRotateOnlyInTabletMode(output);
+                needsSave |= output->auto_mode()->id() != initialOutput->auto_mode()->id()
+                    || output->position() != initialOutput->position()
+                    || output->scale() != initialOutput->scale()
+                    || output->rotation() != initialOutput->rotation()
+                    || output->replicationSource() != initialOutput->replicationSource()
+                    || output->retention() != initialOutput->retention()
+                    || output->auto_resolution() != initialOutput->auto_resolution()
+                    || output->auto_refresh_rate() != initialOutput->auto_refresh_rate()
+                    || output->auto_rotate() != initialOutput->auto_rotate()
+                    || output->auto_rotate_only_in_tablet_mode()
+                        != initialOutput->auto_rotate_only_in_tablet_mode();
             }
             if (needsSave) {
                 Q_EMIT needsSaveChecked(true);
@@ -172,7 +134,7 @@ QSize ConfigHandler::screenSize() const
     int width = 0, height = 0;
     QSize size;
 
-    for (const auto &output : m_config->connectedOutputs()) {
+    for (const auto& output : m_config->outputs()) {
         if (!output->isPositionable()) {
             continue;
         }
@@ -211,9 +173,8 @@ QSize ConfigHandler::normalizeScreen()
 
 void ConfigHandler::checkScreenNormalization()
 {
-    const bool normalized = !m_config ||
-            (m_lastNormalizedScreenSize == screenSize() &&
-             m_outputs->positionsNormalized());
+    const bool normalized = !m_config
+        || (m_lastNormalizedScreenSize == screenSize() && m_outputs->positionsNormalized());
 
     Q_EMIT screenNormalizationUpdate(normalized);
 }
@@ -224,29 +185,30 @@ void ConfigHandler::primaryOutputSelected(int index)
     // TODO
 }
 
-void ConfigHandler::primaryOutputChanged(const Disman::OutputPtr &output)
+void ConfigHandler::primaryOutputChanged(const Disman::OutputPtr& output)
 {
     Q_UNUSED(output)
-
 }
 
-Control::OutputRetention ConfigHandler::getRetention() const
+Disman::Output::Retention ConfigHandler::getRetention() const
 {
-    using Retention = Control::OutputRetention;
+    using Retention = Disman::Output::Retention;
 
     auto ret = Retention::Undefined;
-    if (!m_control) {
+
+    if (!m_config) {
         return ret;
     }
-    const auto outputs = m_config->connectedOutputs();
+
+    const auto outputs = m_config->outputs();
     if (outputs.isEmpty()) {
         return ret;
     }
-    ret = m_control->getOutputRetention(outputs.first());
+    ret = outputs.first()->retention();
 
-    for (const auto &output : outputs) {
-        const auto outputRet = m_control->getOutputRetention(output);
-        if (ret != outputRet ) {
+    for (const auto& output : outputs) {
+        const auto outputRet = output->retention();
+        if (ret != outputRet) {
             // Control file with different retention values per output.
             return Retention::Undefined;
         }
@@ -267,73 +229,27 @@ int ConfigHandler::retention() const
 
 void ConfigHandler::setRetention(int retention)
 {
-    using Retention = Control::OutputRetention;
+    using Retention = Disman::Output::Retention;
 
-    if (!m_control) {
+    if (!m_config) {
         return;
     }
-    if (retention != static_cast<int>(Retention::Global) &&
-            retention != static_cast<int>(Retention::Individual)) {
+
+    if (retention != static_cast<int>(Retention::Global)
+        && retention != static_cast<int>(Retention::Individual)) {
         // We only allow setting to global or individual retention.
         return;
     }
+
     if (retention == ConfigHandler::retention()) {
         return;
     }
+
     auto ret = static_cast<Retention>(retention);
-    for (const auto &output : m_config->connectedOutputs()) {
-        m_control->setOutputRetention(output, ret);
+    for (auto const& output : m_config->outputs()) {
+        output->set_retention(ret);
     }
     checkNeedsSave();
     Q_EMIT retentionChanged();
     Q_EMIT changed();
-}
-
-qreal ConfigHandler::scale(const Disman::OutputPtr &output) const
-{
-    return m_control->getScale(output);
-}
-
-void ConfigHandler::setScale(Disman::OutputPtr &output, qreal scale)
-{
-    m_control->setScale(output, scale);
-}
-
-Disman::OutputPtr ConfigHandler::replicationSource(const Disman::OutputPtr &output) const
-{
-    return m_control->getReplicationSource(output);
-}
-
-void ConfigHandler::setReplicationSource(Disman::OutputPtr &output,
-                                         const Disman::OutputPtr &source)
-{
-    m_control->setReplicationSource(output, source);
-}
-
-bool ConfigHandler::autoRotate(const Disman::OutputPtr &output) const
-{
-    return m_control->getAutoRotate(output);
-}
-
-void ConfigHandler::setAutoRotate(Disman::OutputPtr &output, bool autoRotate)
-{
-    m_control->setAutoRotate(output, autoRotate);
-}
-
-bool ConfigHandler::autoRotateOnlyInTabletMode(const Disman::OutputPtr &output) const
-{
-    return m_control->getAutoRotateOnlyInTabletMode(output);
-}
-
-void ConfigHandler::setAutoRotateOnlyInTabletMode(Disman::OutputPtr &output, bool value)
-{
-    m_control->setAutoRotateOnlyInTabletMode(output, value);
-}
-
-void ConfigHandler::writeControl()
-{
-    if (!m_control) {
-        return;
-    }
-    m_control->writeFile();
 }

@@ -23,7 +23,7 @@ class OrientationSensor final : public QObject
 {
     Q_OBJECT
 public:
-    explicit OrientationSensor(QObject *parent = nullptr);
+    explicit OrientationSensor(QObject* parent = nullptr);
     ~OrientationSensor() override final;
 
     QOrientationReading::Orientation value() const;
@@ -41,7 +41,7 @@ private:
     void refresh();
     void updateState();
 
-    QOrientationSensor *m_sensor;
+    QOrientationSensor* m_sensor;
     QOrientationReading::Orientation m_value = QOrientationReading::Undefined;
     bool m_enabled = false;
 };

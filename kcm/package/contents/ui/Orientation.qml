@@ -21,7 +21,7 @@ import org.kde.kirigami 2.4 as Kirigami
 
 ColumnLayout {
     Kirigami.FormData.label: i18n("Orientation:")
-    Kirigami.FormData.buddyFor: autoRotateRadio
+    Kirigami.FormData.buddyFor: auto_rotate_switch
     spacing: Kirigami.Units.smallSpacing
 
     ColumnLayout {
@@ -31,36 +31,24 @@ ColumnLayout {
         enabled: kcm.orientationSensorAvailable && element.internal
         visible: kcm.autoRotationSupported
 
-        ColumnLayout {
-            Controls.RadioButton {
-                id: autoRotateRadio
-                text: i18n("Automatic")
-                checked: autoRotateColumn.enabled && element.autoRotate
-                onClicked: element.autoRotate = true
-            }
-
-            Controls.CheckBox {
-                id: autoRotateOnlyInTabletMode
-                Layout.leftMargin: Kirigami.Units.largeSpacing
-
-                text: i18n("Only when in tablet mode.")
-                enabled: autoRotateRadio.checked
-                checked: enabled && element.autoRotateOnlyInTabletMode
-                onClicked: element.autoRotateOnlyInTabletMode = checked
-            }
+        Controls.Switch {
+            id: auto_rotate_switch
+            text: i18n("Auto")
+            checked: enabled && element.autoRotate
+            onToggled: element.autoRotate = checked
         }
 
-        Controls.RadioButton {
-            id: manualRotateRadio
-            text: i18n("Manual")
-            checked: !element.autoRotate || !autoRotateColumn.enabled
-            onClicked: element.autoRotate = false
+        Controls.Switch {
+            text: i18n("Only when in tablet mode.")
+            visible: auto_rotate_switch.checked
+            checked: element.autoRotateOnlyInTabletMode
+            onToggled: element.autoRotateOnlyInTabletMode = checked
         }
     }
 
     RowLayout {
        id: orientation
-       enabled: !element.autoRotate || !autoRotateColumn.enabled || !autoRotateColumn.visible
+       visible: !auto_rotate_switch.checked || !kcm.autoRotationSupported
 
        Controls.ButtonGroup {
            buttons: orientation.children

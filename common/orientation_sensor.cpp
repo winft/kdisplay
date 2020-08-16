@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QOrientationSensor>
 
-OrientationSensor::OrientationSensor(QObject *parent)
+OrientationSensor::OrientationSensor(QObject* parent)
     : QObject(parent)
     , m_sensor(new QOrientationSensor(this))
 {
@@ -55,7 +55,7 @@ QOrientationReading::Orientation OrientationSensor::value() const
 
 bool OrientationSensor::available() const
 {
-    return  m_sensor->connectToBackend();
+    return m_sensor->connectToBackend();
 }
 
 bool OrientationSensor::enabled() const
@@ -71,12 +71,12 @@ void OrientationSensor::setEnabled(bool enable)
     m_enabled = enable;
 
     if (enable) {
-        connect(m_sensor, &QOrientationSensor::readingChanged,
-                this, &OrientationSensor::updateState);
+        connect(
+            m_sensor, &QOrientationSensor::readingChanged, this, &OrientationSensor::updateState);
         m_sensor->start();
     } else {
-        disconnect(m_sensor, &QOrientationSensor::readingChanged,
-                   this, &OrientationSensor::updateState);
+        disconnect(
+            m_sensor, &QOrientationSensor::readingChanged, this, &OrientationSensor::updateState);
         m_value = QOrientationReading::Undefined;
     }
     Q_EMIT enabledChanged(enable);

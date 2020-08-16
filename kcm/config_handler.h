@@ -16,9 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #pragma once
 
-#include "../common/control.h"
-
 #include <disman/config.h>
+#include <disman/output.h>
 
 #include <memory>
 
@@ -28,41 +27,31 @@ class ConfigHandler : public QObject
 {
     Q_OBJECT
 public:
-    explicit ConfigHandler (QObject *parent = nullptr);
+    explicit ConfigHandler(QObject* parent = nullptr);
     ~ConfigHandler() override = default;
 
     void setConfig(Disman::ConfigPtr config);
     void updateInitialData();
 
-    OutputModel* outputModel() const {
+    OutputModel* outputModel() const
+    {
         return m_outputs;
     }
 
     QSize normalizeScreen();
 
-    Disman::ConfigPtr config() const {
+    Disman::ConfigPtr config() const
+    {
         return m_config;
     }
 
-    Disman::ConfigPtr initialConfig() const {
+    Disman::ConfigPtr initialConfig() const
+    {
         return m_initialConfig;
     }
 
     int retention() const;
     void setRetention(int retention);
-
-    qreal scale(const Disman::OutputPtr &output) const;
-    void setScale(Disman::OutputPtr &output, qreal scale);
-
-    Disman::OutputPtr replicationSource(const Disman::OutputPtr &output) const;
-    void setReplicationSource(Disman::OutputPtr &output, const Disman::OutputPtr &source);
-
-    bool autoRotate(const Disman::OutputPtr &output) const;
-    void setAutoRotate(Disman::OutputPtr &output, bool autoRotate);
-    bool autoRotateOnlyInTabletMode(const Disman::OutputPtr &output) const;
-    void setAutoRotateOnlyInTabletMode(Disman::OutputPtr &output, bool value);
-
-    void writeControl();
 
     void checkNeedsSave();
 
@@ -77,19 +66,14 @@ Q_SIGNALS:
 private:
     void checkScreenNormalization();
     QSize screenSize() const;
-    Control::OutputRetention getRetention() const;
+    Disman::Output::Retention getRetention() const;
     void primaryOutputSelected(int index);
-    void primaryOutputChanged(const Disman::OutputPtr &output);
-    void initOutput(const Disman::OutputPtr &output);
-    void resetScale(const Disman::OutputPtr &output);
+    void primaryOutputChanged(const Disman::OutputPtr& output);
+    void initOutput(const Disman::OutputPtr& output);
 
     Disman::ConfigPtr m_config = nullptr;
     Disman::ConfigPtr m_initialConfig;
-    OutputModel *m_outputs = nullptr;
+    OutputModel* m_outputs = nullptr;
 
-    std::unique_ptr<ControlConfig> m_control;
-    std::unique_ptr<ControlConfig> m_initialControl;
-    Control::OutputRetention m_initialRetention = Control::OutputRetention::
-                                                  Undefined;
     QSize m_lastNormalizedScreenSize;
 };

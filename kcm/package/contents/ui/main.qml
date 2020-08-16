@@ -24,8 +24,8 @@ import org.kde.kcm 1.2 as KCM
 KCM.SimpleKCM {
     id: root
 
-    implicitWidth: Kirigami.Units.gridUnit * 32
-    implicitHeight: Kirigami.Units.gridUnit * 38
+    implicitWidth: Kirigami.Units.gridUnit * 40
+    implicitHeight: Kirigami.Units.gridUnit * 50
 
     property int selectedOutput: 0
 

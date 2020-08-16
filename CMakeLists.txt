@@ -19,7 +19,9 @@ include(ECMInstallIcons)
 include(ECMMarkAsTest)
 include(ECMQtDeclareLoggingCategory)
 include(FeatureSummary)
-include(KDEClangFormat)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5 ${QT_MIN_VERSION} REQUIRED COMPONENTS Test Sensors)
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
@@ -44,10 +46,6 @@ add_subdirectory(kded)
 add_subdirectory(plasmoid)
 add_subdirectory(tests)
 add_subdirectory(console)
-
-# add clang-format target for all our real source files
-file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h)
-kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
 
 install(FILES kdisplay.categories  DESTINATION  ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
 
