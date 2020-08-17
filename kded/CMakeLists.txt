@@ -38,9 +38,7 @@ qt5_add_dbus_adaptor(kdisplay_daemon_SRCS
 
 add_library(kdisplayd MODULE ${kdisplay_daemon_SRCS})
 
-target_link_libraries(kdisplayd Qt5::Widgets
-                              Qt5::DBus
-                              Qt5::Quick
+target_link_libraries(kdisplayd
                               Qt5::Sensors
                               KF5::Declarative
                               Disman::Disman
