@@ -2,6 +2,10 @@ add_definitions(-DTRANSLATION_DOMAIN="kdisplay")
 
 include_directories(${CMAKE_BINARY_DIR})
 
+find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
+    KCMUtils
+)
+
 add_executable(kdisplay main.cpp)
 target_link_libraries(kdisplay KF5::I18n KF5::KCMUtils)
 

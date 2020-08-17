@@ -2,6 +2,11 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kdisplayd\")
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/../)
 
+find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
+    GlobalAccel
+    XmlGui
+)
+
 set(kdisplay_daemon_SRCS
     daemon.cpp
     config.cpp
