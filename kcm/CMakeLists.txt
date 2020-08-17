@@ -1,5 +1,7 @@
 add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kdisplay\")
 
+add_subdirectory(app)
+
 set(kcm_kdisplay_SRCS
     config_handler.cpp
     kcm.cpp
