@@ -1,5 +1,9 @@
 add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kdisplay\")
 
+find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
+    Kirigami2
+)
+
 add_subdirectory(app)
 
 set(kcm_kdisplay_SRCS
@@ -27,6 +31,7 @@ target_link_libraries(kcm_kdisplay
     Qt5::Sensors
     KF5::Declarative
     KF5::I18n
+    KF5::Kirigami2
     KF5::PlasmaQuick
     KF5::QuickAddons
     Disman::Disman
