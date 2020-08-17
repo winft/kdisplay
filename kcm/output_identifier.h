@@ -20,10 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QVector>
 
-namespace PlasmaQuick
-{
-class Dialog;
-}
+class QQuickView;
 
 class OutputIdentifier : public QObject
 {
@@ -40,5 +37,5 @@ protected:
     bool eventFilter(QObject* object, QEvent* event) override;
 
 private:
-    QVector<PlasmaQuick::Dialog*> m_views;
+    QVector<QQuickView*> m_views;
 };

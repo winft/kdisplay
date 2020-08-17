@@ -21,18 +21,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <disman/output.h>
 
 #include <QQuickItem>
+#include <QQuickView>
 #include <QStandardPaths>
+#include <QSurfaceFormat>
 #include <QTimer>
-
-#include <KDeclarative/kdeclarative/qmlobject.h>
-#include <PlasmaQuick/Dialog>
 
 #define QML_PATH "kpackage/kcms/kcm_kdisplay/contents/ui/"
 
 OutputIdentifier::OutputIdentifier(Disman::ConfigPtr config, QObject* parent)
     : QObject(parent)
 {
-
+    QQuickWindow::setDefaultAlphaBuffer(true);
     const QString qmlPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                                    QStringLiteral(QML_PATH "OutputIdentifier.qml"));
 
@@ -42,19 +41,18 @@ OutputIdentifier::OutputIdentifier(Disman::ConfigPtr config, QObject* parent)
         }
 
         auto const mode = output->auto_mode();
-        auto* view = new PlasmaQuick::Dialog();
 
-        auto qmlObject = new KDeclarative::QmlObject(view);
-        qmlObject->setSource(QUrl::fromLocalFile(qmlPath));
-        qmlObject->completeInitialization();
-
-        auto rootObj = qobject_cast<QQuickItem*>(qmlObject->rootObject());
-
-        view->setMainItem(rootObj);
+        auto view = new QQuickView;
+        QSurfaceFormat format;
+        format.setAlphaBufferSize(8);
+        view->setFormat(format);
+        view->setColor(QColor(0, 0, 0, 0));
         view->setFlags(Qt::X11BypassWindowManagerHint | Qt::FramelessWindowHint);
-        view->setBackgroundHints(PlasmaQuick::Dialog::NoBackground);
+        view->setSource(QUrl::fromLocalFile(qmlPath));
+
         view->installEventFilter(this);
 
+        auto rootObj = view->rootObject();
         if (!rootObj) {
             delete view;
             continue;
@@ -93,12 +91,12 @@ OutputIdentifier::~OutputIdentifier()
 bool OutputIdentifier::eventFilter(QObject* object, QEvent* event)
 {
     if (event->type() == QEvent::Resize) {
-        if (m_views.contains(qobject_cast<PlasmaQuick::Dialog*>(object))) {
+        if (m_views.contains(qobject_cast<QQuickView*>(object))) {
             QResizeEvent* e = static_cast<QResizeEvent*>(event);
             const QRect screenSize = object->property("screenSize").toRect();
             QRect geometry(QPoint(0, 0), e->size());
             geometry.moveCenter(screenSize.center());
-            static_cast<PlasmaQuick::Dialog*>(object)->setGeometry(geometry);
+            static_cast<QQuickView*>(object)->setGeometry(geometry);
         }
     }
     return QObject::eventFilter(object, event);

@@ -32,7 +32,6 @@ target_link_libraries(kcm_kdisplay
     KF5::Declarative
     KF5::I18n
     KF5::Kirigami2
-    KF5::PlasmaQuick
     KF5::QuickAddons
     Disman::Disman
 )
