@@ -27,9 +27,11 @@ Rectangle {
 
     color: theme.backgroundColor
     border {
-        color: "red"
-        width: units.smallSpacing * 2
+        color: theme.textColor
+        width: units.smallSpacing * 1.5
     }
+    radius: Kirigami.Units.smallSpacing * 2
+    opacity: 0.9
 
     width: childrenRect.width + 2 * childrenRect.x
     height: childrenRect.height + 2 * childrenRect.y
