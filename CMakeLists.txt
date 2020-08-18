@@ -29,8 +29,6 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     Declarative
     I18n
 )
-# WARNING PlasmaQuick provides unversioned CMake config
-find_package(KF5 REQUIRED COMPONENTS PlasmaQuick)
 
 set(MIN_DISMAN_VERSION "0.519.80")
 find_package(Disman ${MIN_DISMAN_VERSION} REQUIRED)

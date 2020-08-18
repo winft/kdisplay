@@ -1,5 +1,8 @@
 add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_org.kwinft.kdisplay\")
 
+# WARNING PlasmaQuick provides unversioned CMake config
+find_package(KF5 REQUIRED COMPONENTS PlasmaQuick)
+
 set(kdisplayApplet_SRCS
     kdisplay_applet.cpp
     ../kded/osdaction.cpp
