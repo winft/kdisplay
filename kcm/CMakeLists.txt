@@ -29,7 +29,7 @@ target_link_libraries(kcm_kdisplay
     KF5::I18n
     KF5::PlasmaQuick
     KF5::QuickAddons
-    Disman
+    Disman::Disman
 )
 
 kcoreaddons_desktop_to_json(kcm_kdisplay "kcm_kdisplay.desktop" SERVICE_TYPES kcmodule.desktop)

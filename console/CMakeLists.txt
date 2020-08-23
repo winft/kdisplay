@@ -5,6 +5,6 @@ target_link_libraries(kdisplay-console
             Qt5::Gui
             KF5::CoreAddons
             KF5::I18n
-            Disman)
+            Disman::Disman)
 
 install(TARGETS kdisplay-console ${INSTALL_TARGETS_DEFAULT_ARGS})
