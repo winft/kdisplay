@@ -28,10 +28,10 @@
 #include <QDBusConnection>
 #include <QDBusMessage>
 
-#include <Disman/Config>
-#include <Disman/ConfigMonitor>
-#include <Disman/GetConfigOperation>
-#include <Disman/Output>
+#include <disman/config.h>
+#include <disman/configmonitor.h>
+#include <disman/getconfigoperation.h>
+#include <disman/output.h>
 
 #include "../kded/osdaction.h"
 
