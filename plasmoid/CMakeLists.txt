@@ -14,7 +14,7 @@ target_link_libraries(plasma_applet_kdisplay
                       Qt5::DBus
                       KF5::I18n
                       KF5::Plasma
-                      Disman)
+                      Disman::Disman)
 
 install(TARGETS plasma_applet_kdisplay DESTINATION ${KDE_INSTALL_PLUGINDIR}/plasma/applets)
 

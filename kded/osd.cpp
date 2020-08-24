@@ -22,7 +22,7 @@
 
 #include "../common/utils.h"
 
-#include <Disman/Mode>
+#include <disman/mode.h>
 
 #include <QCursor>
 #include <QGuiApplication>
