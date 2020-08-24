@@ -38,7 +38,7 @@ target_link_libraries(kdisplay Qt5::Widgets
                               Qt5::Quick
                               Qt5::Sensors
                               KF5::Declarative
-                              Disman
+                              Disman::Disman
                               KF5::DBusAddons
                               KF5::I18n
                               KF5::XmlGui

@@ -19,9 +19,9 @@
 #include "kdisplay_daemon_debug.h"
 #include "osd.h"
 
-#include <Disman/Config>
-#include <Disman/GetConfigOperation>
-#include <Disman/Output>
+#include <disman/config.h>
+#include <disman/getconfigoperation.h>
+#include <disman/output.h>
 
 #include <QDBusConnection>
 

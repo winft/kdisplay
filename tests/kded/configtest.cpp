@@ -21,11 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QtTest>
 
-#include <Disman/Config>
-#include <Disman/EDID>
-#include <Disman/Mode>
-#include <Disman/Output>
-#include <Disman/Screen>
+#include <disman/config.h>
+#include <disman/edid.h>
+#include <disman/mode.h>
+#include <disman/output.h>
+#include <disman/screen.h>
 
 #include <memory>
 

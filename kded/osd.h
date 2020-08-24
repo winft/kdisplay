@@ -23,7 +23,7 @@
 #include <QRect>
 #include <QString>
 
-#include <Disman/Output>
+#include <disman/output.h>
 
 #include "osdmanager.h"
 

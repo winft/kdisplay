@@ -24,7 +24,7 @@
 
 #include <Plasma/Applet>
 
-#include <Disman/Types>
+#include <disman/types.h>
 
 class KDisplayApplet : public Plasma::Applet
 {
