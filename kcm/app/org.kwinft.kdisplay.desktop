@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Icon=preferences-desktop-display-randr
+Terminal=false
+Exec=kdisplay
+Name=KDisplay
+GenericName=Control displays settings
+Categories=Qt;KDE;Settings;HardwareSettings;
+NotShowIn=KDE;

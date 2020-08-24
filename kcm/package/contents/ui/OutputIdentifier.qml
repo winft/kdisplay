@@ -17,8 +17,7 @@
 */
 
 import QtQuick 2.1
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.kirigami 2.4 as Kirigami
 
 Rectangle {
     id: root;
@@ -28,14 +27,16 @@ Rectangle {
 
     color: theme.backgroundColor
     border {
-        color: "red"
-        width: units.smallSpacing * 2
+        color: theme.textColor
+        width: units.smallSpacing * 1.5
     }
+    radius: Kirigami.Units.smallSpacing * 2
+    opacity: 0.9
 
     width: childrenRect.width + 2 * childrenRect.x
     height: childrenRect.height + 2 * childrenRect.y
 
-    PlasmaComponents.Label {
+    Kirigami.Label {
         id: displayName
         x: units.largeSpacing * 2
         y: units.largeSpacing
@@ -45,7 +46,7 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter;
     }
 
-    PlasmaComponents.Label {
+    Kirigami.Label {
         id: modeLabel;
         anchors {
             horizontalCenter: displayName.horizontalCenter

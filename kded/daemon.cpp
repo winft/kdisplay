@@ -45,7 +45,7 @@
 #include <QShortcut>
 #include <QTimer>
 
-K_PLUGIN_CLASS_WITH_JSON(KDisplayDaemon, "kdisplay.json")
+K_PLUGIN_CLASS_WITH_JSON(KDisplayDaemon, "kdisplayd.json")
 
 KDisplayDaemon::KDisplayDaemon(QObject* parent, const QList<QVariant>&)
     : KDEDModule(parent)

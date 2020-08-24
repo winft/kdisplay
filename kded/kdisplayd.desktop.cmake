@@ -1,12 +1,12 @@
 [Desktop Entry]
-Name=KDisplay
+Name=KDisplay KDED module
 
-Comment=Display management
+Comment=Automatic display management integrated to the KDE daemon
 
 Type=Service
 Icon=preferences-desktop-display-randr
 X-KDE-ServiceTypes=KDEDModule
-X-KDE-Library=kdisplay
+X-KDE-Library=kdisplayd
 X-KDE-Kded-autoload=true
 X-KDE-Kded-load-on-demand=false
 X-KDE-Kded-phase=1
