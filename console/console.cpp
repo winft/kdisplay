@@ -111,12 +111,12 @@ void Console::printConfig()
         Edid* edid = output->edid();
         qDebug() << "EDID Info: ";
         if (edid && edid->isValid()) {
-            qDebug() << "\tDevice ID: " << edid->deviceId();
-            qDebug() << "\tName: " << edid->name();
-            qDebug() << "\tVendor: " << edid->vendor();
-            qDebug() << "\tSerial: " << edid->serial();
-            qDebug() << "\tEISA ID: " << edid->eisaId();
-            qDebug() << "\tHash: " << edid->hash();
+            qDebug() << "\tDevice ID: " << edid->deviceId().c_str();
+            qDebug() << "\tName: " << edid->name().c_str();
+            qDebug() << "\tVendor: " << edid->vendor().c_str();
+            qDebug() << "\tSerial: " << edid->serial().c_str();
+            qDebug() << "\tEISA ID: " << edid->eisaId().c_str();
+            qDebug() << "\tHash: " << edid->hash().c_str();
             qDebug() << "\tWidth: " << edid->width();
             qDebug() << "\tHeight: " << edid->height();
             qDebug() << "\tGamma: " << edid->gamma();
