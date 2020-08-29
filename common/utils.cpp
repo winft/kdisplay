@@ -41,13 +41,13 @@ QString Utils::outputName(const Disman::Output* output)
         // The name will be "VendorName ModelName (ConnectorName)",
         // but some components may be empty.
         QString name;
-        if (!(output->edid()->vendor().isEmpty())) {
-            name = output->edid()->vendor() + QLatin1Char(' ');
+        if (output->edid()->vendor().size()) {
+            name = QString::fromStdString(output->edid()->vendor()) + QLatin1Char(' ');
         }
-        if (!output->edid()->name().isEmpty()) {
-            name += output->edid()->name() + QLatin1Char(' ');
+        if (output->edid()->name().size()) {
+            name += QString::fromStdString(output->edid()->name()) + QLatin1Char(' ');
         }
-        if (!name.trimmed().isEmpty()) {
+        if (name.trimmed().isEmpty()) {
             return name + QLatin1Char('(') + output->name() + QLatin1Char(')');
         }
     }
