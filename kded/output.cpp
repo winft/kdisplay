@@ -359,13 +359,13 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputs
             if (outputId != info[QStringLiteral("id")].toString()) {
                 continue;
             }
-            if (!output->name().isEmpty() && duplicateIds.contains(outputId)) {
+            if (output->name().size() && duplicateIds.contains(outputId)) {
                 // We may have identical outputs connected, these will have the same id in the
                 // config in order to find the right one, also check the output's name (usually the
                 // connector)
                 const auto metadata = info[QStringLiteral("metadata")].toMap();
                 const auto outputName = metadata[QStringLiteral("name")].toString();
-                if (output->name() != outputName) {
+                if (output->name() != outputName.toStdString()) {
                     // was a duplicate id, but info not for this output
                     continue;
                 }
@@ -399,7 +399,7 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputs
 static QVariantMap metadata(const Disman::OutputPtr& output)
 {
     QVariantMap metadata;
-    metadata[QStringLiteral("name")] = output->name();
+    metadata[QStringLiteral("name")] = QString::fromStdString(output->name());
     if (!output->edid() || !output->edid()->isValid()) {
         return metadata;
     }

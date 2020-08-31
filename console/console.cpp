@@ -68,7 +68,7 @@ void Console::printConfig()
 
     connect(m_config.data(), &Config::primaryOutputChanged, [&](const OutputPtr& output) {
         if (output) {
-            qDebug() << "New primary output: " << output->id() << output->name();
+            qDebug() << "New primary output: " << output->id() << output->name().c_str();
         } else {
             qDebug() << "No primary output.";
         }
@@ -83,7 +83,7 @@ void Console::printConfig()
     Q_FOREACH (const OutputPtr& output, outputs) {
         qDebug() << "\n-----------------------------------------------------\n";
         qDebug() << "Id: " << output->id();
-        qDebug() << "Name: " << output->name();
+        qDebug() << "Name: " << output->name().c_str();
         qDebug() << "Type: " << typetoString(output->type());
         qDebug() << "Enabled: " << output->isEnabled();
         qDebug() << "Primary: " << output->isPrimary();

@@ -48,10 +48,11 @@ QString Utils::outputName(const Disman::Output* output)
             name += QString::fromStdString(output->edid()->name()) + QLatin1Char(' ');
         }
         if (name.trimmed().isEmpty()) {
-            return name + QLatin1Char('(') + output->name() + QLatin1Char(')');
+            return name + QLatin1Char('(') + QString::fromStdString(output->name())
+                + QLatin1Char(')');
         }
     }
-    return output->name();
+    return QString::fromStdString(output->name());
 }
 
 QString Utils::sizeToString(const QSize& size)

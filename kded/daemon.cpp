@@ -479,7 +479,7 @@ void KDisplayDaemon::disableOutput(Disman::OutputPtr& output)
             && otherPos.y() <= geom.bottom()) {
             otherPos.setX(otherPos.x() - geom.width());
         }
-        qCDebug(KDISPLAY_KDED) << "Moving" << otherOutput->name() << "from"
+        qCDebug(KDISPLAY_KDED) << "Moving" << otherOutput->name().c_str() << "from"
                                << otherOutput->position() << "to" << otherPos;
         otherOutput->setPosition(otherPos);
     }

@@ -122,7 +122,7 @@ void KCMKDisplay::doSave(bool force)
 
         atLeastOneEnabledOutput |= output->isEnabled();
 
-        qCDebug(KDISPLAY_KCM) << output->name() << output->id() << output.data() << "\n"
+        qCDebug(KDISPLAY_KCM) << output->name().c_str() << output->id() << output.data() << "\n"
                               << "	Enabled:" << output->isEnabled() << "\n"
                               << "	Primary:" << output->isPrimary() << "\n"
                               << "	Rotation:" << output->rotation() << "\n"
@@ -369,8 +369,8 @@ void KCMKDisplay::writeGlobalScale()
     // DPI for both PlasmaShell which does it's own thing, and for KDE4/GTK2 applications.
     QString screenFactors;
     for (const auto& output : m_config->config()->outputs()) {
-        screenFactors.append(output->name() + QLatin1Char('=') + QString::number(m_globalScale)
-                             + QLatin1Char(';'));
+        screenFactors.append(QString::fromStdString(output->name()) + QLatin1Char('=')
+                             + QString::number(m_globalScale) + QLatin1Char(';'));
     }
     config->group("KScreen").writeEntry("ScreenScaleFactors", screenFactors);
 
