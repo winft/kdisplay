@@ -123,7 +123,7 @@ void KDisplayDaemon::init()
         // We don't care about the result, we just want to force the backend
         // to query XRandR so that it will detect possible changes that happened
         // while the computer was suspended, and will emit the change events.
-        new Disman::GetConfigOperation(Disman::GetConfigOperation::NoEDID, this);
+        new Disman::GetConfigOperation(this);
     });
     connect(
         Device::self(), &Device::aboutToSuspend, this, [&]() {

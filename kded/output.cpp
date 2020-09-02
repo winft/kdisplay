@@ -400,11 +400,7 @@ static QVariantMap metadata(const Disman::OutputPtr& output)
 {
     QVariantMap metadata;
     metadata[QStringLiteral("name")] = QString::fromStdString(output->name());
-    if (!output->edid() || !output->edid()->isValid()) {
-        return metadata;
-    }
-
-    metadata[QStringLiteral("fullname")] = QString::fromStdString(output->edid()->deviceId());
+    metadata[QStringLiteral("description")] = QString::fromStdString(output->description());
     return metadata;
 }
 
