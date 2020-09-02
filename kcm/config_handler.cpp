@@ -97,7 +97,7 @@ void ConfigHandler::checkNeedsSave()
     }
 
     for (const auto& output : m_config->outputs()) {
-        const QString hash = output->hash();
+        auto const hash = output->hash();
         for (const auto& initialOutput : m_initialConfig->outputs()) {
             if (hash != initialOutput->hash()) {
                 continue;

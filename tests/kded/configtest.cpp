@@ -417,7 +417,7 @@ void TestConfig::testIdenticalOutputs()
     QCOMPARE(config2->outputs().count(), 6);
     Q_FOREACH (auto output, config2->outputs()) {
         QVERIFY(positions.keys().contains(QString::fromStdString(output->name())));
-        QVERIFY(QString::fromStdString(output->name()) != output->hash());
+        QVERIFY(output->name() != output->hash());
         QCOMPARE(positions[QString::fromStdString(output->name())], output->position());
         QCOMPARE(output->auto_mode()->size(), QSize(1920, 1080));
         QCOMPARE(output->auto_mode()->refreshRate(), 60.0);

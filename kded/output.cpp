@@ -103,7 +103,7 @@ void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMa
 
 QVariantMap Output::getGlobalData(Disman::OutputPtr output)
 {
-    QFile file(path(output->hash()));
+    QFile file(path(QString::fromStdString(output->hash())));
     if (!file.open(QIODevice::ReadOnly)) {
         qCDebug(KDISPLAY_KDED) << "Failed to open file" << file.fileName();
         return QVariantMap();
@@ -188,7 +188,7 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList& outpu
 
             auto it = std::find_if(outputsInfo.begin(), outputsInfo.end(), [hash](QVariant v) {
                 const QVariantMap info = v.toMap();
-                return info[QStringLiteral("id")].toString() == hash;
+                return info[QStringLiteral("id")].toString().toStdString() == hash;
             });
             if (it == outputsInfo.end()) {
                 return false;
@@ -342,7 +342,7 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputs
         QStringList allIds;
         allIds.reserve(outputs.count());
         for (const Disman::OutputPtr& output : outputs) {
-            const auto outputId = output->hash();
+            const auto outputId = QString::fromStdString(output->hash());
             if (allIds.contains(outputId) && !duplicateIds.contains(outputId)) {
                 duplicateIds << outputId;
             }
@@ -352,7 +352,7 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputs
     }
 
     for (Disman::OutputPtr output : outputs) {
-        const auto outputId = output->hash();
+        const auto outputId = QString::fromStdString(output->hash());
         bool infoFound = false;
         for (const auto& variantInfo : outputsInfo) {
             const QVariantMap info = variantInfo.toMap();
@@ -413,7 +413,7 @@ bool Output::writeGlobalPart(const Disman::OutputPtr& output,
                              const Disman::OutputPtr& fallback)
 {
 
-    info[QStringLiteral("id")] = output->hash();
+    info[QStringLiteral("id")] = QString::fromStdString(output->hash());
     info[QStringLiteral("metadata")] = metadata(output);
     info[QStringLiteral("rotation")] = output->rotation();
 
@@ -454,7 +454,7 @@ void Output::writeGlobal(const Disman::OutputPtr& output)
         return;
     }
 
-    QFile file(createPath(output->hash()));
+    QFile file(createPath(QString::fromStdString(output->hash())));
     if (!file.open(QIODevice::WriteOnly)) {
         qCWarning(KDISPLAY_KDED) << "Failed to open global output file for writing! "
                                  << file.errorString();
