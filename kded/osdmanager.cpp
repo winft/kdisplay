@@ -100,10 +100,10 @@ void OsdManager::slotIdentifyOutputs(Disman::ConfigOperation* op)
         if (!output->isEnabled() || !output->auto_mode()) {
             continue;
         }
-        auto osd = m_osds.value(output->name());
+        auto osd = m_osds.value(QString::fromStdString(output->name()));
         if (!osd) {
             osd = new Disman::Osd(output, this);
-            m_osds.insert(output->name(), osd);
+            m_osds.insert(QString::fromStdString(output->name()), osd);
         }
         osd->showOutputIdentifier(output);
     }
@@ -129,10 +129,10 @@ void OsdManager::showOsd(const QString& icon, const QString& text)
                     if (!output->isEnabled() || !output->auto_mode()) {
                         continue;
                     }
-                    auto osd = m_osds.value(output->name());
+                    auto osd = m_osds.value(QString::fromStdString(output->name()));
                     if (!osd) {
                         osd = new Disman::Osd(output, this);
-                        m_osds.insert(output->name(), osd);
+                        m_osds.insert(QString::fromStdString(output->name()), osd);
                     }
                     osd->showGenericOsd(icon, text);
                 }
@@ -195,11 +195,12 @@ OsdAction* OsdManager::showActionSelector()
                 }
 
                 Disman::Osd* osd = nullptr;
-                if (m_osds.contains(osdOutput->name())) {
-                    osd = m_osds.value(osdOutput->name());
+                auto const name = QString::fromStdString(osdOutput->name());
+                if (m_osds.contains(name)) {
+                    osd = m_osds.value(name);
                 } else {
                     osd = new Disman::Osd(osdOutput, this);
-                    m_osds.insert(osdOutput->name(), osd);
+                    m_osds.insert(name, osd);
                 }
                 action->setOsd(osd);
                 osd->showActionSelector();

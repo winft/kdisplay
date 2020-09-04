@@ -36,22 +36,7 @@ QString Utils::outputName(const Disman::Output* output)
     if (output->type() == Disman::Output::Panel) {
         return i18n("Laptop Screen");
     }
-
-    if (output->edid()) {
-        // The name will be "VendorName ModelName (ConnectorName)",
-        // but some components may be empty.
-        QString name;
-        if (output->edid()->vendor().size()) {
-            name = QString::fromStdString(output->edid()->vendor()) + QLatin1Char(' ');
-        }
-        if (output->edid()->name().size()) {
-            name += QString::fromStdString(output->edid()->name()) + QLatin1Char(' ');
-        }
-        if (name.trimmed().isEmpty()) {
-            return name + QLatin1Char('(') + output->name() + QLatin1Char(')');
-        }
-    }
-    return output->name();
+    return QString::fromStdString(output->description());
 }
 
 QString Utils::sizeToString(const QSize& size)

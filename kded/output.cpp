@@ -103,7 +103,7 @@ void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMa
 
 QVariantMap Output::getGlobalData(Disman::OutputPtr output)
 {
-    QFile file(path(output->hash()));
+    QFile file(path(QString::fromStdString(output->hash())));
     if (!file.open(QIODevice::ReadOnly)) {
         qCDebug(KDISPLAY_KDED) << "Failed to open file" << file.fileName();
         return QVariantMap();
@@ -188,7 +188,7 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList& outpu
 
             auto it = std::find_if(outputsInfo.begin(), outputsInfo.end(), [hash](QVariant v) {
                 const QVariantMap info = v.toMap();
-                return info[QStringLiteral("id")].toString() == hash;
+                return info[QStringLiteral("id")].toString().toStdString() == hash;
             });
             if (it == outputsInfo.end()) {
                 return false;
@@ -342,7 +342,7 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputs
         QStringList allIds;
         allIds.reserve(outputs.count());
         for (const Disman::OutputPtr& output : outputs) {
-            const auto outputId = output->hash();
+            const auto outputId = QString::fromStdString(output->hash());
             if (allIds.contains(outputId) && !duplicateIds.contains(outputId)) {
                 duplicateIds << outputId;
             }
@@ -352,20 +352,20 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputs
     }
 
     for (Disman::OutputPtr output : outputs) {
-        const auto outputId = output->hash();
+        const auto outputId = QString::fromStdString(output->hash());
         bool infoFound = false;
         for (const auto& variantInfo : outputsInfo) {
             const QVariantMap info = variantInfo.toMap();
             if (outputId != info[QStringLiteral("id")].toString()) {
                 continue;
             }
-            if (!output->name().isEmpty() && duplicateIds.contains(outputId)) {
+            if (output->name().size() && duplicateIds.contains(outputId)) {
                 // We may have identical outputs connected, these will have the same id in the
                 // config in order to find the right one, also check the output's name (usually the
                 // connector)
                 const auto metadata = info[QStringLiteral("metadata")].toMap();
                 const auto outputName = metadata[QStringLiteral("name")].toString();
-                if (output->name() != outputName) {
+                if (output->name() != outputName.toStdString()) {
                     // was a duplicate id, but info not for this output
                     continue;
                 }
@@ -399,12 +399,8 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputs
 static QVariantMap metadata(const Disman::OutputPtr& output)
 {
     QVariantMap metadata;
-    metadata[QStringLiteral("name")] = output->name();
-    if (!output->edid() || !output->edid()->isValid()) {
-        return metadata;
-    }
-
-    metadata[QStringLiteral("fullname")] = QString::fromStdString(output->edid()->deviceId());
+    metadata[QStringLiteral("name")] = QString::fromStdString(output->name());
+    metadata[QStringLiteral("description")] = QString::fromStdString(output->description());
     return metadata;
 }
 
@@ -413,7 +409,7 @@ bool Output::writeGlobalPart(const Disman::OutputPtr& output,
                              const Disman::OutputPtr& fallback)
 {
 
-    info[QStringLiteral("id")] = output->hash();
+    info[QStringLiteral("id")] = QString::fromStdString(output->hash());
     info[QStringLiteral("metadata")] = metadata(output);
     info[QStringLiteral("rotation")] = output->rotation();
 
@@ -454,7 +450,7 @@ void Output::writeGlobal(const Disman::OutputPtr& output)
         return;
     }
 
-    QFile file(createPath(output->hash()));
+    QFile file(createPath(QString::fromStdString(output->hash())));
     if (!file.open(QIODevice::WriteOnly)) {
         qCWarning(KDISPLAY_KDED) << "Failed to open global output file for writing! "
                                  << file.errorString();

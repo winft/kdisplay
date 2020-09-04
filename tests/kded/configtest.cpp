@@ -64,7 +64,6 @@ private Q_SLOTS:
     void testCorruptEmptyConfig();
     void testCorruptUselessConfig();
     void testNullConfig();
-    void testIdenticalOutputs();
     void testMoveConfig();
     void testFixedConfig();
 
@@ -94,14 +93,16 @@ std::unique_ptr<Config> TestConfig::createConfig(bool output1Enabled, bool outpu
 
     Disman::OutputPtr output1 = Disman::OutputPtr::create();
     output1->setId(1);
-    output1->setName(QStringLiteral("OUTPUT-1"));
+    output1->set_name("OUTPUT-1");
+    output1->set_hash("OUTPUT-1");
     output1->setPosition(QPoint(0, 0));
     output1->setEnabled(output1Enabled);
     output1->setModes(modes);
 
     Disman::OutputPtr output2 = Disman::OutputPtr::create();
     output2->setId(2);
-    output2->setName(QStringLiteral("OUTPUT-2"));
+    output2->set_name("OUTPUT-2");
+    output2->set_hash("OUTPUT-2");
     output2->setPosition(QPoint(0, 0));
     output2->setEnabled(output2Enabled);
     output2->setModes(modes);
@@ -135,7 +136,7 @@ void TestConfig::testSimpleConfig()
     QCOMPARE(config->outputs().count(), 2);
 
     auto output = config->outputs().first();
-    QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
+    QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-4"));
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
@@ -144,7 +145,7 @@ void TestConfig::testSimpleConfig()
     QCOMPARE(output->isPrimary(), true);
 
     auto output2 = config->outputs().last();
-    QCOMPARE(output2->name(), QLatin1String("OUTPUT-2"));
+    QCOMPARE(output2->name(), "OUTPUT-2");
     QCOMPARE(output2->auto_mode()->id(), QLatin1String("MODE-4"));
     QCOMPARE(output2->auto_mode()->size(), QSize(1920, 1280));
     QCOMPARE(output2->isEnabled(), false);
@@ -167,7 +168,7 @@ void TestConfig::testTwoScreenConfig()
     QCOMPARE(config->outputs().count(), 2);
 
     auto output = config->outputs().first();
-    QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
+    QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-4"));
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
@@ -176,7 +177,7 @@ void TestConfig::testTwoScreenConfig()
     QCOMPARE(output->isPrimary(), true);
 
     output = config->outputs().last();
-    QCOMPARE(output->name(), QLatin1String("OUTPUT-2"));
+    QCOMPARE(output->name(), "OUTPUT-2");
     QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-3"));
     QCOMPARE(output->auto_mode()->size(), QSize(1280, 1024));
     QCOMPARE(output->isEnabled(), true);
@@ -199,7 +200,7 @@ void TestConfig::testRotatedScreenConfig()
     QCOMPARE(config->outputs().count(), 2);
 
     auto output = config->outputs().first();
-    QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
+    QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-4"));
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
@@ -208,7 +209,7 @@ void TestConfig::testRotatedScreenConfig()
     QCOMPARE(output->isPrimary(), true);
 
     output = config->outputs().last();
-    QCOMPARE(output->name(), QLatin1String("OUTPUT-2"));
+    QCOMPARE(output->name(), "OUTPUT-2");
     QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-3"));
     QCOMPARE(output->auto_mode()->size(), QSize(1280, 1024));
     QCOMPARE(output->isEnabled(), true);
@@ -231,7 +232,7 @@ void TestConfig::testDisabledScreenConfig()
     QCOMPARE(config->outputs().count(), 2);
 
     auto output = config->outputs().first();
-    QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
+    QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-4"));
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
@@ -240,7 +241,7 @@ void TestConfig::testDisabledScreenConfig()
     QCOMPARE(output->isPrimary(), true);
 
     output = config->outputs().last();
-    QCOMPARE(output->name(), QLatin1String("OUTPUT-2"));
+    QCOMPARE(output->name(), "OUTPUT-2");
     QCOMPARE(output->isEnabled(), false);
 
     auto screen = config->screen();
@@ -306,126 +307,6 @@ void TestConfig::testNullConfig()
     QVERIFY(!config->writeFile(QString()));
 }
 
-void TestConfig::testIdenticalOutputs()
-{
-    // Test configuration of a video wall with 6 identical outputs connected
-    // this is the autotest for https://bugs.kde.org/show_bug.cgi?id=325277
-    Disman::ScreenPtr screen = Disman::ScreenPtr::create();
-    screen->setCurrentSize(QSize(1920, 1080));
-    screen->setMaxSize(QSize(32768, 32768));
-    screen->setMinSize(QSize(8, 8));
-
-    QList<QSize> sizes({QSize(640, 480),
-                        QSize(1024, 768),
-                        QSize(1920, 1080),
-                        QSize(1280, 1024),
-                        QSize(1920, 1280)});
-    Disman::ModeList modes;
-    for (int i = 0; i < sizes.count(); ++i) {
-        const QSize& size = sizes[i];
-        Disman::ModePtr mode = Disman::ModePtr::create();
-        mode->setId(QStringLiteral("MODE-%1").arg(i));
-        mode->setName(QStringLiteral("%1x%2").arg(size.width()).arg(size.height()));
-        mode->setSize(size);
-        mode->setRefreshRate(60.0);
-        modes.insert(mode->id(), mode);
-    }
-    // This one is important, the output id in the config file is a hash of it
-    QByteArray data = QByteArray::fromBase64(
-        "AP///////"
-        "wAQrBbwTExLQQ4WAQOANCB46h7Frk80sSYOUFSlSwCBgKlA0QBxTwEBAQEBAQEBKDyAoHCwI0AwIDYABkQhAAAaAAA"
-        "A/wBGNTI1TTI0NUFLTEwKAAAA/ABERUxMIFUyNDEwCiAgAAAA/"
-        "QA4TB5REQAKICAgICAgAToCAynxUJAFBAMCBxYBHxITFCAVEQYjCQcHZwMMABAAOC2DAQAA4wUDAQI6gBhxOC1AWCx"
-        "FAAZEIQAAHgEdgBhxHBYgWCwlAAZEIQAAngEdAHJR0B4gbihVAAZEIQAAHowK0Iog4C0QED6WAAZEIQAAGAAAAAAAA"
-        "AAAAAAAAAAAPg==");
-
-    // When setting up the outputs, make sure they're not added in alphabetical order
-    // or in the same order of the config file, as that makes the tests accidentally pass
-
-    Disman::OutputPtr output1 = Disman::OutputPtr::create();
-    output1->setId(1);
-    output1->setEdid(data);
-    output1->setName(QStringLiteral("DisplayPort-0"));
-    output1->setPosition(QPoint(0, 0));
-    output1->setEnabled(false);
-    output1->setModes(modes);
-
-    Disman::OutputPtr output2 = Disman::OutputPtr::create();
-    output2->setId(2);
-    output2->setEdid(data);
-    output2->setName(QStringLiteral("DisplayPort-1"));
-    output2->setPosition(QPoint(0, 0));
-    output2->setEnabled(false);
-    output2->setModes(modes);
-
-    Disman::OutputPtr output3 = Disman::OutputPtr::create();
-    output3->setId(3);
-    output3->setEdid(data);
-    output3->setName(QStringLiteral("DisplayPort-2"));
-    output3->setPosition(QPoint(0, 0));
-    output3->setEnabled(false);
-    output3->setModes(modes);
-
-    Disman::OutputPtr output6 = Disman::OutputPtr::create();
-    output6->setId(6);
-    output6->setEdid(data);
-    output6->setName(QStringLiteral("DVI-0"));
-    output6->setPosition(QPoint(0, 0));
-    output6->setEnabled(false);
-    output6->setModes(modes);
-
-    Disman::OutputPtr output4 = Disman::OutputPtr::create();
-    output4->setId(4);
-    output4->setEdid(data);
-    output4->setName(QStringLiteral("DisplayPort-3"));
-    output4->setPosition(QPoint(0, 0));
-    output4->setEnabled(false);
-    output4->setModes(modes);
-
-    Disman::OutputPtr output5 = Disman::OutputPtr::create();
-    output5->setId(5);
-    output5->setEdid(data);
-    output5->setName(QStringLiteral("DVI-1"));
-    output5->setPosition(QPoint(0, 0));
-    output5->setEnabled(false);
-    output5->setModes(modes);
-
-    Disman::ConfigPtr config = Disman::ConfigPtr::create();
-    config->setScreen(screen);
-    config->addOutput(output6);
-    config->addOutput(output2);
-    config->addOutput(output5);
-    config->addOutput(output4);
-    config->addOutput(output3);
-    config->addOutput(output1);
-
-    Config configWrapper(config);
-
-    QHash<QString, QPoint> positions;
-    positions[QStringLiteral("DisplayPort-0")] = QPoint(0, 1080);
-    positions[QStringLiteral("DisplayPort-1")] = QPoint(2100, 30);
-    positions[QStringLiteral("DisplayPort-2")] = QPoint(2100, 1080);
-    positions[QStringLiteral("DisplayPort-3")] = QPoint(4020, 0);
-    positions[QStringLiteral("DVI-0")] = QPoint(4020, 1080);
-    positions[QStringLiteral("DVI-1")] = QPoint(0, 0);
-
-    auto configWrapper2 = configWrapper.readFile(QStringLiteral("outputgrid_2x3.json"));
-    Disman::ConfigPtr config2 = configWrapper2->data();
-    QVERIFY(config2);
-    QVERIFY(config != config2);
-
-    QCOMPARE(config2->outputs().count(), 6);
-    Q_FOREACH (auto output, config2->outputs()) {
-        QVERIFY(positions.keys().contains(output->name()));
-        QVERIFY(output->name() != output->hash());
-        QCOMPARE(positions[output->name()], output->position());
-        QCOMPARE(output->auto_mode()->size(), QSize(1920, 1080));
-        QCOMPARE(output->auto_mode()->refreshRate(), 60.0);
-        QVERIFY(output->isEnabled());
-    }
-    QCOMPARE(config2->screen()->currentSize(), QSize(5940, 2160));
-}
-
 void TestConfig::testMoveConfig()
 {
     // Test if restoring a config using Serializer::moveConfig(src, dest) works
@@ -446,12 +327,12 @@ void TestConfig::testMoveConfig()
     QCOMPARE(config->outputs().count(), 2);
 
     auto output = config->outputs().first();
-    QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
+    QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->isPrimary(), true);
 
     auto output2 = config->outputs().last();
-    QCOMPARE(output2->name(), QLatin1String("OUTPUT-2"));
+    QCOMPARE(output2->name(), "OUTPUT-2");
     QCOMPARE(output2->isEnabled(), true);
     QCOMPARE(output2->isPrimary(), false);
 
@@ -493,12 +374,12 @@ void TestConfig::testMoveConfig()
     config = configWrapper->data();
 
     output = config->outputs().first();
-    QCOMPARE(output->name(), QLatin1String("OUTPUT-1"));
+    QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->isPrimary(), true);
 
     output2 = config->outputs().last();
-    QCOMPARE(output2->name(), QLatin1String("OUTPUT-2"));
+    QCOMPARE(output2->name(), "OUTPUT-2");
     QCOMPARE(output2->isEnabled(), true);
     QCOMPARE(output2->isPrimary(), false);
 

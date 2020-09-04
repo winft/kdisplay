@@ -51,7 +51,7 @@ void KDisplayApplet::init()
             return new Disman::OsdAction();
         });
 
-    connect(new Disman::GetConfigOperation(Disman::GetConfigOperation::NoEDID),
+    connect(new Disman::GetConfigOperation,
             &Disman::ConfigOperation::finished,
             this,
             [this](Disman::ConfigOperation* op) {

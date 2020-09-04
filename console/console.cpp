@@ -68,7 +68,7 @@ void Console::printConfig()
 
     connect(m_config.data(), &Config::primaryOutputChanged, [&](const OutputPtr& output) {
         if (output) {
-            qDebug() << "New primary output: " << output->id() << output->name();
+            qDebug() << "New primary output: " << output->id() << output->name().c_str();
         } else {
             qDebug() << "No primary output.";
         }
@@ -83,7 +83,8 @@ void Console::printConfig()
     Q_FOREACH (const OutputPtr& output, outputs) {
         qDebug() << "\n-----------------------------------------------------\n";
         qDebug() << "Id: " << output->id();
-        qDebug() << "Name: " << output->name();
+        qDebug() << "Name: " << output->name().c_str();
+        qDebug() << "Description: " << output->description().c_str();
         qDebug() << "Type: " << typetoString(output->type());
         qDebug() << "Enabled: " << output->isEnabled();
         qDebug() << "Primary: " << output->isPrimary();
@@ -106,26 +107,6 @@ void Console::printConfig()
         Q_FOREACH (const ModePtr& mode, modes) {
             qDebug() << "\t" << mode->id() << "  " << mode->name() << " " << mode->size() << " "
                      << mode->refreshRate();
-        }
-
-        Edid* edid = output->edid();
-        qDebug() << "EDID Info: ";
-        if (edid && edid->isValid()) {
-            qDebug() << "\tDevice ID: " << edid->deviceId().c_str();
-            qDebug() << "\tName: " << edid->name().c_str();
-            qDebug() << "\tVendor: " << edid->vendor().c_str();
-            qDebug() << "\tSerial: " << edid->serial().c_str();
-            qDebug() << "\tEISA ID: " << edid->eisaId().c_str();
-            qDebug() << "\tHash: " << edid->hash().c_str();
-            qDebug() << "\tWidth: " << edid->width();
-            qDebug() << "\tHeight: " << edid->height();
-            qDebug() << "\tGamma: " << edid->gamma();
-            qDebug() << "\tRed: " << edid->red();
-            qDebug() << "\tGreen: " << edid->green();
-            qDebug() << "\tBlue: " << edid->blue();
-            qDebug() << "\tWhite: " << edid->white();
-        } else {
-            qDebug() << "\tUnavailable";
         }
     }
 }
