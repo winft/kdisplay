@@ -68,7 +68,7 @@ void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMa
         if (mode->size() != size) {
             continue;
         }
-        if (!qFuzzyCompare(mode->refreshRate(), modeInfo[QStringLiteral("refresh")].toFloat())) {
+        if (!qFuzzyCompare(mode->refreshRate(), modeInfo[QStringLiteral("refresh")].toDouble())) {
             continue;
         }
 
