@@ -111,6 +111,7 @@ std::unique_ptr<Config> TestConfig::createConfig(bool output1Enabled, bool outpu
     config->setScreen(screen);
     config->addOutput(output1);
     config->addOutput(output2);
+    config->setPrimaryOutput(output1);
 
     auto configWrapper = std::unique_ptr<Config>(new Config(config));
     return configWrapper;
@@ -142,7 +143,7 @@ void TestConfig::testSimpleConfig()
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->position(), QPoint(0, 0));
-    QCOMPARE(output->isPrimary(), true);
+    QCOMPARE(config->primaryOutput(), output);
 
     auto output2 = config->outputs().last();
     QCOMPARE(output2->name(), "OUTPUT-2");
@@ -151,7 +152,6 @@ void TestConfig::testSimpleConfig()
     QCOMPARE(output2->isEnabled(), false);
     QCOMPARE(output2->rotation(), Disman::Output::None);
     QCOMPARE(output2->position(), QPoint(0, 0));
-    QCOMPARE(output2->isPrimary(), false);
 
     auto screen = config->screen();
     QCOMPARE(screen->currentSize(), QSize(1920, 1280));
@@ -174,7 +174,7 @@ void TestConfig::testTwoScreenConfig()
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->position(), QPoint(0, 0));
-    QCOMPARE(output->isPrimary(), true);
+    QCOMPARE(config->primaryOutput(), output);
 
     output = config->outputs().last();
     QCOMPARE(output->name(), "OUTPUT-2");
@@ -183,7 +183,6 @@ void TestConfig::testTwoScreenConfig()
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->position(), QPoint(1920, 0));
-    QCOMPARE(output->isPrimary(), false);
 
     auto screen = config->screen();
     QCOMPARE(screen->currentSize(), QSize(3200, 1280));
@@ -206,7 +205,7 @@ void TestConfig::testRotatedScreenConfig()
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->position(), QPoint(0, 0));
-    QCOMPARE(output->isPrimary(), true);
+    QCOMPARE(config->primaryOutput(), output);
 
     output = config->outputs().last();
     QCOMPARE(output->name(), "OUTPUT-2");
@@ -215,7 +214,6 @@ void TestConfig::testRotatedScreenConfig()
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::Left);
     QCOMPARE(output->position(), QPoint(1920, 0));
-    QCOMPARE(output->isPrimary(), false);
 
     auto screen = config->screen();
     QCOMPARE(screen->currentSize(), QSize(2944, 1280));
@@ -238,7 +236,7 @@ void TestConfig::testDisabledScreenConfig()
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->position(), QPoint(0, 0));
-    QCOMPARE(output->isPrimary(), true);
+    QCOMPARE(config->primaryOutput(), output);
 
     output = config->outputs().last();
     QCOMPARE(output->name(), "OUTPUT-2");
@@ -329,28 +327,25 @@ void TestConfig::testMoveConfig()
     auto output = config->outputs().first();
     QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->isEnabled(), true);
-    QCOMPARE(output->isPrimary(), true);
+    QCOMPARE(config->primaryOutput(), output);
 
     auto output2 = config->outputs().last();
     QCOMPARE(output2->name(), "OUTPUT-2");
     QCOMPARE(output2->isEnabled(), true);
-    QCOMPARE(output2->isPrimary(), false);
 
     // we fake the lid being closed, first save our current config to _lidOpened
     configWrapper->writeOpenLidFile();
 
     // ... then switch off the panel, set primary to the other output
     output->setEnabled(false);
-    output->setPrimary(false);
-    output2->setPrimary(true);
+    config->setPrimaryOutput(output2);
 
     // save config as the current one, this is the config we don't want restored, and which we'll
     // overwrite
     configWrapper->writeFile();
 
     QCOMPARE(output->isEnabled(), false);
-    QCOMPARE(output->isPrimary(), false);
-    QCOMPARE(output2->isPrimary(), true);
+    QCOMPARE(config->primaryOutput(), output2);
 
     // Check if both files exist
     const QString basePath = Config::configsDirPath() + configWrapper->id();
@@ -376,12 +371,11 @@ void TestConfig::testMoveConfig()
     output = config->outputs().first();
     QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->isEnabled(), true);
-    QCOMPARE(output->isPrimary(), true);
+    QCOMPARE(config->primaryOutput(), output);
 
     output2 = config->outputs().last();
     QCOMPARE(output2->name(), "OUTPUT-2");
     QCOMPARE(output2->isEnabled(), true);
-    QCOMPARE(output2->isPrimary(), false);
 
     // Make sure we don't screw up when there's no _lidOpened config
     configWrapper = configWrapper->readOpenLidFile();

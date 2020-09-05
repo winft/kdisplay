@@ -79,6 +79,10 @@ void Console::printConfig()
     qDebug() << "\tminSize:" << m_config->screen()->minSize();
     qDebug() << "\tcurrentSize:" << m_config->screen()->currentSize();
 
+    if (auto primary = m_config->primaryOutput()) {
+        qDebug() << "Primary output:" << primary->description().c_str();
+    }
+
     OutputList outputs = m_config->outputs();
     Q_FOREACH (const OutputPtr& output, outputs) {
         qDebug() << "\n-----------------------------------------------------\n";
@@ -87,7 +91,6 @@ void Console::printConfig()
         qDebug() << "Description: " << output->description().c_str();
         qDebug() << "Type: " << typetoString(output->type());
         qDebug() << "Enabled: " << output->isEnabled();
-        qDebug() << "Primary: " << output->isPrimary();
         qDebug() << "Rotation: " << output->rotation();
         qDebug() << "Pos: " << output->position();
         qDebug() << "MMSize: " << output->sizeMm();

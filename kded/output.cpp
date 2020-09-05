@@ -315,13 +315,14 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList& outpu
 
 void Output::readIn(Disman::OutputPtr output,
                     const QVariantMap& info,
-                    Disman::Output::Retention retention)
+                    Disman::Output::Retention retention,
+                    bool& primary)
 {
     const QVariantMap posInfo = info[QStringLiteral("pos")].toMap();
     QPoint point(posInfo[QStringLiteral("x")].toInt(), posInfo[QStringLiteral("y")].toInt());
     output->setPosition(point);
-    output->setPrimary(info[QStringLiteral("primary")].toBool());
     output->setEnabled(info[QStringLiteral("enabled")].toBool());
+    primary = info[QStringLiteral("primary")].toBool();
 
     if (retention != Disman::Output::Retention::Individual && readInGlobal(output)) {
         // output data read from global output file
@@ -371,7 +372,12 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputs
                 }
             }
             infoFound = true;
-            readIn(output, info, output->retention());
+
+            bool primary;
+            readIn(output, info, output->retention(), primary);
+            if (primary) {
+                config->setPrimaryOutput(output);
+            }
             break;
         }
         if (!infoFound) {

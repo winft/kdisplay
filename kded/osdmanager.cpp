@@ -172,12 +172,10 @@ OsdAction* OsdManager::showActionSelector()
                         osdOutput = output;
                         break;
                     }
-
+                }
+                if (!osdOutput) {
                     // Fallback to primary
-                    if (output->isPrimary()) {
-                        osdOutput = output;
-                        break;
-                    }
+                    osdOutput = op->config()->primaryOutput();
                 }
                 // no laptop or primary screen, just take the first usable one
                 if (!osdOutput) {

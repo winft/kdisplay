@@ -253,7 +253,7 @@ bool Config::writeFile(const QString& filePath)
             = oldOutputIt != oldOutputs.constEnd() ? *oldOutputIt : nullptr;
 
         Output::writeGlobalPart(output, info, oldOutput);
-        info[QStringLiteral("primary")] = output->isPrimary();
+        info[QStringLiteral("primary")] = m_data->primaryOutput() == output;
         info[QStringLiteral("enabled")] = output->isEnabled();
 
         auto setOutputConfigInfo = [&info](const Disman::OutputPtr& out) {

@@ -116,6 +116,10 @@ void KCMKDisplay::doSave(bool force)
 
     auto config = m_config->config();
 
+    if (auto primary = config->primaryOutput()) {
+        qCDebug(KDISPLAY_KCM) << "Primary output:" << primary->description().c_str();
+    }
+
     bool atLeastOneEnabledOutput = false;
     for (const Disman::OutputPtr& output : config->outputs()) {
         Disman::ModePtr mode = output->auto_mode();
@@ -124,7 +128,6 @@ void KCMKDisplay::doSave(bool force)
 
         qCDebug(KDISPLAY_KCM) << output->name().c_str() << output->id() << output.data() << "\n"
                               << "	Enabled:" << output->isEnabled() << "\n"
-                              << "	Primary:" << output->isPrimary() << "\n"
                               << "	Rotation:" << output->rotation() << "\n"
                               << "	Mode:" << (mode ? mode->name() : QStringLiteral("unknown"))
                               << "@" << (mode ? mode->refreshRate() : 0.0) << "Hz"

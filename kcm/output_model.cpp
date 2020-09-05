@@ -52,7 +52,7 @@ QVariant OutputModel::data(const QModelIndex& index, int role) const
     case InternalRole:
         return output->type() == Disman::Output::Type::Panel;
     case PrimaryRole:
-        return output->isPrimary();
+        return m_config->config() && m_config->config()->primaryOutput() == output;
     case SizeRole:
         return output->geometry().size();
     case PositionRole:
@@ -129,7 +129,7 @@ bool OutputModel::setData(const QModelIndex& index, const QVariant& value, int r
     case PrimaryRole:
         if (value.canConvert<bool>()) {
             bool primary = value.toBool();
-            if (output.ptr->isPrimary() == primary) {
+            if (!primary || m_config->config()->primaryOutput() == output.ptr) {
                 return false;
             }
             m_config->config()->setPrimaryOutput(output.ptr);
@@ -241,7 +241,7 @@ void OutputModel::add(const Disman::OutputPtr& output)
     }
     m_outputs.insert(i, Output(output, pos));
 
-    connect(output.data(), &Disman::Output::isPrimaryChanged, this, [this, output]() {
+    connect(m_config->config().data(), &Disman::Config::primaryOutputChanged, this, [this, output] {
         roleChanged(output->id(), PrimaryRole);
     });
     Q_EMIT endInsertRows();

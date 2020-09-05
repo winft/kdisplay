@@ -89,8 +89,9 @@ Disman::ConfigPtr Generator::laptop(Disman::ConfigPtr const& config)
 {
     Disman::Generator generator(config);
     generator.set_derived();
+    auto generated_config = generator.config();
 
-    auto outputs = generator.config()->outputs();
+    auto outputs = generated_config->outputs();
     auto embedded = generator.embedded();
 
     /* Apparently older laptops use "VGA-*" as embedded output ID, so embedded()
@@ -118,7 +119,9 @@ Disman::ConfigPtr Generator::laptop(Disman::ConfigPtr const& config)
 
     bool success;
     if (isLidClosed()) {
-        embedded->setPrimary(false);
+        if (generated_config->primaryOutput() == embedded) {
+            generated_config->setPrimaryOutput(nullptr);
+        }
         embedded->setEnabled(false);
 
         Disman::OutputPtr output_to_enable;
@@ -162,7 +165,11 @@ Disman::ConfigPtr Generator::laptop(Disman::ConfigPtr const& config)
             }
             assert(primary);
             primary->setEnabled(true);
-            primary->setPrimary(true);
+
+            if (generated_config->supportedFeatures() & Disman::Config::Feature::PrimaryDisplay) {
+                generated_config->setPrimaryOutput(primary);
+            }
+
             success = generator.extend(Disman::Generator::Extend_direction::right);
         } else {
             // If lid is open, laptop screen should be primary.
