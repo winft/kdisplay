@@ -111,7 +111,7 @@ Disman::ConfigPtr Generator::laptop(Disman::ConfigPtr const& config)
         return nullptr;
     }
 
-    if (embedded->modes().isEmpty()) {
+    if (embedded->modes().empty()) {
         qCWarning(KDISPLAY_KDED) << "Embedded output" << embedded
                                  << "has no modes, keeping current config.";
         return nullptr;

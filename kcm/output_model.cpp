@@ -512,7 +512,7 @@ QVector<QSize> OutputModel::resolutions(const Disman::OutputPtr& output) const
 {
     QVector<QSize> hits;
 
-    for (const auto& mode : output->modes()) {
+    for (auto const& [key, mode] : output->modes()) {
         const QSize size = mode->size();
         if (!hits.contains(size)) {
             hits << size;
@@ -536,7 +536,7 @@ QVector<float> OutputModel::refreshRates(const Disman::OutputPtr& output) const
 
     auto const resolution = output->auto_mode()->size();
 
-    for (auto const& mode : output->modes()) {
+    for (auto const& [key, mode] : output->modes()) {
         if (mode->size() != resolution) {
             continue;
         }

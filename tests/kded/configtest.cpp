@@ -84,11 +84,11 @@ std::unique_ptr<Config> TestConfig::createConfig(bool output1Enabled, bool outpu
     for (int i = 0; i < sizes.count(); ++i) {
         const QSize& size = sizes[i];
         Disman::ModePtr mode = Disman::ModePtr::create();
-        mode->setId(QStringLiteral("MODE-%1").arg(i));
-        mode->setName(QStringLiteral("%1x%2").arg(size.width()).arg(size.height()));
+        mode->setId("MODE-" + std::to_string(i));
+        mode->setName(std::to_string(size.width()) + "x" + std::to_string(size.height()));
         mode->setSize(size);
         mode->setRefreshRate(60.0);
-        modes.insert(mode->id(), mode);
+        modes.insert({mode->id(), mode});
     }
 
     Disman::OutputPtr output1 = Disman::OutputPtr::create();
@@ -138,7 +138,7 @@ void TestConfig::testSimpleConfig()
 
     auto output = config->outputs().first();
     QCOMPARE(output->name(), "OUTPUT-1");
-    QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-4"));
+    QCOMPARE(output->auto_mode()->id(), "MODE-4");
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
@@ -147,7 +147,7 @@ void TestConfig::testSimpleConfig()
 
     auto output2 = config->outputs().last();
     QCOMPARE(output2->name(), "OUTPUT-2");
-    QCOMPARE(output2->auto_mode()->id(), QLatin1String("MODE-4"));
+    QCOMPARE(output2->auto_mode()->id(), "MODE-4");
     QCOMPARE(output2->auto_mode()->size(), QSize(1920, 1280));
     QCOMPARE(output2->isEnabled(), false);
     QCOMPARE(output2->rotation(), Disman::Output::None);
@@ -169,7 +169,7 @@ void TestConfig::testTwoScreenConfig()
 
     auto output = config->outputs().first();
     QCOMPARE(output->name(), "OUTPUT-1");
-    QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-4"));
+    QCOMPARE(output->auto_mode()->id(), "MODE-4");
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
@@ -178,7 +178,7 @@ void TestConfig::testTwoScreenConfig()
 
     output = config->outputs().last();
     QCOMPARE(output->name(), "OUTPUT-2");
-    QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-3"));
+    QCOMPARE(output->auto_mode()->id(), "MODE-3");
     QCOMPARE(output->auto_mode()->size(), QSize(1280, 1024));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
@@ -200,7 +200,7 @@ void TestConfig::testRotatedScreenConfig()
 
     auto output = config->outputs().first();
     QCOMPARE(output->name(), "OUTPUT-1");
-    QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-4"));
+    QCOMPARE(output->auto_mode()->id(), "MODE-4");
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
@@ -209,7 +209,7 @@ void TestConfig::testRotatedScreenConfig()
 
     output = config->outputs().last();
     QCOMPARE(output->name(), "OUTPUT-2");
-    QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-3"));
+    QCOMPARE(output->auto_mode()->id(), "MODE-3");
     QCOMPARE(output->auto_mode()->size(), QSize(1280, 1024));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::Left);
@@ -231,7 +231,7 @@ void TestConfig::testDisabledScreenConfig()
 
     auto output = config->outputs().first();
     QCOMPARE(output->name(), "OUTPUT-1");
-    QCOMPARE(output->auto_mode()->id(), QLatin1String("MODE-4"));
+    QCOMPARE(output->auto_mode()->id(), "MODE-4");
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
     QCOMPARE(output->isEnabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);

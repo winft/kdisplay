@@ -322,8 +322,9 @@ void KDisplayDaemon::configChanged()
             && (output->auto_mode().isNull()
                 || (output->followPreferredMode()
                     && output->auto_mode()->id() != output->preferred_mode()->id()))) {
-            qCDebug(KDISPLAY_KDED) << "Current mode was" << output->auto_mode()
-                                   << ", setting preferred mode" << output->preferred_mode()->id();
+            qCDebug(KDISPLAY_KDED)
+                << "Current mode was" << output->auto_mode() << ", setting preferred mode"
+                << output->preferred_mode()->id().c_str();
             output->set_mode(output->preferred_mode());
             changed = true;
         }

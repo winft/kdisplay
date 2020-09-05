@@ -129,8 +129,8 @@ void KCMKDisplay::doSave(bool force)
         qCDebug(KDISPLAY_KCM) << output->name().c_str() << output->id() << output.data() << "\n"
                               << "	Enabled:" << output->isEnabled() << "\n"
                               << "	Rotation:" << output->rotation() << "\n"
-                              << "	Mode:" << (mode ? mode->name() : QStringLiteral("unknown"))
-                              << "@" << (mode ? mode->refreshRate() : 0.0) << "Hz"
+                              << "	Mode:" << (mode ? mode->name() : "unknown").c_str() << "@"
+                              << (mode ? mode->refreshRate() : 0.0) << "Hz"
                               << "\n"
                               << "    Position:" << output->position().x() << "x"
                               << output->position().y() << "\n"

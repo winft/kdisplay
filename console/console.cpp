@@ -103,12 +103,13 @@ void Console::printConfig()
         qDebug() << "Scale: " << output->scale();
         qDebug() << "Mode: " << output->auto_mode();
         qDebug() << "Preferred Mode: " << output->preferred_mode();
-        qDebug() << "Preferred modes: " << output->preferredModes();
+        qDebug() << "Preferred modes:";
+        for (auto const& mode_string : output->preferredModes()) {
+            qDebug() << "\t" << mode_string.c_str();
+        }
         qDebug() << "Modes: ";
-
-        ModeList modes = output->modes();
-        Q_FOREACH (const ModePtr& mode, modes) {
-            qDebug() << "\t" << mode->id() << "  " << mode->name() << " " << mode->size() << " "
+        for (auto const& [key, mode] : output->modes()) {
+            qDebug() << "\t" << mode->id().c_str() << mode->name().c_str() << mode->size()
                      << mode->refreshRate();
         }
     }

@@ -62,9 +62,8 @@ void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMa
     qCDebug(KDISPLAY_KDED) << "Finding a mode for" << size << "@"
                            << modeInfo[QStringLiteral("refresh")].toFloat();
 
-    Disman::ModeList modes = output->modes();
     Disman::ModePtr matchingMode;
-    for (const Disman::ModePtr& mode : modes) {
+    for (auto const& [key, mode] : output->modes()) {
         if (mode->size() != size) {
             continue;
         }
@@ -72,7 +71,7 @@ void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMa
             continue;
         }
 
-        qCDebug(KDISPLAY_KDED) << "\tFound: " << mode->id() << " " << mode->size() << "@"
+        qCDebug(KDISPLAY_KDED) << "\tFound: " << mode->id().c_str() << " " << mode->size() << "@"
                                << mode->refreshRate();
         matchingMode = mode;
         break;
