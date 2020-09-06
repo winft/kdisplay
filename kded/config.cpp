@@ -72,7 +72,7 @@ QString Config::id() const
     if (!m_data) {
         return QString();
     }
-    return m_data->connectedOutputsHash();
+    return m_data->hash();
 }
 
 bool Config::autoRotationRequested() const
@@ -93,7 +93,7 @@ void Config::setDeviceOrientation(QOrientationReading::Orientation orientation)
             continue;
         }
         auto finalOrientation = orientation;
-        if (output->auto_rotate_only_in_tablet_mode() && !m_data->tabletModeEngaged()) {
+        if (output->auto_rotate_only_in_tablet_mode() && !m_data->tablet_mode_engaged()) {
             finalOrientation = QOrientationReading::Orientation::TopUp;
         }
         if (Output::updateOrientation(output, finalOrientation)) {
@@ -183,7 +183,7 @@ std::unique_ptr<Config> Config::readFile(const QString& fileName)
 
     QSize screenSize;
     for (const auto& output : config->data()->outputs()) {
-        if (!output->isPositionable()) {
+        if (!output->positionable()) {
             continue;
         }
 
@@ -195,7 +195,7 @@ std::unique_ptr<Config> Config::readFile(const QString& fileName)
             screenSize.setHeight(geom.y() + geom.height());
         }
     }
-    config->data()->screen()->setCurrentSize(screenSize);
+    config->data()->screen()->set_current_size(screenSize);
 
     if (!canBeApplied(config->data())) {
         return nullptr;
@@ -214,7 +214,7 @@ bool Config::canBeApplied(Disman::ConfigPtr config) const
     Q_UNUSED(config);
     return true;
 #else
-    return Disman::Config::canBeApplied(config, m_validityFlags);
+    return Disman::Config::can_be_applied(config, m_validityFlags);
 #endif
 }
 
@@ -253,8 +253,8 @@ bool Config::writeFile(const QString& filePath)
             = oldOutputIt != oldOutputs.constEnd() ? *oldOutputIt : nullptr;
 
         Output::writeGlobalPart(output, info, oldOutput);
-        info[QStringLiteral("primary")] = m_data->primaryOutput() == output;
-        info[QStringLiteral("enabled")] = output->isEnabled();
+        info[QStringLiteral("primary")] = m_data->primary_output() == output;
+        info[QStringLiteral("enabled")] = output->enabled();
 
         auto setOutputConfigInfo = [&info](const Disman::OutputPtr& out) {
             if (!out) {
@@ -266,9 +266,9 @@ bool Config::writeFile(const QString& filePath)
             pos[QStringLiteral("y")] = out->position().y();
             info[QStringLiteral("pos")] = pos;
         };
-        setOutputConfigInfo(output->isEnabled() ? output : oldOutput);
+        setOutputConfigInfo(output->enabled() ? output : oldOutput);
 
-        if (output->isEnabled() && output->retention() != Disman::Output::Retention::Individual) {
+        if (output->enabled() && output->retention() != Disman::Output::Retention::Individual) {
             // try to update global output data
             Output::writeGlobal(output);
         }

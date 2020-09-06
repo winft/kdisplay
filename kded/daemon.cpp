@@ -73,7 +73,7 @@ void KDisplayDaemon::getInitialConfig()
             &Disman::GetConfigOperation::finished,
             this,
             [this](Disman::ConfigOperation* op) {
-                if (op->hasError()) {
+                if (op->has_error()) {
                     return;
                 }
 
@@ -83,7 +83,7 @@ void KDisplayDaemon::getInitialConfig()
                     Disman::Config::ValidityFlag::RequireAtLeastOneEnabledScreen);
                 qCDebug(KDISPLAY_KDED)
                     << "Config" << m_monitoredConfig->data().data() << "is ready";
-                Disman::ConfigMonitor::instance()->addConfig(m_monitoredConfig->data());
+                Disman::ConfigMonitor::instance()->add_config(m_monitoredConfig->data());
 
                 init();
             });
@@ -118,7 +118,7 @@ void KDisplayDaemon::init()
 
     connect(Device::self(), &Device::lidClosedChanged, this, &KDisplayDaemon::lidClosedChanged);
     connect(Device::self(), &Device::resumingFromSuspend, this, [&]() {
-        Disman::Log::instance()->setContext(QStringLiteral("resuming"));
+        Disman::Log::instance()->set_context(QStringLiteral("resuming"));
         qCDebug(KDISPLAY_KDED) << "Resumed from suspend, checking for screen changes";
         // We don't care about the result, we just want to force the backend
         // to query XRandR so that it will detect possible changes that happened
@@ -147,7 +147,7 @@ void KDisplayDaemon::updateOrientation()
     if (!m_monitoredConfig) {
         return;
     }
-    const auto features = m_monitoredConfig->data()->supportedFeatures();
+    const auto features = m_monitoredConfig->data()->supported_features();
     if (!features.testFlag(Disman::Config::Feature::AutoRotation)
         || !features.testFlag(Disman::Config::Feature::TabletMode)) {
         return;
@@ -201,7 +201,7 @@ void KDisplayDaemon::refreshConfig()
 {
     setMonitorForChanges(false);
     m_configDirty = false;
-    Disman::ConfigMonitor::instance()->addConfig(m_monitoredConfig->data());
+    Disman::ConfigMonitor::instance()->add_config(m_monitoredConfig->data());
 
     connect(new Disman::SetConfigOperation(m_monitoredConfig->data()),
             &Disman::SetConfigOperation::finished,
@@ -318,9 +318,9 @@ void KDisplayDaemon::configChanged()
     // Modes may have changed, fix-up current mode id
     bool changed = false;
     Q_FOREACH (const Disman::OutputPtr& output, m_monitoredConfig->data()->outputs()) {
-        if (output->isEnabled()
+        if (output->enabled()
             && (output->auto_mode().isNull()
-                || (output->followPreferredMode()
+                || (output->follow_preferred_mode()
                     && output->auto_mode()->id() != output->preferred_mode()->id()))) {
             qCDebug(KDISPLAY_KDED)
                 << "Current mode was" << output->auto_mode() << ", setting preferred mode"
@@ -413,7 +413,7 @@ void KDisplayDaemon::lidClosedTimeout()
 
     for (Disman::OutputPtr& output : m_monitoredConfig->data()->outputs()) {
         if (output->type() == Disman::Output::Panel) {
-            if (output->isEnabled()) {
+            if (output->enabled()) {
                 // Save the current config with opened lid, just so that we know
                 // how to restore it later
                 m_monitoredConfig->writeOpenLidFile();
@@ -429,13 +429,13 @@ void KDisplayDaemon::monitorConnectedChange()
 {
     connect(
         m_monitoredConfig->data().data(),
-        &Disman::Config::outputAdded,
+        &Disman::Config::output_added,
         this,
         [this] { m_changeCompressor->start(); },
         Qt::UniqueConnection);
 
     connect(m_monitoredConfig->data().data(),
-            &Disman::Config::outputRemoved,
+            &Disman::Config::output_removed,
             this,
             &KDisplayDaemon::applyConfig,
             static_cast<Qt::ConnectionType>(Qt::QueuedConnection | Qt::UniqueConnection));
@@ -451,13 +451,13 @@ void KDisplayDaemon::setMonitorForChanges(bool enabled)
     m_monitoring = enabled;
     if (m_monitoring) {
         connect(Disman::ConfigMonitor::instance(),
-                &Disman::ConfigMonitor::configurationChanged,
+                &Disman::ConfigMonitor::configuration_changed,
                 this,
                 &KDisplayDaemon::configChanged,
                 Qt::UniqueConnection);
     } else {
         disconnect(Disman::ConfigMonitor::instance(),
-                   &Disman::ConfigMonitor::configurationChanged,
+                   &Disman::ConfigMonitor::configuration_changed,
                    this,
                    &KDisplayDaemon::configChanged);
     }
@@ -471,7 +471,7 @@ void KDisplayDaemon::disableOutput(Disman::OutputPtr& output)
 
     // Move all outputs right from the @p output to left
     for (Disman::OutputPtr& otherOutput : m_monitoredConfig->data()->outputs()) {
-        if (otherOutput == output || !otherOutput->isEnabled()) {
+        if (otherOutput == output || !otherOutput->enabled()) {
             continue;
         }
 
@@ -482,11 +482,11 @@ void KDisplayDaemon::disableOutput(Disman::OutputPtr& output)
         }
         qCDebug(KDISPLAY_KDED) << "Moving" << otherOutput->name().c_str() << "from"
                                << otherOutput->position() << "to" << otherPos;
-        otherOutput->setPosition(otherPos);
+        otherOutput->set_position(otherPos);
     }
 
     // Disable the output
-    output->setEnabled(false);
+    output->set_enabled(false);
 }
 
 #include "daemon.moc"

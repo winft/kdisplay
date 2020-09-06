@@ -60,12 +60,12 @@ OutputIdentifier::OutputIdentifier(Disman::ConfigPtr config, QObject* parent)
 
         QSize deviceSize;
         QSizeF logicalSize;
-        if (output->isHorizontal()) {
+        if (output->horizontal()) {
             deviceSize = mode->size();
         } else {
             deviceSize = QSize(mode->size().height(), mode->size().width());
         }
-        if (config->supportedFeatures() & Disman::Config::Feature::PerOutputScaling) {
+        if (config->supported_features() & Disman::Config::Feature::PerOutputScaling) {
             // Scale adjustment is not needed on Wayland, we use logical size.
             logicalSize = output->geometry().size();
         } else {

@@ -57,9 +57,9 @@ void KDisplayApplet::init()
             [this](Disman::ConfigOperation* op) {
                 m_screenConfiguration = qobject_cast<Disman::GetConfigOperation*>(op)->config();
 
-                Disman::ConfigMonitor::instance()->addConfig(m_screenConfiguration);
+                Disman::ConfigMonitor::instance()->add_config(m_screenConfiguration);
                 connect(Disman::ConfigMonitor::instance(),
-                        &Disman::ConfigMonitor::configurationChanged,
+                        &Disman::ConfigMonitor::configuration_changed,
                         this,
                         &KDisplayApplet::checkOutputs);
 

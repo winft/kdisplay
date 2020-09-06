@@ -74,9 +74,9 @@ private:
 std::unique_ptr<Config> TestConfig::createConfig(bool output1Enabled, bool output2Enabled)
 {
     Disman::ScreenPtr screen = Disman::ScreenPtr::create();
-    screen->setCurrentSize(QSize(1920, 1080));
-    screen->setMaxSize(QSize(32768, 32768));
-    screen->setMinSize(QSize(8, 8));
+    screen->set_current_size(QSize(1920, 1080));
+    screen->set_max_size(QSize(32768, 32768));
+    screen->set_min_size(QSize(8, 8));
 
     QList<QSize> sizes(
         {QSize(320, 240), QSize(640, 480), QSize(1024, 768), QSize(1280, 1024), QSize(1920, 1280)});
@@ -84,34 +84,34 @@ std::unique_ptr<Config> TestConfig::createConfig(bool output1Enabled, bool outpu
     for (int i = 0; i < sizes.count(); ++i) {
         const QSize& size = sizes[i];
         Disman::ModePtr mode = Disman::ModePtr::create();
-        mode->setId("MODE-" + std::to_string(i));
-        mode->setName(std::to_string(size.width()) + "x" + std::to_string(size.height()));
-        mode->setSize(size);
-        mode->setRefreshRate(60.0);
+        mode->set_id("MODE-" + std::to_string(i));
+        mode->set_name(std::to_string(size.width()) + "x" + std::to_string(size.height()));
+        mode->set_size(size);
+        mode->set_refresh(60.0);
         modes.insert({mode->id(), mode});
     }
 
     Disman::OutputPtr output1 = Disman::OutputPtr::create();
-    output1->setId(1);
+    output1->set_id(1);
     output1->set_name("OUTPUT-1");
     output1->set_hash("OUTPUT-1");
-    output1->setPosition(QPoint(0, 0));
-    output1->setEnabled(output1Enabled);
-    output1->setModes(modes);
+    output1->set_position(QPoint(0, 0));
+    output1->set_enabled(output1Enabled);
+    output1->set_modes(modes);
 
     Disman::OutputPtr output2 = Disman::OutputPtr::create();
-    output2->setId(2);
+    output2->set_id(2);
     output2->set_name("OUTPUT-2");
     output2->set_hash("OUTPUT-2");
-    output2->setPosition(QPoint(0, 0));
-    output2->setEnabled(output2Enabled);
-    output2->setModes(modes);
+    output2->set_position(QPoint(0, 0));
+    output2->set_enabled(output2Enabled);
+    output2->set_modes(modes);
 
     Disman::ConfigPtr config = Disman::ConfigPtr::create();
     config->setScreen(screen);
-    config->addOutput(output1);
-    config->addOutput(output2);
-    config->setPrimaryOutput(output1);
+    config->add_output(output1);
+    config->add_output(output2);
+    config->set_primary_output(output1);
 
     auto configWrapper = std::unique_ptr<Config>(new Config(config));
     return configWrapper;
@@ -140,21 +140,21 @@ void TestConfig::testSimpleConfig()
     QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->auto_mode()->id(), "MODE-4");
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
-    QCOMPARE(output->isEnabled(), true);
+    QCOMPARE(output->enabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->position(), QPoint(0, 0));
-    QCOMPARE(config->primaryOutput(), output);
+    QCOMPARE(config->primary_output(), output);
 
     auto output2 = config->outputs().last();
     QCOMPARE(output2->name(), "OUTPUT-2");
     QCOMPARE(output2->auto_mode()->id(), "MODE-4");
     QCOMPARE(output2->auto_mode()->size(), QSize(1920, 1280));
-    QCOMPARE(output2->isEnabled(), false);
+    QCOMPARE(output2->enabled(), false);
     QCOMPARE(output2->rotation(), Disman::Output::None);
     QCOMPARE(output2->position(), QPoint(0, 0));
 
     auto screen = config->screen();
-    QCOMPARE(screen->currentSize(), QSize(1920, 1280));
+    QCOMPARE(screen->current_size(), QSize(1920, 1280));
 }
 
 void TestConfig::testTwoScreenConfig()
@@ -171,21 +171,21 @@ void TestConfig::testTwoScreenConfig()
     QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->auto_mode()->id(), "MODE-4");
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
-    QCOMPARE(output->isEnabled(), true);
+    QCOMPARE(output->enabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->position(), QPoint(0, 0));
-    QCOMPARE(config->primaryOutput(), output);
+    QCOMPARE(config->primary_output(), output);
 
     output = config->outputs().last();
     QCOMPARE(output->name(), "OUTPUT-2");
     QCOMPARE(output->auto_mode()->id(), "MODE-3");
     QCOMPARE(output->auto_mode()->size(), QSize(1280, 1024));
-    QCOMPARE(output->isEnabled(), true);
+    QCOMPARE(output->enabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->position(), QPoint(1920, 0));
 
     auto screen = config->screen();
-    QCOMPARE(screen->currentSize(), QSize(3200, 1280));
+    QCOMPARE(screen->current_size(), QSize(3200, 1280));
 }
 
 void TestConfig::testRotatedScreenConfig()
@@ -202,21 +202,21 @@ void TestConfig::testRotatedScreenConfig()
     QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->auto_mode()->id(), "MODE-4");
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
-    QCOMPARE(output->isEnabled(), true);
+    QCOMPARE(output->enabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->position(), QPoint(0, 0));
-    QCOMPARE(config->primaryOutput(), output);
+    QCOMPARE(config->primary_output(), output);
 
     output = config->outputs().last();
     QCOMPARE(output->name(), "OUTPUT-2");
     QCOMPARE(output->auto_mode()->id(), "MODE-3");
     QCOMPARE(output->auto_mode()->size(), QSize(1280, 1024));
-    QCOMPARE(output->isEnabled(), true);
+    QCOMPARE(output->enabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::Left);
     QCOMPARE(output->position(), QPoint(1920, 0));
 
     auto screen = config->screen();
-    QCOMPARE(screen->currentSize(), QSize(2944, 1280));
+    QCOMPARE(screen->current_size(), QSize(2944, 1280));
 }
 
 void TestConfig::testDisabledScreenConfig()
@@ -233,17 +233,17 @@ void TestConfig::testDisabledScreenConfig()
     QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->auto_mode()->id(), "MODE-4");
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
-    QCOMPARE(output->isEnabled(), true);
+    QCOMPARE(output->enabled(), true);
     QCOMPARE(output->rotation(), Disman::Output::None);
     QCOMPARE(output->position(), QPoint(0, 0));
-    QCOMPARE(config->primaryOutput(), output);
+    QCOMPARE(config->primary_output(), output);
 
     output = config->outputs().last();
     QCOMPARE(output->name(), "OUTPUT-2");
-    QCOMPARE(output->isEnabled(), false);
+    QCOMPARE(output->enabled(), false);
 
     auto screen = config->screen();
-    QCOMPARE(screen->currentSize(), QSize(1920, 1280));
+    QCOMPARE(screen->current_size(), QSize(1920, 1280));
 }
 
 void TestConfig::testConfig404()
@@ -262,7 +262,7 @@ void TestConfig::testCorruptConfig()
 
     QVERIFY(config);
     QCOMPARE(config->outputs().count(), 2);
-    QVERIFY(config->isValid());
+    QVERIFY(config->valid());
 }
 
 void TestConfig::testCorruptEmptyConfig()
@@ -273,7 +273,7 @@ void TestConfig::testCorruptEmptyConfig()
 
     QVERIFY(config);
     QCOMPARE(config->outputs().count(), 2);
-    QVERIFY(config->isValid());
+    QVERIFY(config->valid());
 }
 
 void TestConfig::testCorruptUselessConfig()
@@ -284,7 +284,7 @@ void TestConfig::testCorruptUselessConfig()
 
     QVERIFY(config);
     QCOMPARE(config->outputs().count(), 2);
-    QVERIFY(config->isValid());
+    QVERIFY(config->valid());
 }
 
 void TestConfig::testNullConfig()
@@ -326,26 +326,26 @@ void TestConfig::testMoveConfig()
 
     auto output = config->outputs().first();
     QCOMPARE(output->name(), "OUTPUT-1");
-    QCOMPARE(output->isEnabled(), true);
-    QCOMPARE(config->primaryOutput(), output);
+    QCOMPARE(output->enabled(), true);
+    QCOMPARE(config->primary_output(), output);
 
     auto output2 = config->outputs().last();
     QCOMPARE(output2->name(), "OUTPUT-2");
-    QCOMPARE(output2->isEnabled(), true);
+    QCOMPARE(output2->enabled(), true);
 
     // we fake the lid being closed, first save our current config to _lidOpened
     configWrapper->writeOpenLidFile();
 
     // ... then switch off the panel, set primary to the other output
-    output->setEnabled(false);
-    config->setPrimaryOutput(output2);
+    output->set_enabled(false);
+    config->set_primary_output(output2);
 
     // save config as the current one, this is the config we don't want restored, and which we'll
     // overwrite
     configWrapper->writeFile();
 
-    QCOMPARE(output->isEnabled(), false);
-    QCOMPARE(config->primaryOutput(), output2);
+    QCOMPARE(output->enabled(), false);
+    QCOMPARE(config->primary_output(), output2);
 
     // Check if both files exist
     const QString basePath = Config::configsDirPath() + configWrapper->id();
@@ -370,12 +370,12 @@ void TestConfig::testMoveConfig()
 
     output = config->outputs().first();
     QCOMPARE(output->name(), "OUTPUT-1");
-    QCOMPARE(output->isEnabled(), true);
-    QCOMPARE(config->primaryOutput(), output);
+    QCOMPARE(output->enabled(), true);
+    QCOMPARE(config->primary_output(), output);
 
     output2 = config->outputs().last();
     QCOMPARE(output2->name(), "OUTPUT-2");
-    QCOMPARE(output2->isEnabled(), true);
+    QCOMPARE(output2->enabled(), true);
 
     // Make sure we don't screw up when there's no _lidOpened config
     configWrapper = configWrapper->readOpenLidFile();

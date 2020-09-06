@@ -119,10 +119,10 @@ Disman::ConfigPtr Generator::laptop(Disman::ConfigPtr const& config)
 
     bool success;
     if (isLidClosed()) {
-        if (generated_config->primaryOutput() == embedded) {
-            generated_config->setPrimaryOutput(nullptr);
+        if (generated_config->primary_output() == embedded) {
+            generated_config->set_primary_output(nullptr);
         }
-        embedded->setEnabled(false);
+        embedded->set_enabled(false);
 
         Disman::OutputPtr output_to_enable;
         int max_area = 0;
@@ -131,7 +131,7 @@ Disman::ConfigPtr Generator::laptop(Disman::ConfigPtr const& config)
             if (output->id() == embedded->id()) {
                 continue;
             }
-            if (output->isEnabled()) {
+            if (output->enabled()) {
                 output_to_enable = output;
                 break;
             }
@@ -142,7 +142,7 @@ Disman::ConfigPtr Generator::laptop(Disman::ConfigPtr const& config)
                 max_area = area;
             }
         }
-        output_to_enable->setEnabled(true);
+        output_to_enable->set_enabled(true);
 
         if (outputs.count() == 2) {
             qCDebug(KDISPLAY_KDED) << "With lid closed and one other display.";
@@ -164,10 +164,10 @@ Disman::ConfigPtr Generator::laptop(Disman::ConfigPtr const& config)
                 primary = generator.biggest(exclude);
             }
             assert(primary);
-            primary->setEnabled(true);
+            primary->set_enabled(true);
 
-            if (generated_config->supportedFeatures() & Disman::Config::Feature::PrimaryDisplay) {
-                generated_config->setPrimaryOutput(primary);
+            if (generated_config->supported_features() & Disman::Config::Feature::PrimaryDisplay) {
+                generated_config->set_primary_output(primary);
             }
 
             success = generator.extend(Disman::Generator::Extend_direction::right);
@@ -218,7 +218,7 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
         qCDebug(KDISPLAY_KDED) << "Turn off embedded (laptop)";
         auto embedded = generator.embedded();
         if (embedded) {
-            embedded->setEnabled(false);
+            embedded->set_enabled(false);
             success = generator.optimize();
         }
         break;

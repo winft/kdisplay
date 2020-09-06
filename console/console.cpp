@@ -39,7 +39,7 @@ namespace Disman
 namespace ConfigSerializer
 {
 // Exported private symbol in configserializer_p.h in Disman
-extern QJsonObject serializeConfig(const Disman::ConfigPtr& config);
+extern QJsonObject serialize_config(const Disman::ConfigPtr& config);
 }
 }
 
@@ -66,7 +66,7 @@ void Console::printConfig()
         return;
     }
 
-    connect(m_config.data(), &Config::primaryOutputChanged, [&](const OutputPtr& output) {
+    connect(m_config.data(), &Config::primary_output_changed, [&](const OutputPtr& output) {
         if (output) {
             qDebug() << "New primary output: " << output->id() << output->name().c_str();
         } else {
@@ -75,11 +75,11 @@ void Console::printConfig()
     });
 
     qDebug() << "Screen:";
-    qDebug() << "\tmaxSize:" << m_config->screen()->maxSize();
-    qDebug() << "\tminSize:" << m_config->screen()->minSize();
-    qDebug() << "\tcurrentSize:" << m_config->screen()->currentSize();
+    qDebug() << "\tmax_size:" << m_config->screen()->max_size();
+    qDebug() << "\tmin_size:" << m_config->screen()->min_size();
+    qDebug() << "\tcurrent_size:" << m_config->screen()->current_size();
 
-    if (auto primary = m_config->primaryOutput()) {
+    if (auto primary = m_config->primary_output()) {
         qDebug() << "Primary output:" << primary->description().c_str();
     }
 
@@ -90,11 +90,11 @@ void Console::printConfig()
         qDebug() << "Name: " << output->name().c_str();
         qDebug() << "Description: " << output->description().c_str();
         qDebug() << "Type: " << typetoString(output->type());
-        qDebug() << "Enabled: " << output->isEnabled();
+        qDebug() << "Enabled: " << output->enabled();
         qDebug() << "Rotation: " << output->rotation();
         qDebug() << "Pos: " << output->position();
-        qDebug() << "MMSize: " << output->sizeMm();
-        qDebug() << "FollowPreferredMode: " << output->followPreferredMode();
+        qDebug() << "MMSize: " << output->physical_size();
+        qDebug() << "FollowPreferredMode: " << output->follow_preferred_mode();
         if (output->auto_mode()) {
             qDebug() << "Size: " << output->auto_mode()->size();
         } else {
@@ -104,13 +104,13 @@ void Console::printConfig()
         qDebug() << "Mode: " << output->auto_mode();
         qDebug() << "Preferred Mode: " << output->preferred_mode();
         qDebug() << "Preferred modes:";
-        for (auto const& mode_string : output->preferredModes()) {
+        for (auto const& mode_string : output->preferred_modes()) {
             qDebug() << "\t" << mode_string.c_str();
         }
         qDebug() << "Modes: ";
         for (auto const& [key, mode] : output->modes()) {
             qDebug() << "\t" << mode->id().c_str() << mode->name().c_str() << mode->size()
-                     << mode->refreshRate();
+                     << mode->refresh();
         }
     }
 }
@@ -154,7 +154,7 @@ QString Console::typetoString(const Output::Type& type) const
 
 void Console::printJSONConfig()
 {
-    QJsonDocument doc(Disman::ConfigSerializer::serializeConfig(m_config));
+    QJsonDocument doc(Disman::ConfigSerializer::serialize_config(m_config));
     cout << doc.toJson(QJsonDocument::Indented);
 }
 
@@ -188,14 +188,14 @@ void Console::printSerializations()
 
 void Console::monitor()
 {
-    ConfigMonitor::instance()->addConfig(m_config);
+    ConfigMonitor::instance()->add_config(m_config);
 }
 
 void Console::monitorAndPrint()
 {
     monitor();
     connect(ConfigMonitor::instance(),
-            &ConfigMonitor::configurationChanged,
+            &ConfigMonitor::configuration_changed,
             this,
             &Console::printConfig);
 }

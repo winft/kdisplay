@@ -90,14 +90,14 @@ void OsdManager::showOutputIdentifiers()
 
 void OsdManager::slotIdentifyOutputs(Disman::ConfigOperation* op)
 {
-    if (op->hasError()) {
+    if (op->has_error()) {
         return;
     }
 
     const Disman::ConfigPtr config = qobject_cast<Disman::GetConfigOperation*>(op)->config();
 
     Q_FOREACH (const Disman::OutputPtr& output, config->outputs()) {
-        if (!output->isEnabled() || !output->auto_mode()) {
+        if (!output->enabled() || !output->auto_mode()) {
             continue;
         }
         auto osd = m_osds.value(QString::fromStdString(output->name()));
@@ -118,7 +118,7 @@ void OsdManager::showOsd(const QString& icon, const QString& text)
             &Disman::GetConfigOperation::finished,
             this,
             [this, icon, text](Disman::ConfigOperation* op) {
-                if (op->hasError()) {
+                if (op->has_error()) {
                     return;
                 }
 
@@ -126,7 +126,7 @@ void OsdManager::showOsd(const QString& icon, const QString& text)
                     = qobject_cast<Disman::GetConfigOperation*>(op)->config();
 
                 Q_FOREACH (const Disman::OutputPtr& output, config->outputs()) {
-                    if (!output->isEnabled() || !output->auto_mode()) {
+                    if (!output->enabled() || !output->auto_mode()) {
                         continue;
                     }
                     auto osd = m_osds.value(QString::fromStdString(output->name()));
@@ -154,8 +154,8 @@ OsdAction* OsdManager::showActionSelector()
             &Disman::GetConfigOperation::finished,
             this,
             [this, action](const Disman::ConfigOperation* op) {
-                if (op->hasError()) {
-                    qCWarning(KDISPLAY_KDED) << op->errorString();
+                if (op->has_error()) {
+                    qCWarning(KDISPLAY_KDED) << op->error_string();
                     return;
                 }
 
@@ -163,7 +163,7 @@ OsdAction* OsdManager::showActionSelector()
                 const auto outputs = op->config()->outputs();
                 Disman::OutputPtr osdOutput;
                 for (const auto& output : outputs) {
-                    if (!output->isEnabled() || !output->auto_mode()) {
+                    if (!output->enabled() || !output->auto_mode()) {
                         continue;
                     }
 
@@ -175,12 +175,12 @@ OsdAction* OsdManager::showActionSelector()
                 }
                 if (!osdOutput) {
                     // Fallback to primary
-                    osdOutput = op->config()->primaryOutput();
+                    osdOutput = op->config()->primary_output();
                 }
                 // no laptop or primary screen, just take the first usable one
                 if (!osdOutput) {
                     for (const auto& output : outputs) {
-                        if (output->isEnabled() && output->auto_mode()) {
+                        if (output->enabled() && output->auto_mode()) {
                             osdOutput = output;
                             break;
                         }

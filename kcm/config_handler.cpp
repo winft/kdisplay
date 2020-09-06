@@ -35,7 +35,7 @@ void ConfigHandler::setConfig(Disman::ConfigPtr config)
 {
     m_config = config;
     m_initialConfig = m_config->clone();
-    Disman::ConfigMonitor::instance()->addConfig(m_config);
+    Disman::ConfigMonitor::instance()->add_config(m_config);
 
     m_outputs = new OutputModel(this);
     connect(
@@ -51,14 +51,14 @@ void ConfigHandler::setConfig(Disman::ConfigPtr config)
         checkNeedsSave();
         Q_EMIT changed();
     });
-    connect(m_config.data(), &Disman::Config::outputAdded, this, [this]() {
+    connect(m_config.data(), &Disman::Config::output_added, this, [this]() {
         Q_EMIT outputConnect(true);
     });
-    connect(m_config.data(), &Disman::Config::outputRemoved, this, [this]() {
+    connect(m_config.data(), &Disman::Config::output_removed, this, [this]() {
         Q_EMIT outputConnect(false);
     });
     connect(m_config.data(),
-            &Disman::Config::primaryOutputChanged,
+            &Disman::Config::primary_output_changed,
             this,
             &ConfigHandler::primaryOutputChanged);
 
@@ -74,7 +74,7 @@ void ConfigHandler::updateInitialData()
 {
     connect(
         new GetConfigOperation(), &GetConfigOperation::finished, this, [this](ConfigOperation* op) {
-            if (op->hasError()) {
+            if (op->has_error()) {
                 return;
             }
             m_initialConfig = qobject_cast<GetConfigOperation*>(op)->config();
@@ -84,13 +84,13 @@ void ConfigHandler::updateInitialData()
 
 void ConfigHandler::checkNeedsSave()
 {
-    if (m_config->supportedFeatures() & Disman::Config::Feature::PrimaryDisplay) {
-        if (m_config->primaryOutput() && m_initialConfig->primaryOutput()) {
-            if (m_config->primaryOutput()->hash() != m_initialConfig->primaryOutput()->hash()) {
+    if (m_config->supported_features() & Disman::Config::Feature::PrimaryDisplay) {
+        if (m_config->primary_output() && m_initialConfig->primary_output()) {
+            if (m_config->primary_output()->hash() != m_initialConfig->primary_output()->hash()) {
                 Q_EMIT needsSaveChecked(true);
                 return;
             }
-        } else if ((bool)m_config->primaryOutput() != (bool)m_initialConfig->primaryOutput()) {
+        } else if ((bool)m_config->primary_output() != (bool)m_initialConfig->primary_output()) {
             Q_EMIT needsSaveChecked(true);
             return;
         }
@@ -103,15 +103,15 @@ void ConfigHandler::checkNeedsSave()
                 continue;
             }
             bool needsSave = false;
-            if (output->isEnabled() != initialOutput->isEnabled()) {
+            if (output->enabled() != initialOutput->enabled()) {
                 needsSave = true;
             }
-            if (output->isEnabled()) {
+            if (output->enabled()) {
                 needsSave |= output->auto_mode()->id() != initialOutput->auto_mode()->id()
                     || output->position() != initialOutput->position()
                     || output->scale() != initialOutput->scale()
                     || output->rotation() != initialOutput->rotation()
-                    || output->replicationSource() != initialOutput->replicationSource()
+                    || output->replication_source() != initialOutput->replication_source()
                     || output->retention() != initialOutput->retention()
                     || output->auto_resolution() != initialOutput->auto_resolution()
                     || output->auto_refresh_rate() != initialOutput->auto_refresh_rate()
@@ -135,7 +135,7 @@ QSize ConfigHandler::screenSize() const
     QSize size;
 
     for (const auto& output : m_config->outputs()) {
-        if (!output->isPositionable()) {
+        if (!output->positionable()) {
             continue;
         }
         const int outputRight = output->geometry().right();

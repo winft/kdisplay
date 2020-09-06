@@ -48,11 +48,11 @@ QVariant OutputModel::data(const QModelIndex& index, int role) const
     case Qt::DisplayRole:
         return Utils::outputName(output);
     case EnabledRole:
-        return output->isEnabled();
+        return output->enabled();
     case InternalRole:
         return output->type() == Disman::Output::Type::Panel;
     case PrimaryRole:
-        return m_config->config() && m_config->config()->primaryOutput() == output;
+        return m_config->config() && m_config->config()->primary_output() == output;
     case SizeRole:
         return output->geometry().size();
     case PositionRole:
@@ -129,10 +129,10 @@ bool OutputModel::setData(const QModelIndex& index, const QVariant& value, int r
     case PrimaryRole:
         if (value.canConvert<bool>()) {
             bool primary = value.toBool();
-            if (!primary || m_config->config()->primaryOutput() == output.ptr) {
+            if (!primary || m_config->config()->primary_output() == output.ptr) {
                 return false;
             }
-            m_config->config()->setPrimaryOutput(output.ptr);
+            m_config->config()->set_primary_output(output.ptr);
             Q_EMIT dataChanged(index, index, {role});
             return true;
         }
@@ -181,7 +181,7 @@ bool OutputModel::setData(const QModelIndex& index, const QVariant& value, int r
         bool ok;
         const qreal scale = value.toReal(&ok);
         if (ok && !qFuzzyCompare(output.ptr->scale(), scale)) {
-            output.ptr->setScale(scale);
+            output.ptr->set_scale(scale);
             Q_EMIT sizeChanged();
             Q_EMIT dataChanged(index, index, {role, SizeRole});
             return true;
@@ -241,9 +241,10 @@ void OutputModel::add(const Disman::OutputPtr& output)
     }
     m_outputs.insert(i, Output(output, pos));
 
-    connect(m_config->config().data(), &Disman::Config::primaryOutputChanged, this, [this, output] {
-        roleChanged(output->id(), PrimaryRole);
-    });
+    connect(m_config->config().data(),
+            &Disman::Config::primary_output_changed,
+            this,
+            [this, output] { roleChanged(output->id(), PrimaryRole); });
     Q_EMIT endInsertRows();
 
     // Update replications.
@@ -280,11 +281,11 @@ void OutputModel::resetPosition(const Output& output)
                 continue;
             }
             if (out.ptr->geometry().right() > output.ptr->position().x()) {
-                output.ptr->setPosition(out.ptr->geometry().topRight());
+                output.ptr->set_position(out.ptr->geometry().topRight());
             }
         }
     } else {
-        output.ptr->setPosition(/*output.ptr->position() - */ output.posReset);
+        output.ptr->set_position(/*output.ptr->position() - */ output.posReset);
     }
 }
 
@@ -292,11 +293,11 @@ bool OutputModel::setEnabled(int outputIndex, bool enable)
 {
     Output& output = m_outputs[outputIndex];
 
-    if (output.ptr->isEnabled() == enable) {
+    if (output.ptr->enabled() == enable) {
         return false;
     }
 
-    output.ptr->setEnabled(enable);
+    output.ptr->set_enabled(enable);
 
     if (enable) {
         resetPosition(output);
@@ -434,7 +435,7 @@ bool OutputModel::setRotation(int outputIndex, Disman::Output::Rotation rotation
     if (output.ptr->rotation() == rotation) {
         return false;
     }
-    output.ptr->setRotation(rotation);
+    output.ptr->set_rotation(rotation);
 
     QModelIndex index = createIndex(outputIndex, 0);
     Q_EMIT dataChanged(index, index, {RotationRole, SizeRole});
@@ -465,7 +466,7 @@ int OutputModel::resolutionIndex(const Disman::OutputPtr& output) const
 int OutputModel::refreshRateIndex(const Disman::OutputPtr& output) const
 {
     const auto rates = refreshRates(output);
-    const float currentRate = output->auto_mode()->refreshRate();
+    const float currentRate = output->auto_mode()->refresh();
 
     const auto it = std::find_if(rates.begin(), rates.end(), [currentRate](float rate) {
         return refreshRateCompare(rate, currentRate);
@@ -540,7 +541,7 @@ QVector<float> OutputModel::refreshRates(const Disman::OutputPtr& output) const
         if (mode->size() != resolution) {
             continue;
         }
-        auto const rate = mode->refreshRate();
+        auto const rate = mode->refresh();
         if (std::find_if(
                 hits.begin(), hits.end(), [rate](float r) { return refreshRateCompare(r, rate); })
             != hits.end()) {
@@ -555,7 +556,7 @@ QVector<float> OutputModel::refreshRates(const Disman::OutputPtr& output) const
 
 int OutputModel::replicationSourceId(const Output& output) const
 {
-    return output.ptr->replicationSource();
+    return output.ptr->replication_source();
 }
 
 QStringList OutputModel::replicationSourceModel(const Disman::OutputPtr& output) const
@@ -596,7 +597,7 @@ bool OutputModel::setReplicationSourceIndex(int outputIndex, int sourceIndex)
             // no change
             return false;
         }
-        output.ptr->setReplicationSource(0);
+        output.ptr->set_replication_source(0);
         resetPosition(output);
     } else {
         const auto source = m_outputs[sourceIndex].ptr;
@@ -604,9 +605,9 @@ bool OutputModel::setReplicationSourceIndex(int outputIndex, int sourceIndex)
             // no change
             return false;
         }
-        output.ptr->setReplicationSource(source->id());
+        output.ptr->set_replication_source(source->id());
         output.posReset = output.ptr->position();
-        output.ptr->setPosition(source->position());
+        output.ptr->set_position(source->position());
     }
 
     reposition();
@@ -674,7 +675,7 @@ void OutputModel::roleChanged(int outputId, OutputRoles role)
 
 bool OutputModel::positionable(const Output& output) const
 {
-    return output.ptr->isPositionable();
+    return output.ptr->positionable();
 }
 
 void OutputModel::reposition()
@@ -711,7 +712,7 @@ void OutputModel::reposition()
 
     for (int i = 0; i < m_outputs.size(); i++) {
         auto& out = m_outputs[i];
-        out.ptr->setPosition(out.ptr->position() - QPoint(x, y));
+        out.ptr->set_position(out.ptr->position() - QPoint(x, y));
         QModelIndex index = createIndex(i, 0);
         Q_EMIT dataChanged(index, index, {NormalizedPositionRole});
     }
@@ -758,7 +759,7 @@ void OutputModel::updatePositions()
         }
         auto const set = out.pos - delta;
         if (out.ptr->position() != set) {
-            out.ptr->setPosition(set);
+            out.ptr->set_position(set);
             QModelIndex index = createIndex(i, 0);
             Q_EMIT dataChanged(index, index, {NormalizedPositionRole});
         }
