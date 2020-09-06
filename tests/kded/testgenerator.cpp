@@ -86,8 +86,8 @@ void testScreenConfig::laptopLidOpenAndExternal()
     generator->setForceLaptop(true);
 
     ConfigPtr config = generator->idealConfig(currentConfig);
-    OutputPtr laptop = config->outputs().value(1);
-    OutputPtr external = config->outputs().value(2);
+    OutputPtr laptop = config->outputs().at(1);
+    OutputPtr external = config->outputs().at(2);
 
     QCOMPARE(laptop->auto_mode()->id(), "3");
     QCOMPARE(config->primary_output(), laptop);
@@ -109,9 +109,9 @@ void testScreenConfig::laptopLidOpenAndTwoExternal()
     generator->setForceLaptop(true);
 
     ConfigPtr config = generator->idealConfig(currentConfig);
-    OutputPtr laptop = config->outputs().value(1);
-    OutputPtr hdmi1 = config->outputs().value(2);
-    OutputPtr hdmi2 = config->outputs().value(3);
+    OutputPtr laptop = config->outputs().at(1);
+    OutputPtr hdmi1 = config->outputs().at(2);
+    OutputPtr hdmi2 = config->outputs().at(3);
 
     QCOMPARE(laptop->auto_mode()->id(), "3");
     QCOMPARE(laptop->enabled(), true);
@@ -139,8 +139,8 @@ void testScreenConfig::laptopLidClosedAndExternal()
     generator->setForceLidClosed(true);
 
     ConfigPtr config = generator->idealConfig(currentConfig);
-    OutputPtr laptop = config->outputs().value(1);
-    OutputPtr external = config->outputs().value(2);
+    OutputPtr laptop = config->outputs().at(1);
+    OutputPtr external = config->outputs().at(2);
 
     QCOMPARE(laptop->enabled(), false);
 
@@ -161,10 +161,10 @@ void testScreenConfig::laptopLidClosedAndThreeExternal()
     generator->setForceLidClosed(true);
 
     ConfigPtr config = generator->idealConfig(currentConfig);
-    OutputPtr laptop = config->outputs().value(1);
-    OutputPtr hdmi1 = config->outputs().value(2);
-    OutputPtr hdmi2 = config->outputs().value(3);
-    OutputPtr primary = config->outputs().value(4);
+    OutputPtr laptop = config->outputs().at(1);
+    OutputPtr hdmi1 = config->outputs().at(2);
+    OutputPtr hdmi2 = config->outputs().at(3);
+    OutputPtr primary = config->outputs().at(4);
 
     QCOMPARE(laptop->enabled(), false);
 
@@ -195,15 +195,15 @@ void testScreenConfig::laptopDockedLidOpenAndExternal()
     generator->setForceDocked(true);
 
     ConfigPtr config = generator->idealConfig(currentConfig);
-    OutputPtr laptop = config->outputs().value(1);
-    OutputPtr external = config->outputs().value(2);
+    OutputPtr laptop = config->outputs().at(1);
+    OutputPtr external = config->outputs().at(2);
 
     QCOMPARE(laptop->auto_mode()->id(), "3");
     QCOMPARE(laptop->enabled(), true);
     QCOMPARE(laptop->position(), QPoint(0, 0));
 
     QCOMPARE(external->auto_mode()->id(), "4");
-    QCOMPARE(external->enabled(), true);
+    QCOMPARE(external->enabled(), false);
     QCOMPARE(external->position(), QPoint(1280, 0));
     QCOMPARE(config->primary_output(), laptop);
 }
@@ -220,8 +220,8 @@ void testScreenConfig::laptopDockedLidClosedAndExternal()
     generator->setForceDocked(true);
 
     ConfigPtr config = generator->idealConfig(currentConfig);
-    OutputPtr laptop = config->outputs().value(1);
-    OutputPtr external = config->outputs().value(2);
+    OutputPtr laptop = config->outputs().at(1);
+    OutputPtr external = config->outputs().at(2);
 
     QCOMPARE(laptop->enabled(), false);
 
@@ -245,8 +245,8 @@ void testScreenConfig::switchDisplayTwoScreens()
 
     // Clone all
     ConfigPtr config = generator->displaySwitch(Generator::Clone);
-    OutputPtr laptop = config->outputs().value(1);
-    OutputPtr external = config->outputs().value(2);
+    OutputPtr laptop = config->outputs().at(1);
+    OutputPtr external = config->outputs().at(2);
     QCOMPARE(laptop->auto_mode()->id(), "3");
     QCOMPARE(laptop->enabled(), true);
     QCOMPARE(laptop->position(), QPoint(0, 0));
@@ -260,8 +260,8 @@ void testScreenConfig::switchDisplayTwoScreens()
 
     // Extend to left
     config = generator->displaySwitch(Generator::ExtendToLeft);
-    laptop = config->outputs().value(1);
-    external = config->outputs().value(2);
+    laptop = config->outputs().at(1);
+    external = config->outputs().at(2);
     QCOMPARE(laptop->auto_mode()->id(), "3");
     QCOMPARE(laptop->enabled(), true);
     QCOMPARE(laptop->position(), QPoint(0, 0));
@@ -272,8 +272,8 @@ void testScreenConfig::switchDisplayTwoScreens()
 
     // Disable embedded,. enable external
     config = generator->displaySwitch(Generator::TurnOffEmbedded);
-    laptop = config->outputs().value(1);
-    external = config->outputs().value(2);
+    laptop = config->outputs().at(1);
+    external = config->outputs().at(2);
     ;
     QCOMPARE(laptop->enabled(), false);
     QCOMPARE(external->auto_mode()->id(), "5");
@@ -287,8 +287,8 @@ void testScreenConfig::switchDisplayTwoScreens()
 
     // Extend to right
     config = generator->displaySwitch(Generator::ExtendToRight);
-    laptop = config->outputs().value(1);
-    external = config->outputs().value(2);
+    laptop = config->outputs().at(1);
+    external = config->outputs().at(2);
     QCOMPARE(laptop->auto_mode()->id(), "3");
     QCOMPARE(laptop->enabled(), true);
     QCOMPARE(laptop->position(), QPoint(0, 0));
@@ -306,8 +306,8 @@ void testScreenConfig::switchDisplayTwoScreensNoCommonMode()
     Generator* generator = Generator::self();
     generator->setCurrentConfig(currentConfig);
     ConfigPtr config = generator->displaySwitch(Generator::Clone);
-    OutputPtr laptop = config->outputs().value(1);
-    OutputPtr external = config->outputs().value(2);
+    OutputPtr laptop = config->outputs().at(1);
+    OutputPtr external = config->outputs().at(2);
 
     QCOMPARE(laptop->auto_mode()->id(), "3");
     QCOMPARE(laptop->enabled(), true);

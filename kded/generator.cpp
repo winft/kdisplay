@@ -25,21 +25,6 @@
 
 #include <algorithm>
 
-#if defined(QT_NO_DEBUG)
-#define ASSERT_OUTPUTS(outputs)
-#else
-#define ASSERT_OUTPUTS(outputs)                                                                    \
-    while (true) {                                                                                 \
-        assert(!outputs.isEmpty());                                                                \
-        for (Disman::OutputPtr const& output : outputs) {                                          \
-            assert(output);                                                                        \
-            assert(output->id());                                                                  \
-            assert(output->auto_mode());                                                           \
-        }                                                                                          \
-        break;                                                                                     \
-    }
-#endif
-
 Generator* Generator::instance = nullptr;
 
 Generator* Generator::self()
@@ -79,7 +64,7 @@ Disman::ConfigPtr Generator::idealConfig(Disman::ConfigPtr const& config)
         qCDebug(KDISPLAY_KDED) << "Not a laptop, using optimal config provided by Disman.";
         return config;
     }
-    if (config->outputs().isEmpty()) {
+    if (config->outputs().empty()) {
         return config;
     }
     return laptop(config);
@@ -101,9 +86,12 @@ Disman::ConfigPtr Generator::laptop(Disman::ConfigPtr const& config)
      * See bug #318907 for further reference. -- dvratil
      */
     if (!embedded) {
-        auto keys = outputs.keys();
+        std::vector<int> keys;
+        for (auto const& [key, out] : outputs) {
+            keys.push_back(key);
+        }
         std::sort(keys.begin(), keys.end());
-        embedded = outputs.value(keys.first());
+        embedded = outputs.at(*(keys.begin()));
     }
 
     if (outputs.size() == 1) {
@@ -126,7 +114,7 @@ Disman::ConfigPtr Generator::laptop(Disman::ConfigPtr const& config)
 
         Disman::OutputPtr output_to_enable;
         int max_area = 0;
-        for (auto output : outputs) {
+        for (auto const& [key, output] : outputs) {
             // Enable at least one other output.
             if (output->id() == embedded->id()) {
                 continue;
@@ -144,7 +132,7 @@ Disman::ConfigPtr Generator::laptop(Disman::ConfigPtr const& config)
         }
         output_to_enable->set_enabled(true);
 
-        if (outputs.count() == 2) {
+        if (outputs.size() == 2) {
             qCDebug(KDISPLAY_KDED) << "With lid closed and one other display.";
             success = generator.optimize();
         } else {

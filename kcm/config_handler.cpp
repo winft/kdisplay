@@ -42,7 +42,7 @@ void ConfigHandler::setConfig(Disman::ConfigPtr config)
         m_outputs, &OutputModel::positionChanged, this, &ConfigHandler::checkScreenNormalization);
     connect(m_outputs, &OutputModel::sizeChanged, this, &ConfigHandler::checkScreenNormalization);
 
-    for (const Disman::OutputPtr& output : config->outputs()) {
+    for (auto const& [key, output] : config->outputs()) {
         initOutput(output);
     }
     m_lastNormalizedScreenSize = screenSize();
@@ -96,9 +96,9 @@ void ConfigHandler::checkNeedsSave()
         }
     }
 
-    for (const auto& output : m_config->outputs()) {
+    for (auto const& [key, output] : m_config->outputs()) {
         auto const hash = output->hash();
-        for (const auto& initialOutput : m_initialConfig->outputs()) {
+        for (auto const& [initial_key, initialOutput] : m_initialConfig->outputs()) {
             if (hash != initialOutput->hash()) {
                 continue;
             }
@@ -134,7 +134,7 @@ QSize ConfigHandler::screenSize() const
     int width = 0, height = 0;
     QSize size;
 
-    for (const auto& output : m_config->outputs()) {
+    for (auto const& [key, output] : m_config->outputs()) {
         if (!output->positionable()) {
             continue;
         }
@@ -201,12 +201,12 @@ Disman::Output::Retention ConfigHandler::getRetention() const
     }
 
     const auto outputs = m_config->outputs();
-    if (outputs.isEmpty()) {
+    if (outputs.empty()) {
         return ret;
     }
-    ret = outputs.first()->retention();
+    ret = outputs.begin()->second->retention();
 
-    for (const auto& output : outputs) {
+    for (auto const& [key, output] : outputs) {
         const auto outputRet = output->retention();
         if (ret != outputRet) {
             // Control file with different retention values per output.
@@ -246,7 +246,7 @@ void ConfigHandler::setRetention(int retention)
     }
 
     auto ret = static_cast<Retention>(retention);
-    for (auto const& output : m_config->outputs()) {
+    for (auto const& [key, output] : m_config->outputs()) {
         output->set_retention(ret);
     }
     checkNeedsSave();

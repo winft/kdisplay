@@ -96,7 +96,7 @@ void OsdManager::slotIdentifyOutputs(Disman::ConfigOperation* op)
 
     const Disman::ConfigPtr config = qobject_cast<Disman::GetConfigOperation*>(op)->config();
 
-    Q_FOREACH (const Disman::OutputPtr& output, config->outputs()) {
+    for (auto const& [key, output] : config->outputs()) {
         if (!output->enabled() || !output->auto_mode()) {
             continue;
         }
@@ -125,7 +125,7 @@ void OsdManager::showOsd(const QString& icon, const QString& text)
                 const Disman::ConfigPtr config
                     = qobject_cast<Disman::GetConfigOperation*>(op)->config();
 
-                Q_FOREACH (const Disman::OutputPtr& output, config->outputs()) {
+                for (auto const& [key, output] : config->outputs()) {
                     if (!output->enabled() || !output->auto_mode()) {
                         continue;
                     }
@@ -162,7 +162,7 @@ OsdAction* OsdManager::showActionSelector()
                 // Show selector on all enabled screens
                 const auto outputs = op->config()->outputs();
                 Disman::OutputPtr osdOutput;
-                for (const auto& output : outputs) {
+                for (auto const& [key, output] : outputs) {
                     if (!output->enabled() || !output->auto_mode()) {
                         continue;
                     }
@@ -179,7 +179,7 @@ OsdAction* OsdManager::showActionSelector()
                 }
                 // no laptop or primary screen, just take the first usable one
                 if (!osdOutput) {
-                    for (const auto& output : outputs) {
+                    for (auto const& [key, output] : outputs) {
                         if (output->enabled() && output->auto_mode()) {
                             osdOutput = output;
                             break;

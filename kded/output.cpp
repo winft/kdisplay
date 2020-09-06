@@ -167,7 +167,7 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList& outpu
 
     Disman::OutputList outputs = config->outputs();
     QVector<Out> sortedOutputs; // <id, pos>
-    for (const Disman::OutputPtr& output : outputs) {
+    for (auto const& [key, output] : outputs) {
         sortedOutputs.append(Out(output->id(), output->position()));
     }
 
@@ -232,8 +232,8 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList& outpu
         };
 
         // it's guaranteed that we find the following values in the QMap
-        Disman::OutputPtr prevPtr = outputs.find(sortedOutputs[cnt - 1].first).value();
-        Disman::OutputPtr curPtr = outputs.find(sortedOutputs[cnt].first).value();
+        Disman::OutputPtr prevPtr = outputs.find(sortedOutputs[cnt - 1].first)->second;
+        Disman::OutputPtr curPtr = outputs.find(sortedOutputs[cnt].first)->second;
 
         QRect prevInfoGeo, curInfoGeo;
         if (!getOutputInfoProperties(prevPtr, prevInfoGeo)
@@ -340,8 +340,8 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputs
     QStringList duplicateIds;
     {
         QStringList allIds;
-        allIds.reserve(outputs.count());
-        for (const Disman::OutputPtr& output : outputs) {
+        allIds.reserve(outputs.size());
+        for (auto const& [key, output] : outputs) {
             const auto outputId = QString::fromStdString(output->hash());
             if (allIds.contains(outputId) && !duplicateIds.contains(outputId)) {
                 duplicateIds << outputId;
@@ -351,7 +351,7 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputs
         allIds.clear();
     }
 
-    for (Disman::OutputPtr output : outputs) {
+    for (auto const& [key, output] : outputs) {
         const auto outputId = QString::fromStdString(output->hash());
         bool infoFound = false;
         for (const auto& variantInfo : outputsInfo) {

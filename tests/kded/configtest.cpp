@@ -134,9 +134,9 @@ void TestConfig::testSimpleConfig()
 
     auto config = configWrapper->data();
     QVERIFY(config);
-    QCOMPARE(config->outputs().count(), 2);
+    QCOMPARE(config->outputs().size(), 2);
 
-    auto output = config->outputs().first();
+    auto output = config->outputs().begin()->second;
     QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->auto_mode()->id(), "MODE-4");
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
@@ -145,7 +145,7 @@ void TestConfig::testSimpleConfig()
     QCOMPARE(output->position(), QPoint(0, 0));
     QCOMPARE(config->primary_output(), output);
 
-    auto output2 = config->outputs().last();
+    auto output2 = config->outputs().rbegin()->second;
     QCOMPARE(output2->name(), "OUTPUT-2");
     QCOMPARE(output2->auto_mode()->id(), "MODE-4");
     QCOMPARE(output2->auto_mode()->size(), QSize(1920, 1280));
@@ -165,9 +165,9 @@ void TestConfig::testTwoScreenConfig()
     auto config = configWrapper->data();
     QVERIFY(config);
 
-    QCOMPARE(config->outputs().count(), 2);
+    QCOMPARE(config->outputs().size(), 2);
 
-    auto output = config->outputs().first();
+    auto output = config->outputs().begin()->second;
     QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->auto_mode()->id(), "MODE-4");
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
@@ -176,7 +176,7 @@ void TestConfig::testTwoScreenConfig()
     QCOMPARE(output->position(), QPoint(0, 0));
     QCOMPARE(config->primary_output(), output);
 
-    output = config->outputs().last();
+    output = config->outputs().rbegin()->second;
     QCOMPARE(output->name(), "OUTPUT-2");
     QCOMPARE(output->auto_mode()->id(), "MODE-3");
     QCOMPARE(output->auto_mode()->size(), QSize(1280, 1024));
@@ -196,9 +196,9 @@ void TestConfig::testRotatedScreenConfig()
     auto config = configWrapper->data();
     QVERIFY(config);
 
-    QCOMPARE(config->outputs().count(), 2);
+    QCOMPARE(config->outputs().size(), 2);
 
-    auto output = config->outputs().first();
+    auto output = config->outputs().begin()->second;
     QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->auto_mode()->id(), "MODE-4");
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
@@ -207,7 +207,7 @@ void TestConfig::testRotatedScreenConfig()
     QCOMPARE(output->position(), QPoint(0, 0));
     QCOMPARE(config->primary_output(), output);
 
-    output = config->outputs().last();
+    output = config->outputs().rbegin()->second;
     QCOMPARE(output->name(), "OUTPUT-2");
     QCOMPARE(output->auto_mode()->id(), "MODE-3");
     QCOMPARE(output->auto_mode()->size(), QSize(1280, 1024));
@@ -227,9 +227,9 @@ void TestConfig::testDisabledScreenConfig()
     auto config = configWrapper->data();
     QVERIFY(config);
 
-    QCOMPARE(config->outputs().count(), 2);
+    QCOMPARE(config->outputs().size(), 2);
 
-    auto output = config->outputs().first();
+    auto output = config->outputs().begin()->second;
     QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->auto_mode()->id(), "MODE-4");
     QCOMPARE(output->auto_mode()->size(), QSize(1920, 1280));
@@ -238,7 +238,7 @@ void TestConfig::testDisabledScreenConfig()
     QCOMPARE(output->position(), QPoint(0, 0));
     QCOMPARE(config->primary_output(), output);
 
-    output = config->outputs().last();
+    output = config->outputs().rbegin()->second;
     QCOMPARE(output->name(), "OUTPUT-2");
     QCOMPARE(output->enabled(), false);
 
@@ -261,7 +261,7 @@ void TestConfig::testCorruptConfig()
     auto config = configWrapper->data();
 
     QVERIFY(config);
-    QCOMPARE(config->outputs().count(), 2);
+    QCOMPARE(config->outputs().size(), 2);
     QVERIFY(config->valid());
 }
 
@@ -272,7 +272,7 @@ void TestConfig::testCorruptEmptyConfig()
     auto config = configWrapper->data();
 
     QVERIFY(config);
-    QCOMPARE(config->outputs().count(), 2);
+    QCOMPARE(config->outputs().size(), 2);
     QVERIFY(config->valid());
 }
 
@@ -283,7 +283,7 @@ void TestConfig::testCorruptUselessConfig()
     auto config = configWrapper->data();
 
     QVERIFY(config);
-    QCOMPARE(config->outputs().count(), 2);
+    QCOMPARE(config->outputs().size(), 2);
     QVERIFY(config->valid());
 }
 
@@ -322,14 +322,14 @@ void TestConfig::testMoveConfig()
 
     // Basic assumptions for the remainder of our tests, this is the situation where the lid is
     // opened
-    QCOMPARE(config->outputs().count(), 2);
+    QCOMPARE(config->outputs().size(), 2);
 
-    auto output = config->outputs().first();
+    auto output = config->outputs().begin()->second;
     QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->enabled(), true);
     QCOMPARE(config->primary_output(), output);
 
-    auto output2 = config->outputs().last();
+    auto output2 = config->outputs().rbegin()->second;
     QCOMPARE(output2->name(), "OUTPUT-2");
     QCOMPARE(output2->enabled(), true);
 
@@ -368,12 +368,12 @@ void TestConfig::testMoveConfig()
     // Make sure the laptop panel is enabled and primary again
     config = configWrapper->data();
 
-    output = config->outputs().first();
+    output = config->outputs().begin()->second;
     QCOMPARE(output->name(), "OUTPUT-1");
     QCOMPARE(output->enabled(), true);
     QCOMPARE(config->primary_output(), output);
 
-    output2 = config->outputs().last();
+    output2 = config->outputs().rbegin()->second;
     QCOMPARE(output2->name(), "OUTPUT-2");
     QCOMPARE(output2->enabled(), true);
 

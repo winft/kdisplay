@@ -290,7 +290,7 @@ void KDisplayDaemon::applyOsdAction(Disman::OsdAction::Action action)
 
 void KDisplayDaemon::applyIdealConfig()
 {
-    const bool showOsd = m_monitoredConfig->data()->outputs().count() > 1 && !m_startingUp
+    const bool showOsd = m_monitoredConfig->data()->outputs().size() > 1 && !m_startingUp
         && m_monitoredConfig->data()->origin() == Disman::Config::Origin::generated;
 
     if (auto config = Generator::self()->idealConfig(m_monitoredConfig->data())) {
@@ -317,7 +317,7 @@ void KDisplayDaemon::configChanged()
 
     // Modes may have changed, fix-up current mode id
     bool changed = false;
-    Q_FOREACH (const Disman::OutputPtr& output, m_monitoredConfig->data()->outputs()) {
+    for (auto const& [key, output] : m_monitoredConfig->data()->outputs()) {
         if (output->enabled()
             && (output->auto_mode().isNull()
                 || (output->follow_preferred_mode()
@@ -361,7 +361,7 @@ void KDisplayDaemon::lidClosedChanged(bool lidIsClosed)
 {
     // Ignore this when we don't have any external monitors, we can't turn off our
     // only screen
-    if (m_monitoredConfig->data()->outputs().count() == 1) {
+    if (m_monitoredConfig->data()->outputs().size() == 1) {
         return;
     }
 
@@ -411,7 +411,7 @@ void KDisplayDaemon::lidClosedTimeout()
         << "Currently all KDisplay daemon config control is disabled. Doing nothing";
     return;
 
-    for (Disman::OutputPtr& output : m_monitoredConfig->data()->outputs()) {
+    for (auto& [key, output] : m_monitoredConfig->data()->outputs()) {
         if (output->type() == Disman::Output::Panel) {
             if (output->enabled()) {
                 // Save the current config with opened lid, just so that we know
@@ -470,7 +470,7 @@ void KDisplayDaemon::disableOutput(Disman::OutputPtr& output)
                            << (output->auto_mode() ? output->auto_mode()->size() : QSize());
 
     // Move all outputs right from the @p output to left
-    for (Disman::OutputPtr& otherOutput : m_monitoredConfig->data()->outputs()) {
+    for (auto const& [key, otherOutput] : m_monitoredConfig->data()->outputs()) {
         if (otherOutput == output || !otherOutput->enabled()) {
             continue;
         }
