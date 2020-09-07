@@ -76,14 +76,14 @@ KCMKDisplay::KCMKDisplay(QObject* parent, const QVariantList& args)
 void KCMKDisplay::configReady(ConfigOperation* op)
 {
     qCDebug(KDISPLAY_KCM) << "Reading in config now.";
-    if (op->hasError()) {
+    if (op->has_error()) {
         m_config.reset();
         Q_EMIT backendError();
         return;
     }
 
     Disman::ConfigPtr config = qobject_cast<GetConfigOperation*>(op)->config();
-    const bool autoRotationSupported = config->supportedFeatures()
+    const bool autoRotationSupported = config->supported_features()
         & (Disman::Config::Feature::AutoRotation | Disman::Config::Feature::TabletMode);
     m_orientationSensor->setEnabled(autoRotationSupported);
 
@@ -116,18 +116,21 @@ void KCMKDisplay::doSave(bool force)
 
     auto config = m_config->config();
 
+    if (auto primary = config->primary_output()) {
+        qCDebug(KDISPLAY_KCM) << "Primary output:" << primary->description().c_str();
+    }
+
     bool atLeastOneEnabledOutput = false;
-    for (const Disman::OutputPtr& output : config->outputs()) {
+    for (auto const& [key, output] : config->outputs()) {
         Disman::ModePtr mode = output->auto_mode();
 
-        atLeastOneEnabledOutput |= output->isEnabled();
+        atLeastOneEnabledOutput |= output->enabled();
 
-        qCDebug(KDISPLAY_KCM) << output->name().c_str() << output->id() << output.data() << "\n"
-                              << "	Enabled:" << output->isEnabled() << "\n"
-                              << "	Primary:" << output->isPrimary() << "\n"
+        qCDebug(KDISPLAY_KCM) << output->name().c_str() << output->id() << output.get() << "\n"
+                              << "	Enabled:" << output->enabled() << "\n"
                               << "	Rotation:" << output->rotation() << "\n"
-                              << "	Mode:" << (mode ? mode->name() : QStringLiteral("unknown"))
-                              << "@" << (mode ? mode->refreshRate() : 0.0) << "Hz"
+                              << "	Mode:" << (mode ? mode->name() : "unknown").c_str() << "@"
+                              << (mode ? mode->refresh() : 0.0) << "Hz"
                               << "\n"
                               << "    Position:" << output->position().x() << "x"
                               << output->position().y() << "\n"
@@ -136,7 +139,7 @@ void KCMKDisplay::doSave(bool force)
                                                      : QStringLiteral("global"))
                               << "\n"
                               << "    Replicates:"
-                              << (output->replicationSource() == 0 ? "no" : "yes");
+                              << (output->replication_source() == 0 ? "no" : "yes");
     }
 
     if (!atLeastOneEnabledOutput && !force) {
@@ -145,7 +148,7 @@ void KCMKDisplay::doSave(bool force)
         return;
     }
 
-    if (!Config::canBeApplied(config)) {
+    if (!Config::can_be_applied(config)) {
         Q_EMIT errorOnSave();
         m_config->checkNeedsSave();
         return;
@@ -223,7 +226,7 @@ bool KCMKDisplay::perOutputScaling() const
     if (!m_config || !m_config->config()) {
         return false;
     }
-    return m_config->config()->supportedFeatures().testFlag(Config::Feature::PerOutputScaling);
+    return m_config->config()->supported_features().testFlag(Config::Feature::PerOutputScaling);
 }
 
 bool KCMKDisplay::primaryOutputSupported() const
@@ -231,7 +234,7 @@ bool KCMKDisplay::primaryOutputSupported() const
     if (!m_config || !m_config->config()) {
         return false;
     }
-    return m_config->config()->supportedFeatures().testFlag(Config::Feature::PrimaryDisplay);
+    return m_config->config()->supported_features().testFlag(Config::Feature::PrimaryDisplay);
 }
 
 bool KCMKDisplay::outputReplicationSupported() const
@@ -239,7 +242,7 @@ bool KCMKDisplay::outputReplicationSupported() const
     if (!m_config || !m_config->config()) {
         return false;
     }
-    return m_config->config()->supportedFeatures().testFlag(Config::Feature::OutputReplication);
+    return m_config->config()->supported_features().testFlag(Config::Feature::OutputReplication);
 }
 
 bool KCMKDisplay::autoRotationSupported() const
@@ -247,7 +250,7 @@ bool KCMKDisplay::autoRotationSupported() const
     if (!m_config || !m_config->config()) {
         return false;
     }
-    return m_config->config()->supportedFeatures()
+    return m_config->config()->supported_features()
         & (Disman::Config::Feature::AutoRotation | Disman::Config::Feature::TabletMode);
 }
 
@@ -261,7 +264,7 @@ bool KCMKDisplay::tabletModeAvailable() const
     if (!m_config || !m_config->config()) {
         return false;
     }
-    return m_config->config()->tabletModeAvailable();
+    return m_config->config()->tablet_mode_available();
 }
 
 void KCMKDisplay::setScreenNormalized(bool normalized)
@@ -368,7 +371,7 @@ void KCMKDisplay::writeGlobalScale()
     // Scaling the fonts makes sense if you don't also set a font DPI, but we NEED to set a font
     // DPI for both PlasmaShell which does it's own thing, and for KDE4/GTK2 applications.
     QString screenFactors;
-    for (const auto& output : m_config->config()->outputs()) {
+    for (auto const& [key, output] : m_config->config()->outputs()) {
         screenFactors.append(QString::fromStdString(output->name()) + QLatin1Char('=')
                              + QString::number(m_globalScale) + QLatin1Char(';'));
     }

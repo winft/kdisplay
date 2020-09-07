@@ -38,9 +38,9 @@ Osd::Osd(const Disman::OutputPtr& output, QObject* parent)
     : QObject(parent)
     , m_output(output)
 {
-    connect(output.data(), &Disman::Output::updated, this, &Osd::maybe_hide);
-    connect(output.data(), &Disman::Output::updated, this, &Osd::updatePosition);
-    connect(output.data(), &Disman::Output::destroyed, this, &Osd::hideOsd);
+    connect(output.get(), &Disman::Output::updated, this, &Osd::maybe_hide);
+    connect(output.get(), &Disman::Output::updated, this, &Osd::updatePosition);
+    connect(output.get(), &Disman::Output::destroyed, this, &Osd::hideOsd);
 }
 
 Osd::~Osd()
@@ -104,7 +104,7 @@ void Osd::showOutputIdentifier(const Disman::OutputPtr& output)
     auto* rootObject = m_osdObject->rootObject();
     auto mode = output->auto_mode();
     QSize realSize = mode->size();
-    if (!output->isHorizontal()) {
+    if (!output->horizontal()) {
         realSize.transpose();
     }
     rootObject->setProperty("itemSource", QStringLiteral("OutputIdentifier.qml"));
@@ -155,7 +155,7 @@ void Osd::onOsdActionSelected(int action)
 
 void Osd::maybe_hide()
 {
-    if (!m_output || !m_output->isEnabled() || !m_output->auto_mode()) {
+    if (!m_output || !m_output->enabled() || !m_output->auto_mode()) {
         hideOsd();
     }
 }

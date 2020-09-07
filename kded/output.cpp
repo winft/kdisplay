@@ -51,7 +51,7 @@ QString Output::createPath(const QString& hash)
 
 void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMap& info)
 {
-    output->setRotation(
+    output->set_rotation(
         static_cast<Disman::Output::Rotation>(info.value(QStringLiteral("rotation"), 1).toInt()));
 
     const QVariantMap modeInfo = info[QStringLiteral("mode")].toMap();
@@ -62,18 +62,17 @@ void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMa
     qCDebug(KDISPLAY_KDED) << "Finding a mode for" << size << "@"
                            << modeInfo[QStringLiteral("refresh")].toFloat();
 
-    Disman::ModeList modes = output->modes();
     Disman::ModePtr matchingMode;
-    for (const Disman::ModePtr& mode : modes) {
+    for (auto const& [key, mode] : output->modes()) {
         if (mode->size() != size) {
             continue;
         }
-        if (!qFuzzyCompare(mode->refreshRate(), modeInfo[QStringLiteral("refresh")].toFloat())) {
+        if (!qFuzzyCompare(mode->refresh(), modeInfo[QStringLiteral("refresh")].toDouble())) {
             continue;
         }
 
-        qCDebug(KDISPLAY_KDED) << "\tFound: " << mode->id() << " " << mode->size() << "@"
-                               << mode->refreshRate();
+        qCDebug(KDISPLAY_KDED) << "\tFound: " << mode->id().c_str() << " " << mode->size() << "@"
+                               << mode->refresh();
         matchingMode = mode;
         break;
     }
@@ -94,7 +93,7 @@ void Output::readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMa
     if (!matchingMode) {
         qCWarning(KDISPLAY_KDED) << "\tFailed to get biggest mode. Which means there are no modes. "
                                     "Turning off the screen.";
-        output->setEnabled(false);
+        output->set_enabled(false);
         return;
     }
 
@@ -157,7 +156,7 @@ bool Output::updateOrientation(Disman::OutputPtr& output,
     if (rotation == currentRotation) {
         return true;
     }
-    output->setRotation(rotation);
+    output->set_rotation(rotation);
     return true;
 }
 
@@ -166,9 +165,9 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList& outpu
 {
     using Out = QPair<int, QPointF>;
 
-    Disman::OutputList outputs = config->outputs();
+    auto outputs = config->outputs();
     QVector<Out> sortedOutputs; // <id, pos>
-    for (const Disman::OutputPtr& output : outputs) {
+    for (auto const& [key, output] : outputs) {
         sortedOutputs.append(Out(output->id(), output->position()));
     }
 
@@ -233,8 +232,8 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList& outpu
         };
 
         // it's guaranteed that we find the following values in the QMap
-        Disman::OutputPtr prevPtr = outputs.find(sortedOutputs[cnt - 1].first).value();
-        Disman::OutputPtr curPtr = outputs.find(sortedOutputs[cnt].first).value();
+        auto prevPtr = outputs.find(sortedOutputs[cnt - 1].first)->second;
+        auto curPtr = outputs.find(sortedOutputs[cnt].first)->second;
 
         QRect prevInfoGeo, curInfoGeo;
         if (!getOutputInfoProperties(prevPtr, prevInfoGeo)
@@ -309,19 +308,20 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList& outpu
 
         const int x = xDiff == xInfoDiff ? curGeo.x() : xCorrected;
         const int y = yDiff == yInfoDiff ? curGeo.y() : yCorrected;
-        curPtr->setPosition(QPoint(x, y));
+        curPtr->set_position(QPoint(x, y));
     }
 }
 
 void Output::readIn(Disman::OutputPtr output,
                     const QVariantMap& info,
-                    Disman::Output::Retention retention)
+                    Disman::Output::Retention retention,
+                    bool& primary)
 {
     const QVariantMap posInfo = info[QStringLiteral("pos")].toMap();
     QPoint point(posInfo[QStringLiteral("x")].toInt(), posInfo[QStringLiteral("y")].toInt());
-    output->setPosition(point);
-    output->setPrimary(info[QStringLiteral("primary")].toBool());
-    output->setEnabled(info[QStringLiteral("enabled")].toBool());
+    output->set_position(point);
+    output->set_enabled(info[QStringLiteral("enabled")].toBool());
+    primary = info[QStringLiteral("primary")].toBool();
 
     if (retention != Disman::Output::Retention::Individual && readInGlobal(output)) {
         // output data read from global output file
@@ -333,15 +333,15 @@ void Output::readIn(Disman::OutputPtr output,
 
 void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputsInfo)
 {
-    Disman::OutputList outputs = config->outputs();
+    auto outputs = config->outputs();
 
     // As global outputs are indexed by a hash of their edid, which is not unique,
     // to be able to tell apart multiple identical outputs, these need special treatment
     QStringList duplicateIds;
     {
         QStringList allIds;
-        allIds.reserve(outputs.count());
-        for (const Disman::OutputPtr& output : outputs) {
+        allIds.reserve(outputs.size());
+        for (auto const& [key, output] : outputs) {
             const auto outputId = QString::fromStdString(output->hash());
             if (allIds.contains(outputId) && !duplicateIds.contains(outputId)) {
                 duplicateIds << outputId;
@@ -351,7 +351,7 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputs
         allIds.clear();
     }
 
-    for (Disman::OutputPtr output : outputs) {
+    for (auto const& [key, output] : outputs) {
         const auto outputId = QString::fromStdString(output->hash());
         bool infoFound = false;
         for (const auto& variantInfo : outputsInfo) {
@@ -371,7 +371,12 @@ void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputs
                 }
             }
             infoFound = true;
-            readIn(output, info, output->retention());
+
+            bool primary;
+            readIn(output, info, output->retention(), primary);
+            if (primary) {
+                config->set_primary_output(output);
+            }
             break;
         }
         if (!infoFound) {
@@ -414,23 +419,23 @@ bool Output::writeGlobalPart(const Disman::OutputPtr& output,
     info[QStringLiteral("rotation")] = output->rotation();
 
     QVariantMap modeInfo;
-    float refreshRate = -1.;
+    float refresh = -1.;
     QSize modeSize;
-    if (auto mode = output->auto_mode(); mode && output->isEnabled()) {
-        refreshRate = mode->refreshRate();
+    if (auto mode = output->auto_mode(); mode && output->enabled()) {
+        refresh = mode->refresh();
         modeSize = mode->size();
     } else if (fallback) {
         if (auto mode = fallback->auto_mode()) {
-            refreshRate = mode->refreshRate();
+            refresh = mode->refresh();
             modeSize = mode->size();
         }
     }
 
-    if (refreshRate < 0 || !modeSize.isValid()) {
+    if (refresh < 0 || !modeSize.isValid()) {
         return false;
     }
 
-    modeInfo[QStringLiteral("refresh")] = refreshRate;
+    modeInfo[QStringLiteral("refresh")] = refresh;
 
     QVariantMap modeSizeMap;
     modeSizeMap[QStringLiteral("width")] = modeSize.width();

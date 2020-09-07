@@ -45,8 +45,10 @@ private:
     static QString createPath(const QString& hash);
     static QVariantMap getGlobalData(Disman::OutputPtr output);
 
-    static void
-    readIn(Disman::OutputPtr output, const QVariantMap& info, Disman::Output::Retention retention);
+    static void readIn(Disman::OutputPtr output,
+                       const QVariantMap& info,
+                       Disman::Output::Retention retention,
+                       bool& primary);
     static bool readInGlobal(Disman::OutputPtr output);
     static void readInGlobalPartFromInfo(Disman::OutputPtr output, const QVariantMap& info);
     /*

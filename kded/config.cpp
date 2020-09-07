@@ -72,12 +72,12 @@ QString Config::id() const
     if (!m_data) {
         return QString();
     }
-    return m_data->connectedOutputsHash();
+    return m_data->hash();
 }
 
 bool Config::autoRotationRequested() const
 {
-    for (auto const& output : m_data->outputs()) {
+    for (auto const& [key, output] : m_data->outputs()) {
         if (output->auto_rotate()) {
             // We say auto rotation is requested when at least one output does.
             return true;
@@ -88,12 +88,12 @@ bool Config::autoRotationRequested() const
 
 void Config::setDeviceOrientation(QOrientationReading::Orientation orientation)
 {
-    for (Disman::OutputPtr& output : m_data->outputs()) {
+    for (auto& [key, output] : m_data->outputs()) {
         if (!output->auto_rotate()) {
             continue;
         }
         auto finalOrientation = orientation;
-        if (output->auto_rotate_only_in_tablet_mode() && !m_data->tabletModeEngaged()) {
+        if (output->auto_rotate_only_in_tablet_mode() && !m_data->tablet_mode_engaged()) {
             finalOrientation = QOrientationReading::Orientation::TopUp;
         }
         if (Output::updateOrientation(output, finalOrientation)) {
@@ -106,17 +106,17 @@ void Config::setDeviceOrientation(QOrientationReading::Orientation orientation)
 bool Config::getAutoRotate() const
 {
     const auto outputs = m_data->outputs();
-    return std::all_of(outputs.cbegin(), outputs.cend(), [this](Disman::OutputPtr output) {
-        if (output->type() != Disman::Output::Type::Panel) {
+    return std::all_of(outputs.cbegin(), outputs.cend(), [this](auto const& output) {
+        if (output.second->type() != Disman::Output::Type::Panel) {
             return true;
         }
-        return output->auto_rotate();
+        return output.second->auto_rotate();
     });
 }
 
 void Config::setAutoRotate(bool value)
 {
-    for (auto& output : m_data->outputs()) {
+    for (auto const& [key, output] : m_data->outputs()) {
         if (output->type() == Disman::Output::Type::Panel) {
             // For now we only set it for panel-type outputs.
             output->set_auto_rotate(value);
@@ -182,8 +182,8 @@ std::unique_ptr<Config> Config::readFile(const QString& fileName)
     Output::readInOutputs(config->data(), outputs);
 
     QSize screenSize;
-    for (const auto& output : config->data()->outputs()) {
-        if (!output->isPositionable()) {
+    for (auto const& [key, output] : config->data()->outputs()) {
+        if (!output->positionable()) {
             continue;
         }
 
@@ -195,7 +195,7 @@ std::unique_ptr<Config> Config::readFile(const QString& fileName)
             screenSize.setHeight(geom.y() + geom.height());
         }
     }
-    config->data()->screen()->setCurrentSize(screenSize);
+    config->data()->screen()->set_current_size(screenSize);
 
     if (!canBeApplied(config->data())) {
         return nullptr;
@@ -214,7 +214,7 @@ bool Config::canBeApplied(Disman::ConfigPtr config) const
     Q_UNUSED(config);
     return true;
 #else
-    return Disman::Config::canBeApplied(config, m_validityFlags);
+    return Disman::Config::can_be_applied(config, m_validityFlags);
 #endif
 }
 
@@ -233,28 +233,28 @@ bool Config::writeFile(const QString& filePath)
     if (id().isEmpty()) {
         return false;
     }
-    const Disman::OutputList outputs = m_data->outputs();
+    auto const outputs = m_data->outputs();
 
     const auto oldConfig = readFile();
-    Disman::OutputList oldOutputs;
+    Disman::OutputMap oldOutputs;
     if (oldConfig) {
         oldOutputs = oldConfig->data()->outputs();
     }
 
     QVariantList outputList;
-    for (const Disman::OutputPtr& output : outputs) {
+    for (auto const& [key, output] : outputs) {
         QVariantMap info;
 
-        const auto oldOutputIt = std::find_if(
-            oldOutputs.constBegin(), oldOutputs.constEnd(), [output](const Disman::OutputPtr& out) {
-                return out->hash() == output->hash();
-            });
+        const auto oldOutputIt
+            = std::find_if(oldOutputs.cbegin(), oldOutputs.cend(), [output](auto const& out) {
+                  return out.second->hash() == output->hash();
+              });
         const Disman::OutputPtr oldOutput
-            = oldOutputIt != oldOutputs.constEnd() ? *oldOutputIt : nullptr;
+            = oldOutputIt != oldOutputs.cend() ? oldOutputIt->second : nullptr;
 
         Output::writeGlobalPart(output, info, oldOutput);
-        info[QStringLiteral("primary")] = output->isPrimary();
-        info[QStringLiteral("enabled")] = output->isEnabled();
+        info[QStringLiteral("primary")] = m_data->primary_output() == output;
+        info[QStringLiteral("enabled")] = output->enabled();
 
         auto setOutputConfigInfo = [&info](const Disman::OutputPtr& out) {
             if (!out) {
@@ -266,9 +266,9 @@ bool Config::writeFile(const QString& filePath)
             pos[QStringLiteral("y")] = out->position().y();
             info[QStringLiteral("pos")] = pos;
         };
-        setOutputConfigInfo(output->isEnabled() ? output : oldOutput);
+        setOutputConfigInfo(output->enabled() ? output : oldOutput);
 
-        if (output->isEnabled() && output->retention() != Disman::Output::Retention::Individual) {
+        if (output->enabled() && output->retention() != Disman::Output::Retention::Individual) {
             // try to update global output data
             Output::writeGlobal(output);
         }
