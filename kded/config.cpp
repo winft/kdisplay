@@ -233,10 +233,10 @@ bool Config::writeFile(const QString& filePath)
     if (id().isEmpty()) {
         return false;
     }
-    const Disman::OutputList outputs = m_data->outputs();
+    auto const outputs = m_data->outputs();
 
     const auto oldConfig = readFile();
-    Disman::OutputList oldOutputs;
+    Disman::OutputMap oldOutputs;
     if (oldConfig) {
         oldOutputs = oldConfig->data()->outputs();
     }

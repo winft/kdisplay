@@ -165,7 +165,7 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList& outpu
 {
     using Out = QPair<int, QPointF>;
 
-    Disman::OutputList outputs = config->outputs();
+    auto outputs = config->outputs();
     QVector<Out> sortedOutputs; // <id, pos>
     for (auto const& [key, output] : outputs) {
         sortedOutputs.append(Out(output->id(), output->position()));
@@ -232,8 +232,8 @@ void Output::adjustPositions(Disman::ConfigPtr config, const QVariantList& outpu
         };
 
         // it's guaranteed that we find the following values in the QMap
-        Disman::OutputPtr prevPtr = outputs.find(sortedOutputs[cnt - 1].first)->second;
-        Disman::OutputPtr curPtr = outputs.find(sortedOutputs[cnt].first)->second;
+        auto prevPtr = outputs.find(sortedOutputs[cnt - 1].first)->second;
+        auto curPtr = outputs.find(sortedOutputs[cnt].first)->second;
 
         QRect prevInfoGeo, curInfoGeo;
         if (!getOutputInfoProperties(prevPtr, prevInfoGeo)
@@ -333,7 +333,7 @@ void Output::readIn(Disman::OutputPtr output,
 
 void Output::readInOutputs(Disman::ConfigPtr config, const QVariantList& outputsInfo)
 {
-    Disman::OutputList outputs = config->outputs();
+    auto outputs = config->outputs();
 
     // As global outputs are indexed by a hash of their edid, which is not unique,
     // to be able to tell apart multiple identical outputs, these need special treatment

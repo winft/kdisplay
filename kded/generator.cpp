@@ -145,7 +145,7 @@ Disman::ConfigPtr Generator::laptop(Disman::ConfigPtr const& config)
 
         if (isDocked()) {
             qCDebug(KDISPLAY_KDED) << "Laptop is docked.";
-            Disman::OutputList exclude;
+            Disman::OutputMap exclude;
             exclude[embedded->id()] = embedded;
             auto primary = generator.primary(exclude);
             if (!primary) {

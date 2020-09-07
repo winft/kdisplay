@@ -83,8 +83,7 @@ void Console::printConfig()
         qDebug() << "Primary output:" << primary->description().c_str();
     }
 
-    OutputList outputs = m_config->outputs();
-    for (auto const& [key, output] : outputs) {
+    for (auto const& [key, output] : m_config->outputs()) {
         qDebug() << "\n-----------------------------------------------------\n";
         qDebug() << "Id: " << output->id();
         qDebug() << "Name: " << output->name().c_str();

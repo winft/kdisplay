@@ -80,7 +80,7 @@ std::unique_ptr<Config> TestConfig::createConfig(bool output1Enabled, bool outpu
 
     QList<QSize> sizes(
         {QSize(320, 240), QSize(640, 480), QSize(1024, 768), QSize(1280, 1024), QSize(1920, 1280)});
-    Disman::ModeList modes;
+    Disman::ModeMap modes;
     for (int i = 0; i < sizes.count(); ++i) {
         const QSize& size = sizes[i];
         auto mode = std::make_shared<Disman::Mode>();
