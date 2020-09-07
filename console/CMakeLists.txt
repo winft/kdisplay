@@ -1,8 +1,0 @@
-add_executable(kdisplay-console main.cpp console.cpp)
-
-target_link_libraries(kdisplay-console
-            KF5::CoreAddons
-            KF5::I18n
-            Disman::Disman)
-
-install(TARGETS kdisplay-console ${INSTALL_TARGETS_DEFAULT_ARGS})
