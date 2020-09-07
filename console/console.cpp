@@ -66,7 +66,7 @@ void Console::printConfig()
         return;
     }
 
-    connect(m_config.data(), &Config::primary_output_changed, [&](const OutputPtr& output) {
+    connect(m_config.get(), &Config::primary_output_changed, [&](const OutputPtr& output) {
         if (output) {
             qDebug() << "New primary output: " << output->id() << output->name().c_str();
         } else {

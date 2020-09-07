@@ -51,13 +51,13 @@ void ConfigHandler::setConfig(Disman::ConfigPtr config)
         checkNeedsSave();
         Q_EMIT changed();
     });
-    connect(m_config.data(), &Disman::Config::output_added, this, [this]() {
+    connect(m_config.get(), &Disman::Config::output_added, this, [this]() {
         Q_EMIT outputConnect(true);
     });
-    connect(m_config.data(), &Disman::Config::output_removed, this, [this]() {
+    connect(m_config.get(), &Disman::Config::output_removed, this, [this]() {
         Q_EMIT outputConnect(false);
     });
-    connect(m_config.data(),
+    connect(m_config.get(),
             &Disman::Config::primary_output_changed,
             this,
             &ConfigHandler::primaryOutputChanged);

@@ -81,8 +81,7 @@ void KDisplayDaemon::getInitialConfig()
                     new Config(qobject_cast<Disman::GetConfigOperation*>(op)->config()));
                 m_monitoredConfig->setValidityFlags(
                     Disman::Config::ValidityFlag::RequireAtLeastOneEnabledScreen);
-                qCDebug(KDISPLAY_KDED)
-                    << "Config" << m_monitoredConfig->data().data() << "is ready";
+                qCDebug(KDISPLAY_KDED) << "Config" << m_monitoredConfig->data().get() << "is ready";
                 Disman::ConfigMonitor::instance()->add_config(m_monitoredConfig->data());
 
                 init();
@@ -318,10 +317,9 @@ void KDisplayDaemon::configChanged()
     // Modes may have changed, fix-up current mode id
     bool changed = false;
     for (auto const& [key, output] : m_monitoredConfig->data()->outputs()) {
-        if (output->enabled()
-            && (output->auto_mode().isNull()
-                || (output->follow_preferred_mode()
-                    && output->auto_mode()->id() != output->preferred_mode()->id()))) {
+        if ((output->enabled() && !output->auto_mode())
+            || (output->follow_preferred_mode()
+                && output->auto_mode()->id() != output->preferred_mode()->id())) {
             qCDebug(KDISPLAY_KDED)
                 << "Current mode was" << output->auto_mode() << ", setting preferred mode"
                 << output->preferred_mode()->id().c_str();
@@ -428,13 +426,13 @@ void KDisplayDaemon::lidClosedTimeout()
 void KDisplayDaemon::monitorConnectedChange()
 {
     connect(
-        m_monitoredConfig->data().data(),
+        m_monitoredConfig->data().get(),
         &Disman::Config::output_added,
         this,
         [this] { m_changeCompressor->start(); },
         Qt::UniqueConnection);
 
-    connect(m_monitoredConfig->data().data(),
+    connect(m_monitoredConfig->data().get(),
             &Disman::Config::output_removed,
             this,
             &KDisplayDaemon::applyConfig,

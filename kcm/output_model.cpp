@@ -241,7 +241,7 @@ void OutputModel::add(const Disman::OutputPtr& output)
     }
     m_outputs.insert(i, Output(output, pos));
 
-    connect(m_config->config().data(),
+    connect(m_config->config().get(),
             &Disman::Config::primary_output_changed,
             this,
             [this, output] { roleChanged(output->id(), PrimaryRole); });

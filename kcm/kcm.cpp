@@ -126,7 +126,7 @@ void KCMKDisplay::doSave(bool force)
 
         atLeastOneEnabledOutput |= output->enabled();
 
-        qCDebug(KDISPLAY_KCM) << output->name().c_str() << output->id() << output.data() << "\n"
+        qCDebug(KDISPLAY_KCM) << output->name().c_str() << output->id() << output.get() << "\n"
                               << "	Enabled:" << output->enabled() << "\n"
                               << "	Rotation:" << output->rotation() << "\n"
                               << "	Mode:" << (mode ? mode->name() : "unknown").c_str() << "@"

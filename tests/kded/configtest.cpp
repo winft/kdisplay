@@ -73,7 +73,7 @@ private:
 
 std::unique_ptr<Config> TestConfig::createConfig(bool output1Enabled, bool output2Enabled)
 {
-    Disman::ScreenPtr screen = Disman::ScreenPtr::create();
+    auto screen = std::make_shared<Disman::Screen>();
     screen->set_current_size(QSize(1920, 1080));
     screen->set_max_size(QSize(32768, 32768));
     screen->set_min_size(QSize(8, 8));
@@ -83,7 +83,7 @@ std::unique_ptr<Config> TestConfig::createConfig(bool output1Enabled, bool outpu
     Disman::ModeList modes;
     for (int i = 0; i < sizes.count(); ++i) {
         const QSize& size = sizes[i];
-        Disman::ModePtr mode = Disman::ModePtr::create();
+        auto mode = std::make_shared<Disman::Mode>();
         mode->set_id("MODE-" + std::to_string(i));
         mode->set_name(std::to_string(size.width()) + "x" + std::to_string(size.height()));
         mode->set_size(size);
@@ -91,7 +91,7 @@ std::unique_ptr<Config> TestConfig::createConfig(bool output1Enabled, bool outpu
         modes.insert({mode->id(), mode});
     }
 
-    Disman::OutputPtr output1 = Disman::OutputPtr::create();
+    auto output1 = std::make_shared<Disman::Output>();
     output1->set_id(1);
     output1->set_name("OUTPUT-1");
     output1->set_hash("OUTPUT-1");
@@ -99,7 +99,7 @@ std::unique_ptr<Config> TestConfig::createConfig(bool output1Enabled, bool outpu
     output1->set_enabled(output1Enabled);
     output1->set_modes(modes);
 
-    Disman::OutputPtr output2 = Disman::OutputPtr::create();
+    auto output2 = std::make_shared<Disman::Output>();
     output2->set_id(2);
     output2->set_name("OUTPUT-2");
     output2->set_hash("OUTPUT-2");
@@ -107,7 +107,7 @@ std::unique_ptr<Config> TestConfig::createConfig(bool output1Enabled, bool outpu
     output2->set_enabled(output2Enabled);
     output2->set_modes(modes);
 
-    Disman::ConfigPtr config = Disman::ConfigPtr::create();
+    auto config = std::make_shared<Disman::Config>();
     config->setScreen(screen);
     config->add_output(output1);
     config->add_output(output2);

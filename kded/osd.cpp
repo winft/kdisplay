@@ -38,9 +38,9 @@ Osd::Osd(const Disman::OutputPtr& output, QObject* parent)
     : QObject(parent)
     , m_output(output)
 {
-    connect(output.data(), &Disman::Output::updated, this, &Osd::maybe_hide);
-    connect(output.data(), &Disman::Output::updated, this, &Osd::updatePosition);
-    connect(output.data(), &Disman::Output::destroyed, this, &Osd::hideOsd);
+    connect(output.get(), &Disman::Output::updated, this, &Osd::maybe_hide);
+    connect(output.get(), &Disman::Output::updated, this, &Osd::updatePosition);
+    connect(output.get(), &Disman::Output::destroyed, this, &Osd::hideOsd);
 }
 
 Osd::~Osd()

@@ -28,7 +28,7 @@
 
 QString Utils::outputName(const Disman::OutputPtr& output)
 {
-    return outputName(output.data());
+    return outputName(output.get());
 }
 
 QString Utils::outputName(const Disman::Output* output)
