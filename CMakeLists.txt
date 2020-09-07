@@ -37,7 +37,6 @@ add_subdirectory(kcm)
 add_subdirectory(kded)
 add_subdirectory(plasmoid)
 add_subdirectory(tests)
-add_subdirectory(console)
 
 install(FILES kdisplay.categories  DESTINATION  ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
 
