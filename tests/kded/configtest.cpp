@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtTest>
 
 #include <disman/config.h>
-#include <disman/edid.h>
 #include <disman/mode.h>
 #include <disman/output.h>
 #include <disman/screen.h>
