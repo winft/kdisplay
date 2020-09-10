@@ -51,7 +51,6 @@ KDisplayDaemon::KDisplayDaemon(QObject* parent, const QList<QVariant>&)
     : KDEDModule(parent)
     , m_monitoring(true)
     , m_changeCompressor(new QTimer(this))
-    , m_lidClosedTimer(new QTimer(this))
     , m_orientationSensor(new OrientationSensor(this))
 {
     connect(m_orientationSensor,
@@ -111,11 +110,6 @@ void KDisplayDaemon::init()
     m_changeCompressor->setSingleShot(true);
     connect(m_changeCompressor, &QTimer::timeout, this, &KDisplayDaemon::applyConfig);
 
-    m_lidClosedTimer->setInterval(1000);
-    m_lidClosedTimer->setSingleShot(true);
-    connect(m_lidClosedTimer, &QTimer::timeout, this, &KDisplayDaemon::lidClosedTimeout);
-
-    connect(Device::self(), &Device::lidClosedChanged, this, &KDisplayDaemon::lidClosedChanged);
     connect(Device::self(), &Device::resumingFromSuspend, this, [&]() {
         Disman::Log::instance()->set_context(QStringLiteral("resuming"));
         qCDebug(KDISPLAY_KDED) << "Resumed from suspend, checking for screen changes";
@@ -124,13 +118,6 @@ void KDisplayDaemon::init()
         // while the computer was suspended, and will emit the change events.
         new Disman::GetConfigOperation(this);
     });
-    connect(
-        Device::self(), &Device::aboutToSuspend, this, [&]() {
-            qCDebug(KDISPLAY_KDED)
-                << "System is going to suspend, won't be changing config (waited for "
-                << (m_lidClosedTimer->interval() - m_lidClosedTimer->remainingTime()) << "ms)";
-            m_lidClosedTimer->stop();
-        });
 
     connect(Generator::self(), &Generator::ready, this, [this] {
         applyConfig();
@@ -353,74 +340,6 @@ void KDisplayDaemon::displayButton()
 
     auto action = m_osdManager->showActionSelector();
     connect(action, &Disman::OsdAction::selected, this, &KDisplayDaemon::applyOsdAction);
-}
-
-void KDisplayDaemon::lidClosedChanged(bool lidIsClosed)
-{
-    // Ignore this when we don't have any external monitors, we can't turn off our
-    // only screen
-    if (m_monitoredConfig->data()->outputs().size() == 1) {
-        return;
-    }
-
-    if (lidIsClosed) {
-        // Lid is closed, now we wait for couple seconds to find out whether it
-        // will trigger a suspend (see Device::aboutToSuspend), or whether we should
-        // turn off the screen
-        qCDebug(KDISPLAY_KDED) << "Lid closed, waiting to see if the computer goes to sleep...";
-        m_lidClosedTimer->start();
-        return;
-    } else {
-        qCDebug(KDISPLAY_KDED) << "Lid opened!";
-
-        qCWarning(KDISPLAY_KDED)
-            << "Currently all KDisplay daemon config control is disabled. Doing nothing";
-        return;
-
-        // We should have a config with "_lidOpened" suffix lying around. If not,
-        // then the configuration has changed while the lid was closed and we just
-        // use applyConfig() and see what we can do ...
-        if (auto openCfg = m_monitoredConfig->readOpenLidFile()) {
-            doApplyConfig(std::move(openCfg));
-        } else {
-            applyConfig();
-        }
-    }
-}
-
-void KDisplayDaemon::lidClosedTimeout()
-{
-    // Make sure nothing has changed in the past second... :-)
-    if (!Device::self()->isLidClosed()) {
-        return;
-    }
-
-    // If we are here, it means that closing the lid did not result in suspend
-    // action.
-    // FIXME: This could be because the suspend took longer than m_lidClosedTimer
-    // timeout. Ideally we need to be able to look into PowerDevil config to see
-    // what's the configured action for lid events, but there's no API to do that
-    // and I'm not parsing PowerDevil's configs...
-
-    qCDebug(KDISPLAY_KDED)
-        << "Lid closed without system going to suspend -> turning off the screen";
-
-    qCWarning(KDISPLAY_KDED)
-        << "Currently all KDisplay daemon config control is disabled. Doing nothing";
-    return;
-
-    for (auto& [key, output] : m_monitoredConfig->data()->outputs()) {
-        if (output->type() == Disman::Output::Panel) {
-            if (output->enabled()) {
-                // Save the current config with opened lid, just so that we know
-                // how to restore it later
-                m_monitoredConfig->writeOpenLidFile();
-                disableOutput(output);
-                refreshConfig();
-                return;
-            }
-        }
-    }
 }
 
 void KDisplayDaemon::monitorConnectedChange()

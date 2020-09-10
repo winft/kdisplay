@@ -68,8 +68,6 @@ private:
     void applyIdealConfig();
     void configChanged();
     void displayButton();
-    void lidClosedChanged(bool lidIsClosed);
-    void lidClosedTimeout();
     void setMonitorForChanges(bool enabled);
 
     void showOutputIdentifier();
@@ -89,7 +87,6 @@ private:
     bool m_monitoring;
     bool m_configDirty = true;
     QTimer* m_changeCompressor;
-    QTimer* m_lidClosedTimer;
     Disman::OsdManager* m_osdManager;
     OrientationSensor* m_orientationSensor;
     bool m_startingUp = true;
