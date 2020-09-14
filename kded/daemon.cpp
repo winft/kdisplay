@@ -23,7 +23,6 @@
 
 #include "../common/orientation_sensor.h"
 #include "config.h"
-#include "device.h"
 #include "generator.h"
 #include "kdisplay_daemon_debug.h"
 #include "kdisplayadaptor.h"
@@ -90,7 +89,6 @@ void KDisplayDaemon::getInitialConfig()
 KDisplayDaemon::~KDisplayDaemon()
 {
     Generator::destroy();
-    Device::destroy();
 }
 
 void KDisplayDaemon::init()
@@ -110,22 +108,11 @@ void KDisplayDaemon::init()
     m_changeCompressor->setSingleShot(true);
     connect(m_changeCompressor, &QTimer::timeout, this, &KDisplayDaemon::applyConfig);
 
-    connect(Device::self(), &Device::resumingFromSuspend, this, [&]() {
-        Disman::Log::instance()->set_context(QStringLiteral("resuming"));
-        qCDebug(KDISPLAY_KDED) << "Resumed from suspend, checking for screen changes";
-        // We don't care about the result, we just want to force the backend
-        // to query XRandR so that it will detect possible changes that happened
-        // while the computer was suspended, and will emit the change events.
-        new Disman::GetConfigOperation(this);
-    });
-
-    connect(Generator::self(), &Generator::ready, this, [this] {
-        applyConfig();
-        m_startingUp = false;
-    });
-
     Generator::self()->setCurrentConfig(m_monitoredConfig->data());
     monitorConnectedChange();
+
+    applyConfig();
+    m_startingUp = false;
 }
 
 void KDisplayDaemon::updateOrientation()

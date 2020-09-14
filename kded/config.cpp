@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "config.h"
 
-#include "device.h"
 #include "kdisplay_daemon_debug.h"
 #include "output.h"
 
@@ -131,20 +130,6 @@ bool Config::fileExists() const
 
 std::unique_ptr<Config> Config::readFile()
 {
-    if (Device::self()->isLaptop() && !Device::self()->isLidClosed()) {
-        // We may look for a config that has been set when the lid was closed, Bug: 353029
-        auto const openLidFilePath = path(openLidFileName());
-        const QFile srcFile(openLidFilePath);
-
-        if (srcFile.exists()) {
-            auto const normalFilePath = path(fileName());
-            QFile::remove(normalFilePath);
-            if (QFile::copy(openLidFilePath, normalFilePath)) {
-                QFile::remove(openLidFilePath);
-                qCDebug(KDISPLAY_KDED) << "Restored lid opened config to" << id();
-            }
-        }
-    }
     return readFile(fileName());
 }
 

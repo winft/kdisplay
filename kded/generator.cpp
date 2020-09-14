@@ -16,7 +16,6 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA   *
  *************************************************************************************/
 #include "generator.h"
-#include "device.h"
 #include "kdisplay_daemon_debug.h"
 #include <QRect>
 
@@ -38,7 +37,6 @@ Generator* Generator::self()
 Generator::Generator()
     : QObject()
 {
-    connect(Device::self(), &Device::ready, this, &Generator::ready);
 }
 
 void Generator::destroy()

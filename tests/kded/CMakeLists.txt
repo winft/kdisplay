@@ -6,7 +6,6 @@ macro(ADD_KDED_TEST testname)
     set(test_SRCS
         ${testname}.cpp
         ${CMAKE_SOURCE_DIR}/kded/generator.cpp
-        ${CMAKE_SOURCE_DIR}/kded/device.cpp
         ${CMAKE_SOURCE_DIR}/kded/config.cpp
         ${CMAKE_SOURCE_DIR}/kded/output.cpp
         ${CMAKE_SOURCE_DIR}/common/globals.cpp

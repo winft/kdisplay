@@ -47,9 +47,6 @@ public:
 
     Disman::ConfigPtr displaySwitch(DisplaySwitchAction iteration);
 
-Q_SIGNALS:
-    void ready();
-
 private:
     Generator();
 
