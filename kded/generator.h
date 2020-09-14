@@ -45,30 +45,13 @@ public:
 
     void setCurrentConfig(const Disman::ConfigPtr& currentConfig);
 
-    Disman::ConfigPtr idealConfig(Disman::ConfigPtr const& config);
     Disman::ConfigPtr displaySwitch(DisplaySwitchAction iteration);
-
-    void setForceLaptop(bool force);
-    void setForceLidClosed(bool force);
-    void setForceDocked(bool force);
-    void setForceNotLaptop(bool force);
 
 Q_SIGNALS:
     void ready();
 
 private:
     Generator();
-
-    Disman::ConfigPtr laptop(Disman::ConfigPtr const& config);
-
-    bool isLaptop() const;
-    bool isLidClosed() const;
-    bool isDocked() const;
-
-    bool m_forceLaptop;
-    bool m_forceLidClosed;
-    bool m_forceNotLaptop;
-    bool m_forceDocked;
 
     Disman::ConfigPtr m_currentConfig;
 
