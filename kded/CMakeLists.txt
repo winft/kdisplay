@@ -12,7 +12,6 @@ set(kdisplay_daemon_SRCS
     config.cpp
     output.cpp
     generator.cpp
-    device.cpp
     osd.cpp
     osdmanager.cpp
     osdaction.cpp

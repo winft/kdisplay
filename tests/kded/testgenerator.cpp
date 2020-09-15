@@ -39,13 +39,6 @@ private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
 
-    void laptopLidOpenAndExternal();
-    void laptopLidOpenAndTwoExternal();
-    void laptopLidClosedAndExternal();
-    void laptopLidClosedAndThreeExternal();
-    void laptopDockedLidOpenAndExternal();
-    void laptopDockedLidClosedAndExternal();
-
     void switchDisplayTwoScreens();
 };
 
@@ -76,161 +69,6 @@ void testScreenConfig::cleanupTestCase()
     Disman::BackendManager::instance()->shutdown_backend();
 }
 
-void testScreenConfig::laptopLidOpenAndExternal()
-{
-    const ConfigPtr currentConfig = loadConfig("laptopAndExternal.json");
-    QVERIFY(currentConfig);
-
-    Generator* generator = Generator::self();
-    generator->setCurrentConfig(currentConfig);
-    generator->setForceLaptop(true);
-
-    ConfigPtr config = generator->idealConfig(currentConfig);
-    OutputPtr laptop = config->outputs().at(1);
-    OutputPtr external = config->outputs().at(2);
-
-    QCOMPARE(laptop->auto_mode()->id(), "3");
-    QCOMPARE(config->primary_output(), laptop);
-    QCOMPARE(laptop->enabled(), true);
-    QCOMPARE(laptop->position(), QPoint(0, 0));
-
-    QCOMPARE(external->auto_mode()->id(), "4");
-    QCOMPARE(external->enabled(), false);
-    QCOMPARE(external->position(), QPoint(1280, 0));
-}
-
-void testScreenConfig::laptopLidOpenAndTwoExternal()
-{
-    const ConfigPtr currentConfig = loadConfig("laptopLidOpenAndTwoExternal.json");
-    QVERIFY(currentConfig);
-
-    Generator* generator = Generator::self();
-    generator->setCurrentConfig(currentConfig);
-    generator->setForceLaptop(true);
-
-    ConfigPtr config = generator->idealConfig(currentConfig);
-    OutputPtr laptop = config->outputs().at(1);
-    OutputPtr hdmi1 = config->outputs().at(2);
-    OutputPtr hdmi2 = config->outputs().at(3);
-
-    QCOMPARE(laptop->auto_mode()->id(), "3");
-    QCOMPARE(laptop->enabled(), true);
-    QCOMPARE(laptop->position(), QPoint(0, 0));
-    QCOMPARE(config->primary_output(), laptop);
-
-    QCOMPARE(hdmi1->auto_mode()->id(), "4");
-    QCOMPARE(hdmi1->enabled(), false);
-    QCOMPARE(hdmi1->position(), QPoint(1280, 0));
-
-    QCOMPARE(hdmi2->auto_mode()->id(), "4");
-    QCOMPARE(hdmi2->enabled(), false);
-    QCOMPARE(hdmi2->position(),
-             QPoint(hdmi1->position().x() + hdmi1->auto_mode()->size().width(), 0));
-}
-
-void testScreenConfig::laptopLidClosedAndExternal()
-{
-    const ConfigPtr currentConfig = loadConfig("laptopAndExternal.json");
-    QVERIFY(currentConfig);
-
-    Generator* generator = Generator::self();
-    generator->setCurrentConfig(currentConfig);
-    generator->setForceLaptop(true);
-    generator->setForceLidClosed(true);
-
-    ConfigPtr config = generator->idealConfig(currentConfig);
-    OutputPtr laptop = config->outputs().at(1);
-    OutputPtr external = config->outputs().at(2);
-
-    QCOMPARE(laptop->enabled(), false);
-
-    QCOMPARE(external->auto_mode()->id(), "4");
-    QCOMPARE(external->enabled(), true);
-    QCOMPARE(external->position(), QPoint(0, 0));
-    QCOMPARE(config->primary_output(), external);
-}
-
-void testScreenConfig::laptopLidClosedAndThreeExternal()
-{
-    const ConfigPtr currentConfig = loadConfig("laptopLidClosedAndThreeExternal.json");
-    QVERIFY(currentConfig);
-
-    Generator* generator = Generator::self();
-    generator->setCurrentConfig(currentConfig);
-    generator->setForceLaptop(true);
-    generator->setForceLidClosed(true);
-
-    ConfigPtr config = generator->idealConfig(currentConfig);
-    OutputPtr laptop = config->outputs().at(1);
-    OutputPtr hdmi1 = config->outputs().at(2);
-    OutputPtr hdmi2 = config->outputs().at(3);
-    OutputPtr primary = config->outputs().at(4);
-
-    QCOMPARE(laptop->enabled(), false);
-
-    QCOMPARE(hdmi1->enabled(), false);
-    QCOMPARE(hdmi1->auto_mode()->id(), "4");
-    QCOMPARE(hdmi1->position(), QPoint(laptop->auto_mode()->size().width(), 0));
-
-    QCOMPARE(hdmi2->enabled(), false);
-    QCOMPARE(hdmi2->auto_mode()->id(), "3");
-    QCOMPARE(hdmi2->position(),
-             QPoint(hdmi1->position().x() + hdmi1->auto_mode()->size().width(), 0));
-
-    QCOMPARE(primary->enabled(), true);
-    QCOMPARE(primary->auto_mode()->id(), "4");
-    QCOMPARE(primary->position(), QPoint(0, 0));
-    QCOMPARE(config->primary_output(), primary);
-}
-
-void testScreenConfig::laptopDockedLidOpenAndExternal()
-{
-    const ConfigPtr currentConfig = loadConfig("laptopAndExternal.json");
-    QVERIFY(currentConfig);
-
-    Generator* generator = Generator::self();
-    generator->setCurrentConfig(currentConfig);
-    generator->setForceLaptop(true);
-    generator->setForceLidClosed(false);
-    generator->setForceDocked(true);
-
-    ConfigPtr config = generator->idealConfig(currentConfig);
-    OutputPtr laptop = config->outputs().at(1);
-    OutputPtr external = config->outputs().at(2);
-
-    QCOMPARE(laptop->auto_mode()->id(), "3");
-    QCOMPARE(laptop->enabled(), true);
-    QCOMPARE(laptop->position(), QPoint(0, 0));
-
-    QCOMPARE(external->auto_mode()->id(), "4");
-    QCOMPARE(external->enabled(), false);
-    QCOMPARE(external->position(), QPoint(1280, 0));
-    QCOMPARE(config->primary_output(), laptop);
-}
-
-void testScreenConfig::laptopDockedLidClosedAndExternal()
-{
-    const ConfigPtr currentConfig = loadConfig("laptopAndExternal.json");
-    QVERIFY(currentConfig);
-
-    Generator* generator = Generator::self();
-    generator->setCurrentConfig(currentConfig);
-    generator->setForceLaptop(true);
-    generator->setForceLidClosed(true);
-    generator->setForceDocked(true);
-
-    ConfigPtr config = generator->idealConfig(currentConfig);
-    OutputPtr laptop = config->outputs().at(1);
-    OutputPtr external = config->outputs().at(2);
-
-    QCOMPARE(laptop->enabled(), false);
-
-    QCOMPARE(external->auto_mode()->id(), "4");
-    QCOMPARE(external->enabled(), true);
-    QCOMPARE(external->position(), QPoint(0, 0));
-    QCOMPARE(config->primary_output(), external);
-}
-
 void testScreenConfig::switchDisplayTwoScreens()
 {
     const ConfigPtr currentConfig = loadConfig("switchDisplayTwoScreens.json");
@@ -238,10 +76,6 @@ void testScreenConfig::switchDisplayTwoScreens()
 
     Generator* generator = Generator::self();
     generator->setCurrentConfig(currentConfig);
-    generator->setForceLaptop(true);
-    generator->setForceNotLaptop(false);
-    generator->setForceDocked(false);
-    generator->setForceLidClosed(false);
 
     // Clone all
     ConfigPtr config = generator->displaySwitch(Generator::Clone);

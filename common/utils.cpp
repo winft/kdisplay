@@ -21,7 +21,6 @@
 
 #include "utils.h"
 
-#include <disman/edid.h>
 #include <disman/output.h>
 
 #include <KLocalizedString>

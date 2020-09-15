@@ -27,8 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRect>
 #include <QStringList>
 
-#include <disman/edid.h>
-
 QString Output::s_dirName = QStringLiteral("outputs/");
 
 QString Output::dirPath()
