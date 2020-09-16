@@ -108,6 +108,6 @@ Disman::ConfigPtr Generator::displaySwitch(DisplaySwitchAction action)
     if (!success) {
         return nullptr;
     }
-    generator.config()->set_origin(Disman::Config::Origin::interactive);
+    generator.config()->set_cause(Disman::Config::Cause::interactive);
     return generator.config();
 }
