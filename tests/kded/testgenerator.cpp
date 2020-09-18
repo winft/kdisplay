@@ -23,6 +23,7 @@
 #include <disman/backendmanager_p.h>
 #include <disman/config.h>
 #include <disman/getconfigoperation.h>
+#include <disman/output.h>
 
 using namespace Disman;
 
@@ -74,11 +75,8 @@ void testScreenConfig::switchDisplayTwoScreens()
     const ConfigPtr currentConfig = loadConfig("switchDisplayTwoScreens.json");
     QVERIFY(currentConfig);
 
-    Generator* generator = Generator::self();
-    generator->setCurrentConfig(currentConfig);
-
     // Clone all
-    ConfigPtr config = generator->displaySwitch(Generator::Clone);
+    auto config = Generator::displaySwitch(Generator::Action::Clone, currentConfig);
     OutputPtr laptop = config->outputs().at(1);
     OutputPtr external = config->outputs().at(2);
     QCOMPARE(laptop->auto_mode()->id(), "3");
@@ -93,7 +91,7 @@ void testScreenConfig::switchDisplayTwoScreens()
     QCOMPARE(external->replication_source(), 1);
 
     // Extend to left
-    config = generator->displaySwitch(Generator::ExtendToLeft);
+    config = Generator::displaySwitch(Generator::Action::ExtendToLeft, currentConfig);
     laptop = config->outputs().at(1);
     external = config->outputs().at(2);
     QCOMPARE(laptop->auto_mode()->id(), "3");
@@ -105,7 +103,7 @@ void testScreenConfig::switchDisplayTwoScreens()
     QCOMPARE(config->primary_output(), laptop);
 
     // Disable embedded,. enable external
-    config = generator->displaySwitch(Generator::TurnOffEmbedded);
+    config = Generator::displaySwitch(Generator::Action::TurnOffEmbedded, currentConfig);
     laptop = config->outputs().at(1);
     external = config->outputs().at(2);
     ;
@@ -116,11 +114,11 @@ void testScreenConfig::switchDisplayTwoScreens()
     QCOMPARE(config->primary_output(), external);
 
     // Enable embedded, disable external
-    config = generator->displaySwitch(Generator::TurnOffExternal);
+    config = Generator::displaySwitch(Generator::Action::TurnOffExternal, currentConfig);
     QVERIFY(!config);
 
     // Extend to right
-    config = generator->displaySwitch(Generator::ExtendToRight);
+    config = Generator::displaySwitch(Generator::Action::ExtendToRight, currentConfig);
     laptop = config->outputs().at(1);
     external = config->outputs().at(2);
     QCOMPARE(laptop->auto_mode()->id(), "3");
@@ -137,9 +135,7 @@ void testScreenConfig::switchDisplayTwoScreensNoCommonMode()
     const ConfigPtr currentConfig = loadConfig("switchDisplayTwoScreensNoCommonMode.json");
     QVERIFY(currentConfig);
 
-    Generator* generator = Generator::self();
-    generator->setCurrentConfig(currentConfig);
-    ConfigPtr config = generator->displaySwitch(Generator::Clone);
+    auto config = Generator::displaySwitch(Generator::Action::Clone, currentConfig);
     OutputPtr laptop = config->outputs().at(1);
     OutputPtr external = config->outputs().at(2);
 

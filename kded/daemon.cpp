@@ -86,7 +86,6 @@ void KDisplayDaemon::getInitialConfig()
 
 KDisplayDaemon::~KDisplayDaemon()
 {
-    Generator::destroy();
 }
 
 void KDisplayDaemon::init()
@@ -106,7 +105,6 @@ void KDisplayDaemon::init()
     m_changeCompressor->setSingleShot(true);
     connect(m_changeCompressor, &QTimer::timeout, this, &KDisplayDaemon::applyConfig);
 
-    Generator::self()->setCurrentConfig(m_monitoredConfig->data());
     monitorConnectedChange();
 
     applyConfig();
@@ -227,6 +225,7 @@ void KDisplayDaemon::setAutoRotate(bool value)
 void KDisplayDaemon::applyOsdAction(Disman::OsdAction::Action action)
 {
     Disman::ConfigPtr config;
+    auto cur_cfg = m_monitoredConfig->data();
 
     switch (action) {
     case Disman::OsdAction::NoAction:
@@ -234,23 +233,23 @@ void KDisplayDaemon::applyOsdAction(Disman::OsdAction::Action action)
         break;
     case Disman::OsdAction::SwitchToInternal:
         qCDebug(KDISPLAY_KDED) << "OSD: switch to internal";
-        config = Generator::self()->displaySwitch(Generator::TurnOffExternal);
+        config = Generator::displaySwitch(Generator::Action::TurnOffExternal, cur_cfg);
         break;
     case Disman::OsdAction::SwitchToExternal:
         qCDebug(KDISPLAY_KDED) << "OSD: switch to external";
-        config = Generator::self()->displaySwitch(Generator::TurnOffEmbedded);
+        config = Generator::displaySwitch(Generator::Action::TurnOffEmbedded, cur_cfg);
         break;
     case Disman::OsdAction::ExtendLeft:
         qCDebug(KDISPLAY_KDED) << "OSD: extend left";
-        config = Generator::self()->displaySwitch(Generator::ExtendToLeft);
+        config = Generator::displaySwitch(Generator::Action::ExtendToLeft, cur_cfg);
         break;
     case Disman::OsdAction::ExtendRight:
         qCDebug(KDISPLAY_KDED) << "OSD: extend right";
-        config = Generator::self()->displaySwitch(Generator::ExtendToRight);
+        config = Generator::displaySwitch(Generator::Action::ExtendToRight, cur_cfg);
         return;
     case Disman::OsdAction::Clone:
         qCDebug(KDISPLAY_KDED) << "OSD: clone";
-        config = Generator::self()->displaySwitch(Generator::Clone);
+        config = Generator::displaySwitch(Generator::Action::Clone, cur_cfg);
         break;
     }
     if (config) {
