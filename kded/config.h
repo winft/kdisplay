@@ -19,7 +19,6 @@ public:
     void setDeviceOrientation(QOrientationReading::Orientation orientation);
     bool getAutoRotate() const;
     void setAutoRotate(bool value);
-    void log();
 
 private:
     Disman::ConfigPtr m_data;

@@ -1,24 +1,11 @@
-/*************************************************************************************
- *  Copyright (C) 2012 by Alejandro Fiestas Olivares <afiestas@kde.org>              *
- *  Copyright 2016 by Sebastian Kügler <sebas@kde.org>                               *
- *  Copyright (c) 2018 Kai Uwe Broulik <kde@broulik.de>                              *
- *                    Work sponsored by the LiMux project of                         *
- *                    the city of Munich.                                            *
- *                                                                                   *
- *  This program is free software; you can redistribute it and/or                    *
- *  modify it under the terms of the GNU General Public License                      *
- *  as published by the Free Software Foundation; either version 2                   *
- *  of the License, or (at your option) any later version.                           *
- *                                                                                   *
- *  This program is distributed in the hope that it will be useful,                  *
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of                   *
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                    *
- *  GNU General Public License for more details.                                     *
- *                                                                                   *
- *  You should have received a copy of the GNU General Public License                *
- *  along with this program; if not, write to the Free Software                      *
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA   *
- *************************************************************************************/
+/*
+    SPDX-FileCopyrightText: 2012 Alejandro Fiestas Olivares <afiestas@kde.org>
+    SPDX-FileCopyrightText: 2016 Sebastian Kügler <sebas@kde.org>
+    SPDX-FileCopyrightText: 2018 Kai Uwe Broulik <kde@broulik.de>
+    SPDX-FileCopyrightText: 2020 Roman Gilg <subdiff@gmail.com>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "daemon.h"
 
 #include "../common/orientation_sensor.h"
@@ -180,7 +167,18 @@ void KDisplayDaemon::refreshConfig()
 void KDisplayDaemon::applyConfig()
 {
     qCDebug(KDISPLAY_KDED) << "Applying config";
-    applyIdealConfig();
+
+    const bool showOsd = m_monitoredConfig->outputs().size() > 1 && !m_startingUp
+        && m_monitoredConfig->cause() == Disman::Config::Cause::generated;
+
+    if (showOsd) {
+        qCDebug(KDISPLAY_KDED) << "Getting ideal config from user via OSD...";
+        auto action = m_osdManager->showActionSelector();
+        connect(action, &Disman::OsdAction::selected, this, &KDisplayDaemon::applyOsdAction);
+    } else {
+        m_osdManager->hideOsd();
+    }
+
     m_orientationSensor->setEnabled(Config(m_monitoredConfig).autoRotationRequested());
     updateOrientation();
 }
@@ -248,45 +246,10 @@ void KDisplayDaemon::applyOsdAction(Disman::OsdAction::Action action)
     }
 }
 
-void KDisplayDaemon::applyIdealConfig()
-{
-    const bool showOsd = m_monitoredConfig->outputs().size() > 1 && !m_startingUp
-        && m_monitoredConfig->cause() == Disman::Config::Cause::generated;
-
-    if (showOsd) {
-        qCDebug(KDISPLAY_KDED) << "Getting ideal config from user via OSD...";
-        auto action = m_osdManager->showActionSelector();
-        connect(action, &Disman::OsdAction::selected, this, &KDisplayDaemon::applyOsdAction);
-    } else {
-        m_osdManager->hideOsd();
-    }
-}
-
 void KDisplayDaemon::configChanged()
 {
-    qCDebug(KDISPLAY_KDED) << "Change detected";
-    Config(m_monitoredConfig).log();
-
-    qCWarning(KDISPLAY_KDED)
-        << "Currently all KDisplay daemon config control is disabled. Doing nothing";
-    return;
-
-    // Modes may have changed, fix-up current mode id
-    bool changed = false;
-    for (auto const& [key, output] : m_monitoredConfig->outputs()) {
-        if ((output->enabled() && !output->auto_mode())
-            || (output->follow_preferred_mode()
-                && output->auto_mode()->id() != output->preferred_mode()->id())) {
-            qCDebug(KDISPLAY_KDED)
-                << "Current mode was" << output->auto_mode() << ", setting preferred mode"
-                << output->preferred_mode()->id().c_str();
-            output->set_mode(output->preferred_mode());
-            changed = true;
-        }
-    }
-    if (changed) {
-        refreshConfig();
-    }
+    qCDebug(KDISPLAY_KDED) << "Change detected" << m_monitoredConfig;
+    updateOrientation();
 }
 
 void KDisplayDaemon::showOsd(const QString& icon, const QString& text)
@@ -336,6 +299,7 @@ void KDisplayDaemon::setMonitorForChanges(bool enabled)
 
     qCDebug(KDISPLAY_KDED) << "Monitor for changes: " << enabled;
     m_monitoring = enabled;
+
     if (m_monitoring) {
         connect(Disman::ConfigMonitor::instance(),
                 &Disman::ConfigMonitor::configuration_changed,
@@ -348,32 +312,6 @@ void KDisplayDaemon::setMonitorForChanges(bool enabled)
                    this,
                    &KDisplayDaemon::configChanged);
     }
-}
-
-void KDisplayDaemon::disableOutput(Disman::OutputPtr& output)
-{
-    auto const geom = output->geometry();
-    qCDebug(KDISPLAY_KDED) << "Laptop geometry:" << geom << output->position()
-                           << (output->auto_mode() ? output->auto_mode()->size() : QSize());
-
-    // Move all outputs right from the @p output to left
-    for (auto const& [key, otherOutput] : m_monitoredConfig->outputs()) {
-        if (otherOutput == output || !otherOutput->enabled()) {
-            continue;
-        }
-
-        auto otherPos = otherOutput->position();
-        if (otherPos.x() >= geom.right() && otherPos.y() >= geom.top()
-            && otherPos.y() <= geom.bottom()) {
-            otherPos.setX(otherPos.x() - geom.width());
-        }
-        qCDebug(KDISPLAY_KDED) << "Moving" << otherOutput->name().c_str() << "from"
-                               << otherOutput->position() << "to" << otherPos;
-        otherOutput->set_position(otherPos);
-    }
-
-    // Disable the output
-    output->set_enabled(false);
 }
 
 #include "daemon.moc"

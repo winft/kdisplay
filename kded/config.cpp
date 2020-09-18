@@ -101,14 +101,3 @@ void Config::setAutoRotate(bool value)
         }
     }
 }
-
-void Config::log()
-{
-    if (!m_data) {
-        return;
-    }
-    const auto outputs = m_data->outputs();
-    for (const auto& o : outputs) {
-        qCDebug(KDISPLAY_KDED) << o;
-    }
-}
