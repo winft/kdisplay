@@ -10,7 +10,6 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
 set(kdisplay_daemon_SRCS
     daemon.cpp
     config.cpp
-    output.cpp
     generator.cpp
     osd.cpp
     osdmanager.cpp

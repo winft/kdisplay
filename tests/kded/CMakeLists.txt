@@ -7,7 +7,6 @@ macro(ADD_KDED_TEST testname)
         ${testname}.cpp
         ${CMAKE_SOURCE_DIR}/kded/generator.cpp
         ${CMAKE_SOURCE_DIR}/kded/config.cpp
-        ${CMAKE_SOURCE_DIR}/kded/output.cpp
         ${CMAKE_SOURCE_DIR}/common/globals.cpp
         #${CMAKE_SOURCE_DIR}/kded/daemon.cpp
     )
