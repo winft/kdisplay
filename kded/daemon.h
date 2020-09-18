@@ -22,8 +22,6 @@ namespace Disman
 class OsdManager;
 }
 
-class QTimer;
-
 class KDisplayDaemon : public KDEDModule
 {
     Q_OBJECT
@@ -67,7 +65,6 @@ private:
     Disman::ConfigPtr m_monitoredConfig;
     bool m_monitoring;
     bool m_configDirty = true;
-    QTimer* m_changeCompressor;
     Disman::OsdManager* m_osdManager;
     OrientationSensor* m_orientationSensor;
     bool m_startingUp = true;

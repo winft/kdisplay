@@ -28,15 +28,12 @@
 
 #include <QAction>
 #include <QOrientationReading>
-#include <QShortcut>
-#include <QTimer>
 
 K_PLUGIN_CLASS_WITH_JSON(KDisplayDaemon, "kdisplayd.json")
 
 KDisplayDaemon::KDisplayDaemon(QObject* parent, const QList<QVariant>&)
     : KDEDModule(parent)
     , m_monitoring(true)
-    , m_changeCompressor(new QTimer(this))
     , m_orientationSensor(new OrientationSensor(this))
 {
     connect(m_orientationSensor,
@@ -86,10 +83,6 @@ void KDisplayDaemon::init()
     new KdisplayAdaptor(this);
     // Initialize OSD manager to register its dbus interface
     m_osdManager = new Disman::OsdManager(this);
-
-    m_changeCompressor->setInterval(10);
-    m_changeCompressor->setSingleShot(true);
-    connect(m_changeCompressor, &QTimer::timeout, this, &KDisplayDaemon::applyConfig);
 
     monitorConnectedChange();
 
@@ -277,18 +270,10 @@ void KDisplayDaemon::displayButton()
 
 void KDisplayDaemon::monitorConnectedChange()
 {
-    connect(
-        m_monitoredConfig.get(),
-        &Disman::Config::output_added,
-        this,
-        [this] { m_changeCompressor->start(); },
-        Qt::UniqueConnection);
+    auto cfg = m_monitoredConfig.get();
 
-    connect(m_monitoredConfig.get(),
-            &Disman::Config::output_removed,
-            this,
-            &KDisplayDaemon::applyConfig,
-            static_cast<Qt::ConnectionType>(Qt::QueuedConnection | Qt::UniqueConnection));
+    connect(cfg, &Disman::Config::output_added, this, &KDisplayDaemon::applyConfig);
+    connect(cfg, &Disman::Config::output_removed, this, &KDisplayDaemon::applyConfig);
 }
 
 void KDisplayDaemon::setMonitorForChanges(bool enabled)
