@@ -88,9 +88,9 @@ QVariant OutputModel::data(const QModelIndex& index, int role) const
         for (auto rate : refreshRates(output)) {
             if (output->auto_refresh_rate()) {
                 // We just show rounded values when not manual selecting a rate.
-                ret << i18n("≈ %1 Hz", static_cast<int>(rate + 0.5));
+                ret << i18n("≈ %1 Hz", static_cast<int>(rate / 1000. + 0.5));
             } else {
-                ret << i18n("%1 Hz", rate);
+                ret << i18n("%1 Hz", static_cast<double>(rate / 1000.));
             }
         }
         return ret;
@@ -313,11 +313,6 @@ bool OutputModel::setEnabled(int outputIndex, bool enable)
     return true;
 }
 
-inline bool refreshRateCompare(float rate1, float rate2)
-{
-    return qFuzzyCompare(rate1, rate2);
-}
-
 bool OutputModel::setResolution(int outputIndex, int resIndex)
 {
     const Output& output = m_outputs[outputIndex];
@@ -465,16 +460,14 @@ int OutputModel::resolutionIndex(const Disman::OutputPtr& output) const
 
 int OutputModel::refreshRateIndex(const Disman::OutputPtr& output) const
 {
-    const auto rates = refreshRates(output);
-    const float currentRate = output->auto_mode()->refresh();
+    auto const rates = refreshRates(output);
+    auto const currentRate = output->auto_mode()->refresh();
 
-    const auto it = std::find_if(rates.begin(), rates.end(), [currentRate](float rate) {
-        return refreshRateCompare(rate, currentRate);
-    });
-    if (it == rates.end()) {
+    auto const it = std::find(rates.cbegin(), rates.cend(), currentRate);
+    if (it == rates.cend()) {
         return 0;
     }
-    return it - rates.begin();
+    return it - rates.cbegin();
 }
 
 static int greatestCommonDivisor(int a, int b)
@@ -531,9 +524,9 @@ QVector<QSize> OutputModel::resolutions(const Disman::OutputPtr& output) const
     return hits;
 }
 
-QVector<float> OutputModel::refreshRates(const Disman::OutputPtr& output) const
+QVector<int> OutputModel::refreshRates(const Disman::OutputPtr& output) const
 {
-    QVector<float> hits;
+    QVector<int> hits;
 
     auto const resolution = output->auto_mode()->size();
 
@@ -542,9 +535,7 @@ QVector<float> OutputModel::refreshRates(const Disman::OutputPtr& output) const
             continue;
         }
         auto const rate = mode->refresh();
-        if (std::find_if(
-                hits.begin(), hits.end(), [rate](float r) { return refreshRateCompare(r, rate); })
-            != hits.end()) {
+        if (std::find(hits.cbegin(), hits.cend(), rate) != hits.cend()) {
             continue;
         }
         hits << rate;

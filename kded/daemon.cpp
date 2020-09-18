@@ -264,7 +264,7 @@ void KDisplayDaemon::applyOsdAction(Disman::OsdAction::Action action)
 void KDisplayDaemon::applyIdealConfig()
 {
     const bool showOsd = m_monitoredConfig->data()->outputs().size() > 1 && !m_startingUp
-        && m_monitoredConfig->data()->origin() == Disman::Config::Origin::generated;
+        && m_monitoredConfig->data()->cause() == Disman::Config::Cause::generated;
 
     if (showOsd) {
         qCDebug(KDISPLAY_KDED) << "Getting ideal config from user via OSD...";
