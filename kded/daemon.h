@@ -19,7 +19,6 @@
 #ifndef KSCREEN_DAEMON_H
 #define KSCREEN_DAEMON_H
 
-#include "../common/globals.h"
 #include "osdaction.h"
 
 #include <disman/config.h>
