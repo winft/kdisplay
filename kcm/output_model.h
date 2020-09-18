@@ -139,7 +139,7 @@ private:
     int refreshRateIndex(const Disman::OutputPtr& output) const;
     QVariantList resolutionsStrings(const Disman::OutputPtr& output) const;
     QVector<QSize> resolutions(const Disman::OutputPtr& output) const;
-    QVector<float> refreshRates(const Disman::OutputPtr& output) const;
+    QVector<int> refreshRates(const Disman::OutputPtr& output) const;
 
     bool positionable(const Output& output) const;
 
