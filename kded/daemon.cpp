@@ -77,8 +77,6 @@ void KDisplayDaemon::getInitialConfig()
 
                 m_monitoredConfig = std::unique_ptr<Config>(
                     new Config(qobject_cast<Disman::GetConfigOperation*>(op)->config()));
-                m_monitoredConfig->setValidityFlags(
-                    Disman::Config::ValidityFlag::RequireAtLeastOneEnabledScreen);
                 qCDebug(KDISPLAY_KDED) << "Config" << m_monitoredConfig->data().get() << "is ready";
                 Disman::ConfigMonitor::instance()->add_config(m_monitoredConfig->data());
 
@@ -154,7 +152,6 @@ void KDisplayDaemon::doApplyConfig(const Disman::ConfigPtr& config)
 {
     qCDebug(KDISPLAY_KDED) << "Do set and apply specific config";
     auto configWrapper = std::unique_ptr<Config>(new Config(config));
-    configWrapper->setValidityFlags(Disman::Config::ValidityFlag::RequireAtLeastOneEnabledScreen);
 
     doApplyConfig(std::move(configWrapper));
 }

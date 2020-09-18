@@ -30,14 +30,6 @@ public:
     explicit Config(Disman::ConfigPtr config, QObject* parent = nullptr);
     ~Config() = default;
 
-    QString id() const;
-
-    bool fileExists() const;
-    std::unique_ptr<Config> readFile();
-    std::unique_ptr<Config> readOpenLidFile();
-    bool writeFile();
-    bool writeOpenLidFile();
-
     Disman::ConfigPtr data() const
     {
         return m_data;
@@ -49,33 +41,8 @@ public:
     void setAutoRotate(bool value);
     void log();
 
-    void setValidityFlags(Disman::Config::ValidityFlags flags)
-    {
-        m_validityFlags = flags;
-    }
-
-    bool canBeApplied() const;
-
 private:
-    friend class TestConfig;
-
-    QString createPath(const QString& fileName);
-    QString path(const QString& fileName) const;
-    QString fileName() const;
-    QString openLidFileName() const;
-
-    std::unique_ptr<Config> readFile(const QString& fileName);
-    bool writeFile(const QString& filePath);
-
-    bool canBeApplied(Disman::ConfigPtr config) const;
-
     Disman::ConfigPtr m_data;
-    Disman::Config::ValidityFlags m_validityFlags;
-
-    static QString s_configsDirName;
-    static QString s_fixedConfigFileName;
-
-    static QString configsDirPath();
 };
 
 #endif

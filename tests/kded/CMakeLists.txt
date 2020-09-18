@@ -27,5 +27,4 @@ macro(ADD_KDED_TEST testname)
 endmacro()
 
 add_kded_test(testgenerator)
-add_kded_test(configtest)
 #add_kded_test(testdaemon)
