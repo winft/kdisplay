@@ -29,7 +29,6 @@ class KDisplayDaemon : public KDEDModule
 
 public:
     KDisplayDaemon(QObject* parent, const QList<QVariant>&);
-    ~KDisplayDaemon() override;
 
 public Q_SLOTS:
     // DBus

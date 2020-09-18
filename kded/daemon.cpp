@@ -67,10 +67,6 @@ void KDisplayDaemon::getInitialConfig()
             });
 }
 
-KDisplayDaemon::~KDisplayDaemon()
-{
-}
-
 void KDisplayDaemon::init()
 {
     KActionCollection* coll = new KActionCollection(this);
