@@ -27,9 +27,6 @@
 
 #include <QVariant>
 
-#include <memory>
-
-class Config;
 class OrientationSensor;
 
 namespace Disman
@@ -72,8 +69,7 @@ private:
     void showOutputIdentifier();
     void applyOsdAction(Disman::OsdAction::Action action);
 
-    void doApplyConfig(const Disman::ConfigPtr& config);
-    void doApplyConfig(std::unique_ptr<Config> config);
+    void doApplyConfig(Disman::ConfigPtr const& config);
     void refreshConfig();
 
     void monitorConnectedChange();
@@ -82,7 +78,7 @@ private:
 
     void updateOrientation();
 
-    std::unique_ptr<Config> m_monitoredConfig;
+    Disman::ConfigPtr m_monitoredConfig;
     bool m_monitoring;
     bool m_configDirty = true;
     QTimer* m_changeCompressor;

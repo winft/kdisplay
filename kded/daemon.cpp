@@ -75,10 +75,9 @@ void KDisplayDaemon::getInitialConfig()
                     return;
                 }
 
-                m_monitoredConfig = std::unique_ptr<Config>(
-                    new Config(qobject_cast<Disman::GetConfigOperation*>(op)->config()));
-                qCDebug(KDISPLAY_KDED) << "Config" << m_monitoredConfig->data().get() << "is ready";
-                Disman::ConfigMonitor::instance()->add_config(m_monitoredConfig->data());
+                m_monitoredConfig = qobject_cast<Disman::GetConfigOperation*>(op)->config();
+                qCDebug(KDISPLAY_KDED) << "Config" << m_monitoredConfig.get() << "is ready";
+                Disman::ConfigMonitor::instance()->add_config(m_monitoredConfig);
 
                 init();
             });
@@ -116,7 +115,7 @@ void KDisplayDaemon::updateOrientation()
     if (!m_monitoredConfig) {
         return;
     }
-    const auto features = m_monitoredConfig->data()->supported_features();
+    const auto features = m_monitoredConfig->supported_features();
     if (!features.testFlag(Disman::Config::Feature::AutoRotation)
         || !features.testFlag(Disman::Config::Feature::TabletMode)) {
         return;
@@ -138,30 +137,23 @@ void KDisplayDaemon::updateOrientation()
         return;
     }
 
-    m_monitoredConfig->setDeviceOrientation(orientation);
+    Config(m_monitoredConfig).setDeviceOrientation(orientation);
     if (m_monitoring) {
-        doApplyConfig(m_monitoredConfig->data());
+        doApplyConfig(m_monitoredConfig);
     } else {
         m_configDirty = true;
     }
 }
 
-void KDisplayDaemon::doApplyConfig(const Disman::ConfigPtr& config)
+void KDisplayDaemon::doApplyConfig(Disman::ConfigPtr const& config)
 {
     qCDebug(KDISPLAY_KDED) << "Do set and apply specific config";
-    auto configWrapper = std::unique_ptr<Config>(new Config(config));
 
-    doApplyConfig(std::move(configWrapper));
-}
-
-void KDisplayDaemon::doApplyConfig(std::unique_ptr<Config> config)
-{
     qCWarning(KDISPLAY_KDED)
         << "Currently all KDisplay daemon config control is disabled. Doing nothing";
     return;
 
-    m_monitoredConfig = std::move(config);
-
+    m_monitoredConfig = config;
     refreshConfig();
 }
 
@@ -169,16 +161,16 @@ void KDisplayDaemon::refreshConfig()
 {
     setMonitorForChanges(false);
     m_configDirty = false;
-    Disman::ConfigMonitor::instance()->add_config(m_monitoredConfig->data());
+    Disman::ConfigMonitor::instance()->add_config(m_monitoredConfig);
 
-    connect(new Disman::SetConfigOperation(m_monitoredConfig->data()),
+    connect(new Disman::SetConfigOperation(m_monitoredConfig),
             &Disman::SetConfigOperation::finished,
             this,
             [this]() {
                 qCDebug(KDISPLAY_KDED) << "Config applied";
                 if (m_configDirty) {
                     // Config changed in the meantime again, apply.
-                    doApplyConfig(m_monitoredConfig->data());
+                    doApplyConfig(m_monitoredConfig);
                 } else {
                     setMonitorForChanges(true);
                 }
@@ -189,7 +181,7 @@ void KDisplayDaemon::applyConfig()
 {
     qCDebug(KDISPLAY_KDED) << "Applying config";
     applyIdealConfig();
-    m_orientationSensor->setEnabled(m_monitoredConfig->autoRotationRequested());
+    m_orientationSensor->setEnabled(Config(m_monitoredConfig).autoRotationRequested());
     updateOrientation();
 }
 
@@ -210,7 +202,7 @@ void KDisplayDaemon::applyLayoutPreset(const QString& presetName)
 
 bool KDisplayDaemon::getAutoRotate()
 {
-    return m_monitoredConfig->getAutoRotate();
+    return Config(m_monitoredConfig).getAutoRotate();
 }
 
 void KDisplayDaemon::setAutoRotate(bool value)
@@ -218,14 +210,13 @@ void KDisplayDaemon::setAutoRotate(bool value)
     if (!m_monitoredConfig) {
         return;
     }
-    m_monitoredConfig->setAutoRotate(value);
+    Config(m_monitoredConfig).setAutoRotate(value);
     m_orientationSensor->setEnabled(value);
 }
 
 void KDisplayDaemon::applyOsdAction(Disman::OsdAction::Action action)
 {
     Disman::ConfigPtr config;
-    auto cur_cfg = m_monitoredConfig->data();
 
     switch (action) {
     case Disman::OsdAction::NoAction:
@@ -233,23 +224,23 @@ void KDisplayDaemon::applyOsdAction(Disman::OsdAction::Action action)
         break;
     case Disman::OsdAction::SwitchToInternal:
         qCDebug(KDISPLAY_KDED) << "OSD: switch to internal";
-        config = Generator::displaySwitch(Generator::Action::TurnOffExternal, cur_cfg);
+        config = Generator::displaySwitch(Generator::Action::TurnOffExternal, m_monitoredConfig);
         break;
     case Disman::OsdAction::SwitchToExternal:
         qCDebug(KDISPLAY_KDED) << "OSD: switch to external";
-        config = Generator::displaySwitch(Generator::Action::TurnOffEmbedded, cur_cfg);
+        config = Generator::displaySwitch(Generator::Action::TurnOffEmbedded, m_monitoredConfig);
         break;
     case Disman::OsdAction::ExtendLeft:
         qCDebug(KDISPLAY_KDED) << "OSD: extend left";
-        config = Generator::displaySwitch(Generator::Action::ExtendToLeft, cur_cfg);
+        config = Generator::displaySwitch(Generator::Action::ExtendToLeft, m_monitoredConfig);
         break;
     case Disman::OsdAction::ExtendRight:
         qCDebug(KDISPLAY_KDED) << "OSD: extend right";
-        config = Generator::displaySwitch(Generator::Action::ExtendToRight, cur_cfg);
+        config = Generator::displaySwitch(Generator::Action::ExtendToRight, m_monitoredConfig);
         return;
     case Disman::OsdAction::Clone:
         qCDebug(KDISPLAY_KDED) << "OSD: clone";
-        config = Generator::displaySwitch(Generator::Action::Clone, cur_cfg);
+        config = Generator::displaySwitch(Generator::Action::Clone, m_monitoredConfig);
         break;
     }
     if (config) {
@@ -259,8 +250,8 @@ void KDisplayDaemon::applyOsdAction(Disman::OsdAction::Action action)
 
 void KDisplayDaemon::applyIdealConfig()
 {
-    const bool showOsd = m_monitoredConfig->data()->outputs().size() > 1 && !m_startingUp
-        && m_monitoredConfig->data()->cause() == Disman::Config::Cause::generated;
+    const bool showOsd = m_monitoredConfig->outputs().size() > 1 && !m_startingUp
+        && m_monitoredConfig->cause() == Disman::Config::Cause::generated;
 
     if (showOsd) {
         qCDebug(KDISPLAY_KDED) << "Getting ideal config from user via OSD...";
@@ -274,7 +265,7 @@ void KDisplayDaemon::applyIdealConfig()
 void KDisplayDaemon::configChanged()
 {
     qCDebug(KDISPLAY_KDED) << "Change detected";
-    m_monitoredConfig->log();
+    Config(m_monitoredConfig).log();
 
     qCWarning(KDISPLAY_KDED)
         << "Currently all KDisplay daemon config control is disabled. Doing nothing";
@@ -282,7 +273,7 @@ void KDisplayDaemon::configChanged()
 
     // Modes may have changed, fix-up current mode id
     bool changed = false;
-    for (auto const& [key, output] : m_monitoredConfig->data()->outputs()) {
+    for (auto const& [key, output] : m_monitoredConfig->outputs()) {
         if ((output->enabled() && !output->auto_mode())
             || (output->follow_preferred_mode()
                 && output->auto_mode()->id() != output->preferred_mode()->id())) {
@@ -324,13 +315,13 @@ void KDisplayDaemon::displayButton()
 void KDisplayDaemon::monitorConnectedChange()
 {
     connect(
-        m_monitoredConfig->data().get(),
+        m_monitoredConfig.get(),
         &Disman::Config::output_added,
         this,
         [this] { m_changeCompressor->start(); },
         Qt::UniqueConnection);
 
-    connect(m_monitoredConfig->data().get(),
+    connect(m_monitoredConfig.get(),
             &Disman::Config::output_removed,
             this,
             &KDisplayDaemon::applyConfig,
@@ -366,7 +357,7 @@ void KDisplayDaemon::disableOutput(Disman::OutputPtr& output)
                            << (output->auto_mode() ? output->auto_mode()->size() : QSize());
 
     // Move all outputs right from the @p output to left
-    for (auto const& [key, otherOutput] : m_monitoredConfig->data()->outputs()) {
+    for (auto const& [key, otherOutput] : m_monitoredConfig->outputs()) {
         if (otherOutput == output || !otherOutput->enabled()) {
             continue;
         }
