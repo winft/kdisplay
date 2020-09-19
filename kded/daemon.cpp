@@ -46,11 +46,7 @@ KDisplayDaemon::KDisplayDaemon(QObject* parent, const QList<QVariant>&)
             &KDisplayDaemon::updateOrientation);
 
     Disman::Log::instance();
-    QMetaObject::invokeMethod(this, "getInitialConfig", Qt::QueuedConnection);
-}
 
-void KDisplayDaemon::getInitialConfig()
-{
     connect(new Disman::GetConfigOperation,
             &Disman::GetConfigOperation::finished,
             this,

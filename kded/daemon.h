@@ -42,7 +42,6 @@ Q_SIGNALS:
     void unknownOutputConnected(const QString& outputName);
 
 private:
-    Q_INVOKABLE void getInitialConfig();
     void init();
 
     void applyConfig();
