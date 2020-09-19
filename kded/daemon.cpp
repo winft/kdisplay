@@ -123,11 +123,7 @@ void KDisplayDaemon::doApplyConfig(Disman::ConfigPtr const& config)
 {
     qCDebug(KDISPLAY_KDED) << "Do set and apply specific config";
 
-    qCWarning(KDISPLAY_KDED)
-        << "Currently all KDisplay daemon config control is disabled. Doing nothing";
-    return;
-
-    m_monitoredConfig = config;
+    m_monitoredConfig->apply(config);
     refreshConfig();
 }
 
