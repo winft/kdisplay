@@ -36,15 +36,6 @@ KDisplayDaemon::KDisplayDaemon(QObject* parent, const QList<QVariant>&)
     , m_monitoring(true)
     , m_orientationSensor(new OrientationSensor(this))
 {
-    connect(m_orientationSensor,
-            &OrientationSensor::availableChanged,
-            this,
-            &KDisplayDaemon::updateOrientation);
-    connect(m_orientationSensor,
-            &OrientationSensor::valueChanged,
-            this,
-            &KDisplayDaemon::updateOrientation);
-
     Disman::Log::instance();
 
     connect(new Disman::GetConfigOperation,
@@ -77,15 +68,24 @@ void KDisplayDaemon::init(Disman::ConfigOperation* op)
 
     monitorConnectedChange();
 
+    connect(m_orientationSensor,
+            &OrientationSensor::availableChanged,
+            this,
+            &KDisplayDaemon::updateOrientation);
+    connect(m_orientationSensor,
+            &OrientationSensor::valueChanged,
+            this,
+            &KDisplayDaemon::updateOrientation);
+
     applyConfig();
+
     m_startingUp = false;
 }
 
 void KDisplayDaemon::updateOrientation()
 {
-    if (!m_monitoredConfig) {
-        return;
-    }
+    assert(m_monitoredConfig);
+
     const auto features = m_monitoredConfig->supported_features();
     if (!features.testFlag(Disman::Config::Feature::AutoRotation)
         || !features.testFlag(Disman::Config::Feature::TabletMode)) {
