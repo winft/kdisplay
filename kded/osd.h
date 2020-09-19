@@ -34,16 +34,11 @@ class QmlObject;
 
 class QTimer;
 
-namespace Disman
-{
-
 class Osd : public QObject
 {
-
     Q_OBJECT
-
 public:
-    explicit Osd(const OutputPtr& output, QObject* parent = nullptr);
+    explicit Osd(const Disman::OutputPtr& output, QObject* parent = nullptr);
     ~Osd() override;
 
     void showGenericOsd(const QString& icon, const QString& text);
@@ -70,7 +65,5 @@ private:
     QTimer* m_osdTimer = nullptr;
     int m_timeout = 0;
 };
-
-} // ns
 
 #endif // KSCREEN_OSD_H

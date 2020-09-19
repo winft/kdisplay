@@ -66,7 +66,7 @@ void KDisplayDaemon::init(Disman::ConfigOperation* op)
 
     new KdisplayAdaptor(this);
     // Initialize OSD manager to register its dbus interface
-    m_osdManager = new Disman::OsdManager(this);
+    m_osdManager = new OsdManager(this);
 
     connect(cfg, &Disman::Config::output_added, this, &KDisplayDaemon::applyConfig);
     connect(cfg, &Disman::Config::output_removed, this, &KDisplayDaemon::applyConfig);
@@ -157,7 +157,7 @@ void KDisplayDaemon::applyConfig()
     if (showOsd) {
         qCDebug(KDISPLAY_KDED) << "Getting ideal config from user via OSD...";
         auto action = m_osdManager->showActionSelector();
-        connect(action, &Disman::OsdAction::selected, this, &KDisplayDaemon::applyOsdAction);
+        connect(action, &OsdAction::selected, this, &KDisplayDaemon::applyOsdAction);
     } else {
         m_osdManager->hideOsd();
     }
@@ -168,12 +168,12 @@ void KDisplayDaemon::applyConfig()
 
 void KDisplayDaemon::applyLayoutPreset(const QString& presetName)
 {
-    const QMetaEnum actionEnum = QMetaEnum::fromType<Disman::OsdAction::Action>();
+    const QMetaEnum actionEnum = QMetaEnum::fromType<OsdAction::Action>();
     Q_ASSERT(actionEnum.isValid());
 
     bool ok;
-    auto action = static_cast<Disman::OsdAction::Action>(
-        actionEnum.keyToValue(qPrintable(presetName), &ok));
+    auto action
+        = static_cast<OsdAction::Action>(actionEnum.keyToValue(qPrintable(presetName), &ok));
     if (!ok) {
         qCWarning(KDISPLAY_KDED) << "Cannot apply unknown screen layout preset named" << presetName;
         return;
@@ -195,31 +195,31 @@ void KDisplayDaemon::setAutoRotate(bool value)
     m_orientationSensor->setEnabled(value);
 }
 
-void KDisplayDaemon::applyOsdAction(Disman::OsdAction::Action action)
+void KDisplayDaemon::applyOsdAction(OsdAction::Action action)
 {
     Disman::ConfigPtr config;
 
     switch (action) {
-    case Disman::OsdAction::NoAction:
+    case OsdAction::NoAction:
         qCDebug(KDISPLAY_KDED) << "OSD: no action";
         break;
-    case Disman::OsdAction::SwitchToInternal:
+    case OsdAction::SwitchToInternal:
         qCDebug(KDISPLAY_KDED) << "OSD: switch to internal";
         config = Generator::displaySwitch(Generator::Action::TurnOffExternal, m_monitoredConfig);
         break;
-    case Disman::OsdAction::SwitchToExternal:
+    case OsdAction::SwitchToExternal:
         qCDebug(KDISPLAY_KDED) << "OSD: switch to external";
         config = Generator::displaySwitch(Generator::Action::TurnOffEmbedded, m_monitoredConfig);
         break;
-    case Disman::OsdAction::ExtendLeft:
+    case OsdAction::ExtendLeft:
         qCDebug(KDISPLAY_KDED) << "OSD: extend left";
         config = Generator::displaySwitch(Generator::Action::ExtendToLeft, m_monitoredConfig);
         break;
-    case Disman::OsdAction::ExtendRight:
+    case OsdAction::ExtendRight:
         qCDebug(KDISPLAY_KDED) << "OSD: extend right";
         config = Generator::displaySwitch(Generator::Action::ExtendToRight, m_monitoredConfig);
         return;
-    case Disman::OsdAction::Clone:
+    case OsdAction::Clone:
         qCDebug(KDISPLAY_KDED) << "OSD: clone";
         config = Generator::displaySwitch(Generator::Action::Clone, m_monitoredConfig);
         break;
@@ -255,7 +255,7 @@ void KDisplayDaemon::displayButton()
     qCDebug(KDISPLAY_KDED) << "displayBtn triggered";
 
     auto action = m_osdManager->showActionSelector();
-    connect(action, &Disman::OsdAction::selected, this, &KDisplayDaemon::applyOsdAction);
+    connect(action, &OsdAction::selected, this, &KDisplayDaemon::applyOsdAction);
 }
 
 void KDisplayDaemon::setMonitorForChanges(bool enabled)

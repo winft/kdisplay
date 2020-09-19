@@ -22,8 +22,6 @@
 
 #include <KLocalizedString>
 
-using namespace Disman;
-
 OsdAction::OsdAction(QObject* parent)
     : QObject(parent)
 {

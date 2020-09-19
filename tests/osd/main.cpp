@@ -41,7 +41,7 @@ int main(int argc, char** argv)
     QCommandLineOption selector
         = QCommandLineOption({QStringLiteral("s"), QStringLiteral("selector")},
                              QStringLiteral("Show new screen action selector"));
-    Disman::OsdTest osdtest;
+    OsdTest osdtest;
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addOption(dbus);

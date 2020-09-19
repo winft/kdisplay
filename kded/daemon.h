@@ -15,13 +15,13 @@
 
 #include <QVariant>
 
-class OrientationSensor;
-
 namespace Disman
 {
 class ConfigOperation;
-class OsdManager;
 }
+
+class OrientationSensor;
+class OsdManager;
 
 class KDisplayDaemon : public KDEDModule
 {
@@ -51,7 +51,7 @@ private:
     void setMonitorForChanges(bool enabled);
 
     void showOutputIdentifier();
-    void applyOsdAction(Disman::OsdAction::Action action);
+    void applyOsdAction(OsdAction::Action action);
 
     void doApplyConfig(Disman::ConfigPtr const& config);
     void refreshConfig();
@@ -63,7 +63,7 @@ private:
     Disman::ConfigPtr m_monitoredConfig;
     bool m_monitoring;
     bool m_configDirty = true;
-    Disman::OsdManager* m_osdManager;
+    OsdManager* m_osdManager;
     OrientationSensor* m_orientationSensor;
     bool m_startingUp = true;
 };

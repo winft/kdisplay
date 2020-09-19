@@ -27,9 +27,6 @@
 
 #include <QQmlEngine>
 
-namespace Disman
-{
-
 class OsdActionImpl : public OsdAction
 {
     Q_OBJECT
@@ -52,9 +49,9 @@ OsdManager::OsdManager(QObject* parent)
     : QObject(parent)
     , m_cleanupTimer(new QTimer(this))
 {
-    qmlRegisterSingletonType<Disman::OsdAction>(
+    qmlRegisterSingletonType<OsdAction>(
         "org.kwinft.kdisplay", 1, 0, "OsdAction", [](QQmlEngine*, QJSEngine*) -> QObject* {
-            return new Disman::OsdAction();
+            return new OsdAction();
         });
 
     // free up memory when the osd hasn't been used for more than 1 minute
@@ -102,7 +99,7 @@ void OsdManager::slotIdentifyOutputs(Disman::ConfigOperation* op)
         }
         auto osd = m_osds.value(QString::fromStdString(output->name()));
         if (!osd) {
-            osd = new Disman::Osd(output, this);
+            osd = new Osd(output, this);
             m_osds.insert(QString::fromStdString(output->name()), osd);
         }
         osd->showOutputIdentifier(output);
@@ -131,7 +128,7 @@ void OsdManager::showOsd(const QString& icon, const QString& text)
                     }
                     auto osd = m_osds.value(QString::fromStdString(output->name()));
                     if (!osd) {
-                        osd = new Disman::Osd(output, this);
+                        osd = new Osd(output, this);
                         m_osds.insert(QString::fromStdString(output->name()), osd);
                     }
                     osd->showGenericOsd(icon, text);
@@ -192,12 +189,12 @@ OsdAction* OsdManager::showActionSelector()
                     return;
                 }
 
-                Disman::Osd* osd = nullptr;
+                Osd* osd = nullptr;
                 auto const name = QString::fromStdString(osdOutput->name());
                 if (m_osds.contains(name)) {
                     osd = m_osds.value(name);
                 } else {
-                    osd = new Disman::Osd(osdOutput, this);
+                    osd = new Osd(osdOutput, this);
                     m_osds.insert(name, osd);
                 }
                 action->setOsd(osd);
@@ -206,8 +203,6 @@ OsdAction* OsdManager::showActionSelector()
             });
 
     return action;
-}
-
 }
 
 #include "osdmanager.moc"

@@ -32,8 +32,6 @@
 
 #include <KDeclarative/QmlObjectSharedEngine>
 
-using namespace Disman;
-
 Osd::Osd(const Disman::OutputPtr& output, QObject* parent)
     : QObject(parent)
     , m_output(output)

@@ -24,9 +24,6 @@
 #include <QString>
 #include <QVector>
 
-namespace Disman
-{
-
 class OsdAction : public QObject
 {
     Q_OBJECT
@@ -43,5 +40,3 @@ public:
 Q_SIGNALS:
     void selected(Action action);
 };
-
-} // namespace Disman
