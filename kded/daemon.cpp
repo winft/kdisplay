@@ -50,21 +50,20 @@ KDisplayDaemon::KDisplayDaemon(QObject* parent, const QList<QVariant>&)
     connect(new Disman::GetConfigOperation,
             &Disman::GetConfigOperation::finished,
             this,
-            [this](Disman::ConfigOperation* op) {
-                if (op->has_error()) {
-                    return;
-                }
-
-                m_monitoredConfig = qobject_cast<Disman::GetConfigOperation*>(op)->config();
-                qCDebug(KDISPLAY_KDED) << "Config" << m_monitoredConfig.get() << "is ready";
-                Disman::ConfigMonitor::instance()->add_config(m_monitoredConfig);
-
-                init();
-            });
+            &KDisplayDaemon::init);
 }
 
-void KDisplayDaemon::init()
+void KDisplayDaemon::init(Disman::ConfigOperation* op)
 {
+    if (op->has_error()) {
+        qCWarning(KDISPLAY_KDED) << "Initial config has error.";
+        return;
+    }
+
+    m_monitoredConfig = qobject_cast<Disman::GetConfigOperation*>(op)->config();
+    qCDebug(KDISPLAY_KDED) << "Config" << m_monitoredConfig.get() << "is ready";
+    Disman::ConfigMonitor::instance()->add_config(m_monitoredConfig);
+
     KActionCollection* coll = new KActionCollection(this);
     QAction* action = coll->addAction(QStringLiteral("display"));
     action->setText(i18n("Switch Display"));

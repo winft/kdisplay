@@ -19,6 +19,7 @@ class OrientationSensor;
 
 namespace Disman
 {
+class ConfigOperation;
 class OsdManager;
 }
 
@@ -42,7 +43,7 @@ Q_SIGNALS:
     void unknownOutputConnected(const QString& outputName);
 
 private:
-    void init();
+    void init(Disman::ConfigOperation* op);
 
     void applyConfig();
     void configChanged();
