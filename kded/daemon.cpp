@@ -197,34 +197,9 @@ void KDisplayDaemon::setAutoRotate(bool value)
 
 void KDisplayDaemon::applyOsdAction(OsdAction::Action action)
 {
-    Disman::ConfigPtr config;
+    qCDebug(KDISPLAY_KDED) << "Applying OSD action:" << action;
 
-    switch (action) {
-    case OsdAction::NoAction:
-        qCDebug(KDISPLAY_KDED) << "OSD: no action";
-        break;
-    case OsdAction::SwitchToInternal:
-        qCDebug(KDISPLAY_KDED) << "OSD: switch to internal";
-        config = Generator::displaySwitch(Generator::Action::TurnOffExternal, m_monitoredConfig);
-        break;
-    case OsdAction::SwitchToExternal:
-        qCDebug(KDISPLAY_KDED) << "OSD: switch to external";
-        config = Generator::displaySwitch(Generator::Action::TurnOffEmbedded, m_monitoredConfig);
-        break;
-    case OsdAction::ExtendLeft:
-        qCDebug(KDISPLAY_KDED) << "OSD: extend left";
-        config = Generator::displaySwitch(Generator::Action::ExtendToLeft, m_monitoredConfig);
-        break;
-    case OsdAction::ExtendRight:
-        qCDebug(KDISPLAY_KDED) << "OSD: extend right";
-        config = Generator::displaySwitch(Generator::Action::ExtendToRight, m_monitoredConfig);
-        return;
-    case OsdAction::Clone:
-        qCDebug(KDISPLAY_KDED) << "OSD: clone";
-        config = Generator::displaySwitch(Generator::Action::Clone, m_monitoredConfig);
-        break;
-    }
-    if (config) {
+    if (auto config = Generator::displaySwitch(action, m_monitoredConfig)) {
         doApplyConfig(config);
     }
 }

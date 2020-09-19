@@ -15,7 +15,7 @@
 namespace Generator
 {
 
-Disman::ConfigPtr displaySwitch(Action action, Disman::ConfigPtr const& config)
+Disman::ConfigPtr displaySwitch(OsdAction::Action action, Disman::ConfigPtr const& config)
 {
     qCDebug(KDISPLAY_KDED) << "Display Switch";
 
@@ -33,17 +33,17 @@ Disman::ConfigPtr displaySwitch(Action action, Disman::ConfigPtr const& config)
 
     auto success = false;
     switch (action) {
-    case Action::ExtendToLeft: {
+    case OsdAction::ExtendLeft: {
         qCDebug(KDISPLAY_KDED) << "Extend to left";
         success = generator.extend(Disman::Generator::Extend_direction::left);
         break;
     }
-    case Action::ExtendToRight: {
+    case OsdAction::ExtendRight: {
         qCDebug(KDISPLAY_KDED) << "Extend to right";
         success = generator.extend(Disman::Generator::Extend_direction::right);
         break;
     }
-    case Action::TurnOffEmbedded: {
+    case OsdAction::SwitchToExternal: {
         qCDebug(KDISPLAY_KDED) << "Turn off embedded (laptop)";
         auto embedded = generator.embedded();
         if (embedded) {
@@ -52,20 +52,19 @@ Disman::ConfigPtr displaySwitch(Action action, Disman::ConfigPtr const& config)
         }
         break;
     }
-    case Action::TurnOffExternal: {
+    case OsdAction::SwitchToInternal: {
         qCDebug(KDISPLAY_KDED) << "Turn off external screen";
         // TODO: Why would a user want to do that?
         qCWarning(KDISPLAY_KDED)
             << "Weird option to turn off external was selected, just do nothing instead.";
         break;
     }
-    case Action::Clone: {
+    case OsdAction::Clone: {
         success = generator.replicate();
         break;
     }
-    case Action::None: // just return config
-        success = false;
-        break;
+    case OsdAction::NoAction:
+        return nullptr;
     }
 
     if (!success) {
