@@ -56,7 +56,6 @@ private:
     void doApplyConfig(Disman::ConfigPtr const& config);
     void refreshConfig();
 
-    void monitorConnectedChange();
     void showOsd(const QString& icon, const QString& text);
 
     void updateOrientation();

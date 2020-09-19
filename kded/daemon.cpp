@@ -52,7 +52,9 @@ void KDisplayDaemon::init(Disman::ConfigOperation* op)
     }
 
     m_monitoredConfig = qobject_cast<Disman::GetConfigOperation*>(op)->config();
-    qCDebug(KDISPLAY_KDED) << "Config" << m_monitoredConfig.get() << "is ready";
+    auto cfg = m_monitoredConfig.get();
+
+    qCDebug(KDISPLAY_KDED) << "Config" << cfg << "is ready";
     Disman::ConfigMonitor::instance()->add_config(m_monitoredConfig);
 
     KActionCollection* coll = new KActionCollection(this);
@@ -66,7 +68,8 @@ void KDisplayDaemon::init(Disman::ConfigOperation* op)
     // Initialize OSD manager to register its dbus interface
     m_osdManager = new Disman::OsdManager(this);
 
-    monitorConnectedChange();
+    connect(cfg, &Disman::Config::output_added, this, &KDisplayDaemon::applyConfig);
+    connect(cfg, &Disman::Config::output_removed, this, &KDisplayDaemon::applyConfig);
 
     connect(m_orientationSensor,
             &OrientationSensor::availableChanged,
@@ -257,14 +260,6 @@ void KDisplayDaemon::displayButton()
 
     auto action = m_osdManager->showActionSelector();
     connect(action, &Disman::OsdAction::selected, this, &KDisplayDaemon::applyOsdAction);
-}
-
-void KDisplayDaemon::monitorConnectedChange()
-{
-    auto cfg = m_monitoredConfig.get();
-
-    connect(cfg, &Disman::Config::output_added, this, &KDisplayDaemon::applyConfig);
-    connect(cfg, &Disman::Config::output_removed, this, &KDisplayDaemon::applyConfig);
 }
 
 void KDisplayDaemon::setMonitorForChanges(bool enabled)
