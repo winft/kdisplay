@@ -57,6 +57,7 @@ void KDisplayDaemon::init(Disman::ConfigOperation* op)
     qCDebug(KDISPLAY_KDED) << "Config" << cfg << "is ready";
     Disman::ConfigMonitor::instance()->add_config(m_monitoredConfig);
 
+    update_auto_rotate();
     setMonitorForChanges(true);
 
     KActionCollection* coll = new KActionCollection(this);
@@ -85,6 +86,12 @@ void KDisplayDaemon::init(Disman::ConfigOperation* op)
     applyConfig();
 
     m_startingUp = false;
+}
+
+void KDisplayDaemon::update_auto_rotate()
+{
+    assert(m_monitoredConfig);
+    m_orientationSensor->setEnabled(Config(m_monitoredConfig).autoRotationRequested());
 }
 
 void KDisplayDaemon::updateOrientation()
@@ -163,9 +170,6 @@ void KDisplayDaemon::applyConfig()
     } else {
         m_osdManager->hideOsd();
     }
-
-    m_orientationSensor->setEnabled(Config(m_monitoredConfig).autoRotationRequested());
-    updateOrientation();
 }
 
 void KDisplayDaemon::applyLayoutPreset(const QString& presetName)
@@ -209,6 +213,8 @@ void KDisplayDaemon::applyOsdAction(OsdAction::Action action)
 void KDisplayDaemon::configChanged()
 {
     qCDebug(KDISPLAY_KDED) << "Change detected" << m_monitoredConfig;
+
+    update_auto_rotate();
     updateOrientation();
 }
 

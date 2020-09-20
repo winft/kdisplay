@@ -58,6 +58,7 @@ private:
 
     void showOsd(const QString& icon, const QString& text);
 
+    void update_auto_rotate();
     void updateOrientation();
 
     Disman::ConfigPtr m_monitoredConfig;
