@@ -33,7 +33,7 @@ K_PLUGIN_CLASS_WITH_JSON(KDisplayDaemon, "kdisplayd.json")
 
 KDisplayDaemon::KDisplayDaemon(QObject* parent, const QList<QVariant>&)
     : KDEDModule(parent)
-    , m_monitoring(true)
+    , m_monitoring{false}
     , m_orientationSensor(new OrientationSensor(this))
 {
     Disman::Log::instance();
@@ -56,6 +56,8 @@ void KDisplayDaemon::init(Disman::ConfigOperation* op)
 
     qCDebug(KDISPLAY_KDED) << "Config" << cfg << "is ready";
     Disman::ConfigMonitor::instance()->add_config(m_monitoredConfig);
+
+    setMonitorForChanges(true);
 
     KActionCollection* coll = new KActionCollection(this);
     QAction* action = coll->addAction(QStringLiteral("display"));
