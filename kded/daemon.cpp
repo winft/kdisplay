@@ -194,11 +194,11 @@ bool KDisplayDaemon::getAutoRotate()
 
 void KDisplayDaemon::setAutoRotate(bool value)
 {
-    if (!m_monitoredConfig) {
+    if (!m_monitoredConfig || !m_orientationSensor->available()) {
         return;
     }
     Config(m_monitoredConfig).setAutoRotate(value);
-    m_orientationSensor->setEnabled(value);
+    refreshConfig();
 }
 
 void KDisplayDaemon::applyOsdAction(OsdAction::Action action)
