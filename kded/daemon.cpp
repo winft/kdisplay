@@ -1,24 +1,11 @@
-/*************************************************************************************
- *  Copyright (C) 2012 by Alejandro Fiestas Olivares <afiestas@kde.org>              *
- *  Copyright 2016 by Sebastian Kügler <sebas@kde.org>                               *
- *  Copyright (c) 2018 Kai Uwe Broulik <kde@broulik.de>                              *
- *                    Work sponsored by the LiMux project of                         *
- *                    the city of Munich.                                            *
- *                                                                                   *
- *  This program is free software; you can redistribute it and/or                    *
- *  modify it under the terms of the GNU General Public License                      *
- *  as published by the Free Software Foundation; either version 2                   *
- *  of the License, or (at your option) any later version.                           *
- *                                                                                   *
- *  This program is distributed in the hope that it will be useful,                  *
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of                   *
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                    *
- *  GNU General Public License for more details.                                     *
- *                                                                                   *
- *  You should have received a copy of the GNU General Public License                *
- *  along with this program; if not, write to the Free Software                      *
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA   *
- *************************************************************************************/
+/*
+    SPDX-FileCopyrightText: 2012 Alejandro Fiestas Olivares <afiestas@kde.org>
+    SPDX-FileCopyrightText: 2016 Sebastian Kügler <sebas@kde.org>
+    SPDX-FileCopyrightText: 2018 Kai Uwe Broulik <kde@broulik.de>
+    SPDX-FileCopyrightText: 2020 Roman Gilg <subdiff@gmail.com>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "daemon.h"
 
 #include "../common/orientation_sensor.h"
@@ -41,58 +28,38 @@
 
 #include <QAction>
 #include <QOrientationReading>
-#include <QShortcut>
-#include <QTimer>
 
 K_PLUGIN_CLASS_WITH_JSON(KDisplayDaemon, "kdisplayd.json")
 
 KDisplayDaemon::KDisplayDaemon(QObject* parent, const QList<QVariant>&)
     : KDEDModule(parent)
-    , m_monitoring(true)
-    , m_changeCompressor(new QTimer(this))
+    , m_monitoring{false}
     , m_orientationSensor(new OrientationSensor(this))
 {
-    connect(m_orientationSensor,
-            &OrientationSensor::availableChanged,
-            this,
-            &KDisplayDaemon::updateOrientation);
-    connect(m_orientationSensor,
-            &OrientationSensor::valueChanged,
-            this,
-            &KDisplayDaemon::updateOrientation);
-
     Disman::Log::instance();
-    QMetaObject::invokeMethod(this, "getInitialConfig", Qt::QueuedConnection);
-}
 
-void KDisplayDaemon::getInitialConfig()
-{
     connect(new Disman::GetConfigOperation,
             &Disman::GetConfigOperation::finished,
             this,
-            [this](Disman::ConfigOperation* op) {
-                if (op->has_error()) {
-                    return;
-                }
-
-                m_monitoredConfig = std::unique_ptr<Config>(
-                    new Config(qobject_cast<Disman::GetConfigOperation*>(op)->config()));
-                m_monitoredConfig->setValidityFlags(
-                    Disman::Config::ValidityFlag::RequireAtLeastOneEnabledScreen);
-                qCDebug(KDISPLAY_KDED) << "Config" << m_monitoredConfig->data().get() << "is ready";
-                Disman::ConfigMonitor::instance()->add_config(m_monitoredConfig->data());
-
-                init();
-            });
+            &KDisplayDaemon::init);
 }
 
-KDisplayDaemon::~KDisplayDaemon()
+void KDisplayDaemon::init(Disman::ConfigOperation* op)
 {
-    Generator::destroy();
-}
+    if (op->has_error()) {
+        qCWarning(KDISPLAY_KDED) << "Initial config has error.";
+        return;
+    }
 
-void KDisplayDaemon::init()
-{
+    m_monitoredConfig = qobject_cast<Disman::GetConfigOperation*>(op)->config();
+    auto cfg = m_monitoredConfig.get();
+
+    qCDebug(KDISPLAY_KDED) << "Config" << cfg << "is ready";
+    Disman::ConfigMonitor::instance()->add_config(m_monitoredConfig);
+
+    update_auto_rotate();
+    setMonitorForChanges(true);
+
     KActionCollection* coll = new KActionCollection(this);
     QAction* action = coll->addAction(QStringLiteral("display"));
     action->setText(i18n("Switch Display"));
@@ -102,25 +69,36 @@ void KDisplayDaemon::init()
 
     new KdisplayAdaptor(this);
     // Initialize OSD manager to register its dbus interface
-    m_osdManager = new Disman::OsdManager(this);
+    m_osdManager = new OsdManager(this);
 
-    m_changeCompressor->setInterval(10);
-    m_changeCompressor->setSingleShot(true);
-    connect(m_changeCompressor, &QTimer::timeout, this, &KDisplayDaemon::applyConfig);
+    connect(cfg, &Disman::Config::output_added, this, &KDisplayDaemon::applyConfig);
+    connect(cfg, &Disman::Config::output_removed, this, &KDisplayDaemon::applyConfig);
 
-    Generator::self()->setCurrentConfig(m_monitoredConfig->data());
-    monitorConnectedChange();
+    connect(m_orientationSensor,
+            &OrientationSensor::availableChanged,
+            this,
+            &KDisplayDaemon::updateOrientation);
+    connect(m_orientationSensor,
+            &OrientationSensor::valueChanged,
+            this,
+            &KDisplayDaemon::updateOrientation);
 
     applyConfig();
+
     m_startingUp = false;
+}
+
+void KDisplayDaemon::update_auto_rotate()
+{
+    assert(m_monitoredConfig);
+    m_orientationSensor->setEnabled(Config(m_monitoredConfig).autoRotationRequested());
 }
 
 void KDisplayDaemon::updateOrientation()
 {
-    if (!m_monitoredConfig) {
-        return;
-    }
-    const auto features = m_monitoredConfig->data()->supported_features();
+    assert(m_monitoredConfig);
+
+    const auto features = m_monitoredConfig->supported_features();
     if (!features.testFlag(Disman::Config::Feature::AutoRotation)
         || !features.testFlag(Disman::Config::Feature::TabletMode)) {
         return;
@@ -142,31 +120,19 @@ void KDisplayDaemon::updateOrientation()
         return;
     }
 
-    m_monitoredConfig->setDeviceOrientation(orientation);
+    Config(m_monitoredConfig).setDeviceOrientation(orientation);
     if (m_monitoring) {
-        doApplyConfig(m_monitoredConfig->data());
+        doApplyConfig(m_monitoredConfig);
     } else {
         m_configDirty = true;
     }
 }
 
-void KDisplayDaemon::doApplyConfig(const Disman::ConfigPtr& config)
+void KDisplayDaemon::doApplyConfig(Disman::ConfigPtr const& config)
 {
     qCDebug(KDISPLAY_KDED) << "Do set and apply specific config";
-    auto configWrapper = std::unique_ptr<Config>(new Config(config));
-    configWrapper->setValidityFlags(Disman::Config::ValidityFlag::RequireAtLeastOneEnabledScreen);
 
-    doApplyConfig(std::move(configWrapper));
-}
-
-void KDisplayDaemon::doApplyConfig(std::unique_ptr<Config> config)
-{
-    qCWarning(KDISPLAY_KDED)
-        << "Currently all KDisplay daemon config control is disabled. Doing nothing";
-    return;
-
-    m_monitoredConfig = std::move(config);
-
+    m_monitoredConfig->apply(config);
     refreshConfig();
 }
 
@@ -174,16 +140,16 @@ void KDisplayDaemon::refreshConfig()
 {
     setMonitorForChanges(false);
     m_configDirty = false;
-    Disman::ConfigMonitor::instance()->add_config(m_monitoredConfig->data());
+    Disman::ConfigMonitor::instance()->add_config(m_monitoredConfig);
 
-    connect(new Disman::SetConfigOperation(m_monitoredConfig->data()),
+    connect(new Disman::SetConfigOperation(m_monitoredConfig),
             &Disman::SetConfigOperation::finished,
             this,
             [this]() {
                 qCDebug(KDISPLAY_KDED) << "Config applied";
                 if (m_configDirty) {
                     // Config changed in the meantime again, apply.
-                    doApplyConfig(m_monitoredConfig->data());
+                    doApplyConfig(m_monitoredConfig);
                 } else {
                     setMonitorForChanges(true);
                 }
@@ -193,19 +159,27 @@ void KDisplayDaemon::refreshConfig()
 void KDisplayDaemon::applyConfig()
 {
     qCDebug(KDISPLAY_KDED) << "Applying config";
-    applyIdealConfig();
-    m_orientationSensor->setEnabled(m_monitoredConfig->autoRotationRequested());
-    updateOrientation();
+
+    const bool showOsd = m_monitoredConfig->outputs().size() > 1 && !m_startingUp
+        && m_monitoredConfig->cause() == Disman::Config::Cause::generated;
+
+    if (showOsd) {
+        qCDebug(KDISPLAY_KDED) << "Getting ideal config from user via OSD...";
+        auto action = m_osdManager->showActionSelector();
+        connect(action, &OsdAction::selected, this, &KDisplayDaemon::applyOsdAction);
+    } else {
+        m_osdManager->hideOsd();
+    }
 }
 
 void KDisplayDaemon::applyLayoutPreset(const QString& presetName)
 {
-    const QMetaEnum actionEnum = QMetaEnum::fromType<Disman::OsdAction::Action>();
+    const QMetaEnum actionEnum = QMetaEnum::fromType<OsdAction::Action>();
     Q_ASSERT(actionEnum.isValid());
 
     bool ok;
-    auto action = static_cast<Disman::OsdAction::Action>(
-        actionEnum.keyToValue(qPrintable(presetName), &ok));
+    auto action
+        = static_cast<OsdAction::Action>(actionEnum.keyToValue(qPrintable(presetName), &ok));
     if (!ok) {
         qCWarning(KDISPLAY_KDED) << "Cannot apply unknown screen layout preset named" << presetName;
         return;
@@ -215,91 +189,33 @@ void KDisplayDaemon::applyLayoutPreset(const QString& presetName)
 
 bool KDisplayDaemon::getAutoRotate()
 {
-    return m_monitoredConfig->getAutoRotate();
+    return Config(m_monitoredConfig).getAutoRotate();
 }
 
 void KDisplayDaemon::setAutoRotate(bool value)
 {
-    if (!m_monitoredConfig) {
+    if (!m_monitoredConfig || !m_orientationSensor->available()) {
         return;
     }
-    m_monitoredConfig->setAutoRotate(value);
-    m_orientationSensor->setEnabled(value);
+    Config(m_monitoredConfig).setAutoRotate(value);
+    refreshConfig();
 }
 
-void KDisplayDaemon::applyOsdAction(Disman::OsdAction::Action action)
+void KDisplayDaemon::applyOsdAction(OsdAction::Action action)
 {
-    Disman::ConfigPtr config;
+    qCDebug(KDISPLAY_KDED) << "Applying OSD action:" << action;
 
-    switch (action) {
-    case Disman::OsdAction::NoAction:
-        qCDebug(KDISPLAY_KDED) << "OSD: no action";
-        break;
-    case Disman::OsdAction::SwitchToInternal:
-        qCDebug(KDISPLAY_KDED) << "OSD: switch to internal";
-        config = Generator::self()->displaySwitch(Generator::TurnOffExternal);
-        break;
-    case Disman::OsdAction::SwitchToExternal:
-        qCDebug(KDISPLAY_KDED) << "OSD: switch to external";
-        config = Generator::self()->displaySwitch(Generator::TurnOffEmbedded);
-        break;
-    case Disman::OsdAction::ExtendLeft:
-        qCDebug(KDISPLAY_KDED) << "OSD: extend left";
-        config = Generator::self()->displaySwitch(Generator::ExtendToLeft);
-        break;
-    case Disman::OsdAction::ExtendRight:
-        qCDebug(KDISPLAY_KDED) << "OSD: extend right";
-        config = Generator::self()->displaySwitch(Generator::ExtendToRight);
-        return;
-    case Disman::OsdAction::Clone:
-        qCDebug(KDISPLAY_KDED) << "OSD: clone";
-        config = Generator::self()->displaySwitch(Generator::Clone);
-        break;
-    }
-    if (config) {
+    if (auto config = Generator::displaySwitch(action, m_monitoredConfig)) {
         doApplyConfig(config);
-    }
-}
-
-void KDisplayDaemon::applyIdealConfig()
-{
-    const bool showOsd = m_monitoredConfig->data()->outputs().size() > 1 && !m_startingUp
-        && m_monitoredConfig->data()->cause() == Disman::Config::Cause::generated;
-
-    if (showOsd) {
-        qCDebug(KDISPLAY_KDED) << "Getting ideal config from user via OSD...";
-        auto action = m_osdManager->showActionSelector();
-        connect(action, &Disman::OsdAction::selected, this, &KDisplayDaemon::applyOsdAction);
-    } else {
-        m_osdManager->hideOsd();
     }
 }
 
 void KDisplayDaemon::configChanged()
 {
-    qCDebug(KDISPLAY_KDED) << "Change detected";
-    m_monitoredConfig->log();
+    qCDebug(KDISPLAY_KDED) << "Change detected" << m_monitoredConfig;
 
-    qCWarning(KDISPLAY_KDED)
-        << "Currently all KDisplay daemon config control is disabled. Doing nothing";
-    return;
-
-    // Modes may have changed, fix-up current mode id
-    bool changed = false;
-    for (auto const& [key, output] : m_monitoredConfig->data()->outputs()) {
-        if ((output->enabled() && !output->auto_mode())
-            || (output->follow_preferred_mode()
-                && output->auto_mode()->id() != output->preferred_mode()->id())) {
-            qCDebug(KDISPLAY_KDED)
-                << "Current mode was" << output->auto_mode() << ", setting preferred mode"
-                << output->preferred_mode()->id().c_str();
-            output->set_mode(output->preferred_mode());
-            changed = true;
-        }
-    }
-    if (changed) {
-        refreshConfig();
-    }
+    update_auto_rotate();
+    updateOrientation();
 }
 
 void KDisplayDaemon::showOsd(const QString& icon, const QString& text)
@@ -322,23 +238,7 @@ void KDisplayDaemon::displayButton()
     qCDebug(KDISPLAY_KDED) << "displayBtn triggered";
 
     auto action = m_osdManager->showActionSelector();
-    connect(action, &Disman::OsdAction::selected, this, &KDisplayDaemon::applyOsdAction);
-}
-
-void KDisplayDaemon::monitorConnectedChange()
-{
-    connect(
-        m_monitoredConfig->data().get(),
-        &Disman::Config::output_added,
-        this,
-        [this] { m_changeCompressor->start(); },
-        Qt::UniqueConnection);
-
-    connect(m_monitoredConfig->data().get(),
-            &Disman::Config::output_removed,
-            this,
-            &KDisplayDaemon::applyConfig,
-            static_cast<Qt::ConnectionType>(Qt::QueuedConnection | Qt::UniqueConnection));
+    connect(action, &OsdAction::selected, this, &KDisplayDaemon::applyOsdAction);
 }
 
 void KDisplayDaemon::setMonitorForChanges(bool enabled)
@@ -349,6 +249,7 @@ void KDisplayDaemon::setMonitorForChanges(bool enabled)
 
     qCDebug(KDISPLAY_KDED) << "Monitor for changes: " << enabled;
     m_monitoring = enabled;
+
     if (m_monitoring) {
         connect(Disman::ConfigMonitor::instance(),
                 &Disman::ConfigMonitor::configuration_changed,
@@ -361,32 +262,6 @@ void KDisplayDaemon::setMonitorForChanges(bool enabled)
                    this,
                    &KDisplayDaemon::configChanged);
     }
-}
-
-void KDisplayDaemon::disableOutput(Disman::OutputPtr& output)
-{
-    auto const geom = output->geometry();
-    qCDebug(KDISPLAY_KDED) << "Laptop geometry:" << geom << output->position()
-                           << (output->auto_mode() ? output->auto_mode()->size() : QSize());
-
-    // Move all outputs right from the @p output to left
-    for (auto const& [key, otherOutput] : m_monitoredConfig->data()->outputs()) {
-        if (otherOutput == output || !otherOutput->enabled()) {
-            continue;
-        }
-
-        auto otherPos = otherOutput->position();
-        if (otherPos.x() >= geom.right() && otherPos.y() >= geom.top()
-            && otherPos.y() <= geom.bottom()) {
-            otherPos.setX(otherPos.x() - geom.width());
-        }
-        qCDebug(KDISPLAY_KDED) << "Moving" << otherOutput->name().c_str() << "from"
-                               << otherOutput->position() << "to" << otherPos;
-        otherOutput->set_position(otherPos);
-    }
-
-    // Disable the output
-    output->set_enabled(false);
 }
 
 #include "daemon.moc"

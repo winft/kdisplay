@@ -20,8 +20,6 @@
 
 #include <QObject>
 
-namespace Disman
-{
 class OsdManager;
 
 class OsdTest : public QObject
@@ -43,7 +41,5 @@ private:
     OsdManager* m_osdManager = nullptr;
     bool m_useDBus = false;
 };
-
-} // namespace
 
 #endif // KSCREEN_OSDTEST_H

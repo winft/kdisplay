@@ -10,12 +10,10 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
 set(kdisplay_daemon_SRCS
     daemon.cpp
     config.cpp
-    output.cpp
     generator.cpp
     osd.cpp
     osdmanager.cpp
     osdaction.cpp
-    ${CMAKE_SOURCE_DIR}/common/globals.cpp
     ${CMAKE_SOURCE_DIR}/common/orientation_sensor.cpp
     ${CMAKE_SOURCE_DIR}/common/utils.cpp
 )

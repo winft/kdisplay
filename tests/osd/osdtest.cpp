@@ -26,8 +26,6 @@
 
 Q_LOGGING_CATEGORY(KDISPLAY_KDED, "kdisplay.kded")
 
-namespace Disman
-{
 OsdTest::OsdTest(QObject* parent)
     : QObject(parent)
 {
@@ -86,7 +84,7 @@ void OsdTest::showActionSelector()
 {
     if (!m_useDBus) {
         auto action = getOsdManager()->showActionSelector();
-        connect(action, &Disman::OsdAction::selected, [](Disman::OsdAction::Action action) {
+        connect(action, &OsdAction::selected, [](OsdAction::Action action) {
             qCDebug(KDISPLAY_KDED) << "Selected action:" << action;
             qApp->quit();
         });
@@ -95,5 +93,3 @@ void OsdTest::showActionSelector()
         QTimer::singleShot(100, qApp, &QCoreApplication::quit);
     }
 }
-
-} // ns

@@ -27,10 +27,11 @@
 
 namespace Disman
 {
-
 class ConfigOperation;
-class Osd;
 class Output;
+}
+
+class Osd;
 
 class OsdManager : public QObject
 {
@@ -49,9 +50,8 @@ public Q_SLOTS:
 
 private:
     void slotIdentifyOutputs(Disman::ConfigOperation* op);
-    QMap<QString, Disman::Osd*> m_osds;
+    QMap<QString, Osd*> m_osds;
     QTimer* m_cleanupTimer;
 };
 
-} // ns
 #endif // OSDM_H

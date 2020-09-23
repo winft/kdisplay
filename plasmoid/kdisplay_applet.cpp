@@ -46,9 +46,9 @@ KDisplayApplet::~KDisplayApplet() = default;
 
 void KDisplayApplet::init()
 {
-    qmlRegisterSingletonType<Disman::OsdAction>(
+    qmlRegisterSingletonType<OsdAction>(
         "org.kwinft.private.kdisplay", 1, 0, "OsdAction", [](QQmlEngine*, QJSEngine*) -> QObject* {
-            return new Disman::OsdAction();
+            return new OsdAction();
         });
 
     connect(new Disman::GetConfigOperation,
@@ -74,7 +74,7 @@ int KDisplayApplet::connectedOutputCount() const
 
 void KDisplayApplet::applyLayoutPreset(Action action)
 {
-    const QMetaEnum actionEnum = QMetaEnum::fromType<Disman::OsdAction::Action>();
+    const QMetaEnum actionEnum = QMetaEnum::fromType<OsdAction::Action>();
     Q_ASSERT(actionEnum.isValid());
 
     const QString presetName = QString::fromLatin1(actionEnum.valueToKey(action));

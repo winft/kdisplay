@@ -12,7 +12,6 @@ set(kcm_kdisplay_SRCS
     output_identifier.cpp
     output_model.cpp
     ${CMAKE_SOURCE_DIR}/common/utils.cpp
-    ${CMAKE_SOURCE_DIR}/common/globals.cpp
     ${CMAKE_SOURCE_DIR}/common/orientation_sensor.cpp
 )
 
