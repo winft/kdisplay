@@ -837,7 +837,7 @@ bool snapToRight(const QRectF& target, const QSizeF& size, QPoint& dest)
 {
     if (qAbs(target.right() - dest.x()) < s_snapArea) {
         // In snap zone for left to right snap.
-        dest.setX(target.right() + 1);
+        dest.setX(target.right());
         return true;
     }
     if (qAbs(target.right() - (dest.x() + size.width())) < s_snapArea) {
@@ -894,12 +894,12 @@ bool snapToBottom(const QRectF& target, const QSizeF& size, QPoint& dest)
 {
     if (qAbs(target.bottom() - dest.y()) < s_snapArea) {
         // In snap zone for top to bottom snap.
-        dest.setY(target.bottom() + 1);
+        dest.setY(target.bottom());
         return true;
     }
     if (qAbs(target.bottom() - (dest.y() + size.height())) < s_snapArea) {
         // In snap zone for bottom to bottom snap.
-        dest.setY(target.bottom() - size.height() + 1);
+        dest.setY(target.bottom() - size.height());
         return true;
     }
     return false;
