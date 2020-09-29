@@ -1,4 +1,4 @@
-add_definitions(-DTRANSLATION_DOMAIN=\"kdisplayd\")
+add_definitions(-DTRANSLATION_DOMAIN=\"kdisplay-plasma-integration\")
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/../)
 
