@@ -8,7 +8,7 @@
 */
 #include "daemon.h"
 
-#include "../common/orientation_sensor.h"
+#include "../../common/orientation_sensor.h"
 #include "config.h"
 #include "generator.h"
 #include "kdisplay_daemon_debug.h"

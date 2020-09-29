@@ -5,14 +5,14 @@ add_definitions(-DKDED_UNIT_TEST)
 macro(ADD_KDED_TEST testname)
     set(test_SRCS
         ${testname}.cpp
-        ${CMAKE_SOURCE_DIR}/kded/generator.cpp
-        ${CMAKE_SOURCE_DIR}/kded/config.cpp
+        ${CMAKE_SOURCE_DIR}/plasma-integration/kded/generator.cpp
+        ${CMAKE_SOURCE_DIR}/plasma-integration/kded/config.cpp
         #${CMAKE_SOURCE_DIR}/kded/daemon.cpp
     )
     ecm_qt_declare_logging_category(test_SRCS HEADER kdisplay_daemon_debug.h IDENTIFIER KDISPLAY_KDED CATEGORY_NAME kdisplay.kded)
 
     qt5_add_dbus_interface(test_SRCS
-        ${CMAKE_SOURCE_DIR}/kded/org.freedesktop.DBus.Properties.xml
+        ${CMAKE_SOURCE_DIR}/plasma-integration/kded/org.freedesktop.DBus.Properties.xml
         freedesktop_interface
     )
 
