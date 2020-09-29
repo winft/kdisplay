@@ -42,6 +42,11 @@ clang-format:
     # Run clang-format via wrapper script.
     - bash ci/compliance/clang-format.sh
 
+Localization:
+  stage: Compliance
+  image: ${IMAGE_BASE}-master:latest
+  script: bash ci/compliance/i18n-diff.sh
+
 
 .common-master: &common-master
   image: ${IMAGE_BASE}-master:latest
