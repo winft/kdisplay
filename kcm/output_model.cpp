@@ -88,9 +88,13 @@ QVariant OutputModel::data(const QModelIndex& index, int role) const
         for (auto rate : refreshRates(output)) {
             if (output->auto_refresh_rate()) {
                 // We just show rounded values when not manual selecting a rate.
-                ret << i18n("≈ %1 Hz", static_cast<int>(rate / 1000. + 0.5));
+                ret << i18nc("Approximate refresh rate in Hz (rounded to integer)",
+                             "≈ %1 Hz",
+                             static_cast<int>(rate / 1000. + 0.5));
             } else {
-                ret << i18n("%1 Hz", static_cast<double>(rate / 1000.));
+                ret << i18nc("Refresh rate in Hz (rounded to 3 digits)",
+                             "%1 Hz",
+                             static_cast<double>(rate / 1000.));
             }
         }
         return ret;
@@ -552,14 +556,14 @@ int OutputModel::replicationSourceId(const Output& output) const
 
 QStringList OutputModel::replicationSourceModel(const Disman::OutputPtr& output) const
 {
-    QStringList ret = {i18n("None")};
+    QStringList ret = {i18nc("Displayed when no replication source is selected.", "None")};
 
     for (const auto& out : m_outputs) {
         if (out.ptr->id() != output->id()) {
             const int outSourceId = replicationSourceId(out);
             if (outSourceId == output->id()) {
                 // 'output' is already source for replication, can't be replica itself
-                return {i18n("Replicated by other output")};
+                return {i18n("Replicated by other display")};
             }
             if (outSourceId) {
                 // This 'out' is a replica. Can't be a replication source.
