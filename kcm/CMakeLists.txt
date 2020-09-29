@@ -5,6 +5,7 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
 )
 
 add_subdirectory(app)
+ki18n_install(po)
 
 set(kcm_kdisplay_SRCS
     config_handler.cpp
