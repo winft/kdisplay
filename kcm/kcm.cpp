@@ -54,7 +54,7 @@ KCMKDisplay::KCMKDisplay(QObject* parent, const QVariantList& args)
     KAboutData* about = new KAboutData(QStringLiteral("kcm_kdisplay"),
                                        i18n("Display Configuration"),
                                        QStringLiteral(KDISPLAY_VERSION),
-                                       i18n("Manage and configure monitors and displays"),
+                                       i18n("Manage and configure monitors and displays."),
                                        KAboutLicense::GPL,
                                        i18n("Copyright © 2019 Roman Gilg"));
     about->addAuthor(i18n("Roman Gilg"), i18n("Maintainer"), QStringLiteral("subdiff@gmail.com"));

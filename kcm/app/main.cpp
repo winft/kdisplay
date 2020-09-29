@@ -21,14 +21,14 @@ int main(int argc, char** argv)
                      QStringLiteral(KDISPLAY_VERSION),
                      i18n("KDisplay"),
                      KAboutLicense::GPL,
-                     i18n("Copyright (C) 2020 Roman Gilg"));
+                     i18n("Copyright © 2020 Roman Gilg"));
     about.addAuthor(QStringLiteral("Roman Gilg"));
     about.setBugAddress("https://gitlab.com/kwinft/kdisplay/-/issues");
     KAboutData::setApplicationData(about);
 
     QCommandLineParser parser;
     parser.addOption(QCommandLineOption(
-        QStringLiteral("args"), i18n("Arguments for the config module"), QStringLiteral("args")));
+        QStringLiteral("args"), i18n("Arguments for the config module."), QStringLiteral("args")));
 
     about.setupCommandLine(&parser);
     parser.process(app);

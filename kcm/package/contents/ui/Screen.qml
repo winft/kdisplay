@@ -60,7 +60,7 @@ Controls.ScrollView {
         level: 4
         opacity: 0.6
         horizontalAlignment: Text.AlignHCenter
-        text: i18n("Drag screens to re-arrange them")
+        text: i18n("Drag displays to re-arrange them")
         visible: kcm.outputModel && kcm.outputModel.rowCount() > 1
     }
 
@@ -73,7 +73,7 @@ Controls.ScrollView {
         z: 90
 
         onClicked: kcm.identifyOutputs()
-        text: i18n("Identify")
+        text: i18nc("Itendifies displays with visual indicators", "Identify")
         icon.name: "documentinfo"
         focusPolicy: Qt.NoFocus
         visible: kcm.outputModel && kcm.outputModel.rowCount() > 1

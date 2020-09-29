@@ -41,13 +41,13 @@ KCM.SimpleKCM {
 
             Layout.fillWidth: true
             type: Kirigami.MessageType.Warning
-            text: i18n("Are you sure you want to disable all outputs? This might render the device unusable.")
+            text: i18n("Are you sure you want to disable all displays? This might render the device unusable.")
             showCloseButton: true
 
             actions: [
                 Kirigami.Action {
                     iconName: "dialog-ok"
-                    text: i18n("Disable All Outputs")
+                    text: i18n("Disable all displays")
                     onTriggered: {
                         dangerousSaveMsg.visible = false;
                         kcm.forceSave();
@@ -59,7 +59,7 @@ KCM.SimpleKCM {
             id: errBackendMsg
             Layout.fillWidth: true
             type: Kirigami.MessageType.Error
-            text: i18n("No KDisplay backend found. Please check your KDisplay installation.")
+            text: i18n("No Disman backend found. Please check your Disman installation.")
             visible: false
             showCloseButton: false
         }
@@ -67,7 +67,7 @@ KCM.SimpleKCM {
             id: errSaveMsg
             Layout.fillWidth: true
             type: Kirigami.MessageType.Error
-            text: i18n("Outputs could not be saved due to error.")
+            text: i18n("Displays could not be saved due to error.")
             visible: false
             showCloseButton: true
         }
@@ -94,9 +94,9 @@ KCM.SimpleKCM {
             onGlobalScaleWritten: scaleMsg.visible = true;
             onOutputConnect: {
                 if (connected) {
-                    connectMsg.text = i18n("A new output has been added. Settings have been reloaded.");
+                    connectMsg.text = i18n("A new display has been added. Settings have been reloaded.");
                 } else {
-                    connectMsg.text = i18n("An output has been removed. Settings have been reloaded.");
+                    connectMsg.text = i18n("A display has been removed. Settings have been reloaded.");
                 }
                 connectMsg.visible = true;
             }
