@@ -63,10 +63,24 @@ See first the respective section in [Disman's Readme][disman-reporting-issues].
 In case KDisplay is identified as being responsible for the issue you experience
 and no [issue ticket][issue] exists yet for this specific issue please create a new ticket.
 
+## Translations
+KDisplay has been translated to the following languages already:
+
+<a href="https://hosted.weblate.org/engage/kwinft">
+  <img src="https://hosted.weblate.org/widgets/kwinft/-/multi-blue.svg"
+       alt="Translation status" />
+</a>
+
+We use the [Weblate][weblate] service for localization.
+If you want to help us translating KDisplay to your native or other languages
+please join us there.
+
 ## Contributing
-See the [CONTRIBUTING.md](CONTRIBUTING.md) file on how to start contributing.
+If you are interested in improving the KDisplay source code directly,
+see the [CONTRIBUTING.md](CONTRIBUTING.md) file on how to get started.
 
 
 [aur-package]: https://aur.archlinux.org/packages/kdisplay-kwinft
 [disman-reporting-issues]: https://gitlab.com/kwinft/disman#reporting-issues
 [issue]: https://gitlab.com/kwinft/kdisplay/-/issues
+[weblate]: https://hosted.weblate.org/engage/kwinft
