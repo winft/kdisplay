@@ -1,12 +1,12 @@
 include_directories(
-    ${CMAKE_BINARY_DIR}/kded
+    ${CMAKE_BINARY_DIR}/plasma-integration/kded
 )
 
 add_executable(osdtest main.cpp
                        osdtest.cpp
-                       ../../kded/osd.cpp
-                       ../../kded/osdmanager.cpp
-                       ../../kded/osdaction.cpp
+                       ../../plasma-integration/kded/osd.cpp
+                       ../../plasma-integration/kded/osdmanager.cpp
+                       ../../plasma-integration/kded/osdaction.cpp
                        ../../common/utils.cpp
 )
 

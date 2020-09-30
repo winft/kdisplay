@@ -59,6 +59,7 @@ compare() {
 
 FAILED=0
 compare kcm kcm/po/kcm_kdisplay.pot
+compare plasma-integration plasma-integration/po/kdisplay-plasma.pot
 
 if [ "$FAILED" != "0" ]; then
     echo; echo "Number of failed pot-files: $FAILED"

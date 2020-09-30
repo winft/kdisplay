@@ -34,8 +34,7 @@ set(MIN_DISMAN_VERSION "0.519.80")
 find_package(Disman ${MIN_DISMAN_VERSION} REQUIRED)
 
 add_subdirectory(kcm)
-add_subdirectory(kded)
-add_subdirectory(plasmoid)
+add_subdirectory(plasma-integration)
 add_subdirectory(tests)
 
 install(FILES kdisplay.categories  DESTINATION  ${KDE_INSTALL_LOGGINGCATEGORIESDIR})

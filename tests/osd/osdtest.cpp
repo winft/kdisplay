@@ -16,7 +16,7 @@
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA       *
  *************************************************************************************/
 #include "osdtest.h"
-#include "../../kded/osdmanager.h"
+#include "../../plasma-integration/kded/osdmanager.h"
 
 #include <QCoreApplication>
 #include <QDBusConnection>

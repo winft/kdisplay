@@ -12,4 +12,4 @@ xgettext -F --from-code=UTF-8 -C --kde \
   -ci18n -ki18n:1 -ki18nc:1c,2 -ki18np:1,2 -ki18ncp:1c,2,3 -ktr2i18n:1 \
   -kI18N_NOOP:1 -kI18N_NOOP2:1c,2 -kI18N_NOOP2_NOSTRIP:1c,2 \
   -kaliasLocale -kki18n:1 -kki18nc:1c,2 -kki18np:1,2 -kki18ncp:1c,2,3 \
-  `find kcm -name "*.cpp" -o -name "*.qml"` -o $PO_DIR/kcm_kdisplay.pot
+  `find plasma-integration -name "*.cpp" -o -name "*.qml"` -o $PO_DIR/kdisplay-plasma.pot

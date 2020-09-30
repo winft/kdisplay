@@ -20,7 +20,7 @@
 
 #include "kdisplay_daemon_debug.h"
 
-#include "../common/utils.h"
+#include "../../common/utils.h"
 
 #include <disman/mode.h>
 
