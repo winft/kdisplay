@@ -8,33 +8,36 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 15:09+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2020-09-30 18:42+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/kwinft/"
+"kdisplay-app/nb_NO/>\n"
 "Language: nb_NO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.3-dev\n"
 
 #: app/main.cpp:20 app/main.cpp:22
 #, kde-format
 msgid "KDisplay"
-msgstr ""
+msgstr "KDisplay"
 
 #: app/main.cpp:24
 #, kde-format
 msgid "Copyright © 2020 Roman Gilg"
-msgstr ""
+msgstr "Opphavsrett © 2020 Roman Gilg"
 
 #: app/main.cpp:31
 #, kde-format
 msgid "Arguments for the config module."
-msgstr ""
+msgstr "Argumenter for oppsettsmodulen."
 
 #: kcm.cpp:55
-#, kde-format
+#, fuzzy, kde-format
 msgid "Display Configuration"
-msgstr ""
+msgstr "Paneloppsett"
 
 #: kcm.cpp:57
 #, kde-format
@@ -44,41 +47,41 @@ msgstr ""
 #: kcm.cpp:59
 #, kde-format
 msgid "Copyright © 2019 Roman Gilg"
-msgstr ""
+msgstr "Opphavsrett © Roman Gilg"
 
 #: kcm.cpp:60
 #, kde-format
 msgid "Maintainer"
-msgstr ""
+msgstr "Vedlikeholder"
 
 #: kcm.cpp:60
 #, kde-format
 msgid "Roman Gilg"
-msgstr ""
+msgstr "Roman Gilg"
 
 #: output_model.cpp:92
 #, kde-format
 msgctxt "Approximate refresh rate in Hz (rounded to integer)"
 msgid "≈ %1 Hz"
-msgstr ""
+msgstr "≈ %1 Hz"
 
 #: output_model.cpp:96
 #, kde-format
 msgctxt "Refresh rate in Hz (rounded to 3 digits)"
 msgid "%1 Hz"
-msgstr ""
+msgstr "%1 Hz"
 
 #: output_model.cpp:497
 #, kde-format
 msgctxt "Width x height (aspect ratio)"
 msgid "%1x%2 (%3:%4)"
-msgstr ""
+msgstr "%1x%2 (%3:%4)"
 
 #: output_model.cpp:559
 #, kde-format
 msgctxt "Displayed when no replication source is selected."
 msgid "None"
-msgstr ""
+msgstr "Ingen"
 
 #: output_model.cpp:566
 #, kde-format
@@ -86,115 +89,117 @@ msgid "Replicated by other display"
 msgstr ""
 
 #: package/contents/ui/Orientation.qml:23
-#, kde-format
+#, fuzzy, kde-format
 msgid "Orientation:"
-msgstr ""
+msgstr "Orientasjon:"
 
 #: package/contents/ui/Orientation.qml:36
 #: package/contents/ui/OutputPanel.qml:112
 #: package/contents/ui/OutputPanel.qml:139
 #, kde-format
 msgid "Auto"
-msgstr ""
+msgstr "Auto"
 
 #: package/contents/ui/Orientation.qml:42
 #, kde-format
 msgid "Only when in tablet mode."
-msgstr ""
+msgstr "Kun i nettbrettmodus."
 
 #: package/contents/ui/Output.qml:154
-#, kde-format
+#, fuzzy, kde-format
 msgid "Replicas"
-msgstr ""
+msgstr "Kopier"
 
 #: package/contents/ui/OutputPanel.qml:31
 #, kde-format
 msgid "Enabled"
-msgstr ""
+msgstr "Påskrudd"
 
 #: package/contents/ui/OutputPanel.qml:39
 #, kde-format
 msgid "Primary"
-msgstr ""
+msgstr "Primær"
 
 #: package/contents/ui/OutputPanel.qml:54
-#, kde-format
+#, fuzzy, kde-format
 msgid "Scale:"
-msgstr ""
+msgstr "Skalering:"
 
 #: package/contents/ui/OutputPanel.qml:84 package/contents/ui/Panel.qml:118
 #, kde-format
 msgctxt "Global scale factor expressed in percentage"
 msgid "%1%"
-msgstr ""
+msgstr "%1%"
 
 #: package/contents/ui/OutputPanel.qml:104
 #, kde-format
 msgid "Resolution:"
-msgstr ""
+msgstr "Oppløsning:"
 
 #: package/contents/ui/OutputPanel.qml:131
 #: package/contents/ui/OutputPanel.qml:146
 #, kde-format
 msgid "Refresh rate:"
-msgstr ""
+msgstr "Gjenoppfriskningstakt:"
 
 #: package/contents/ui/OutputPanel.qml:154
-#, kde-format
+#, fuzzy, kde-format
 msgid "Replica of:"
-msgstr ""
+msgstr "Kopi av:"
 
 #: package/contents/ui/Panel.qml:30
 #, kde-format
 msgid "Device:"
-msgstr ""
+msgstr "Enhet:"
 
 #: package/contents/ui/Panel.qml:81
-#, kde-format
+#, fuzzy, kde-format
 msgid "Global scale:"
-msgstr ""
+msgstr "Skalering for hele systemet:"
 
 #: package/contents/ui/Panel.qml:139
-#, kde-format
+#, fuzzy, kde-format
 msgid ""
 "The global scale factor is limited to multiples of 6.25% to minimize visual "
 "glitches in applications using the X11 windowing system."
 msgstr ""
+"Skaleringsfaktoren for hele systemet er begrenset til multipler av 6.25% for "
+"å minimere visuelle forstyrrelser i programmer som bruker X11-vindussystemet."
 
 #: package/contents/ui/Panel.qml:151
-#, kde-format
+#, fuzzy, kde-format
 msgid "Save displays' properties:"
-msgstr ""
+msgstr "Lagre panelets egenskaper:"
 
 #: package/contents/ui/Panel.qml:157
-#, kde-format
+#, fuzzy, kde-format
 msgid "For any display arrangement"
-msgstr ""
+msgstr "For alle paneltilpasninger"
 
 #: package/contents/ui/Panel.qml:164
-#, kde-format
+#, fuzzy, kde-format
 msgid "For only this specific display arrangement"
-msgstr ""
+msgstr "Kun for denne spesifikke paneltilpasningen"
 
 #: package/contents/ui/RotationButton.qml:61
-#, kde-format
+#, fuzzy, kde-format
 msgid "90° Clockwise"
-msgstr ""
+msgstr "90° med klokken"
 
 #: package/contents/ui/RotationButton.qml:65
 #, kde-format
 msgid "Upside Down"
-msgstr ""
+msgstr "Opp-ned"
 
 #: package/contents/ui/RotationButton.qml:69
-#, kde-format
+#, fuzzy, kde-format
 msgid "90° Counterclockwise"
-msgstr ""
+msgstr "90° mot klokken"
 
 #: package/contents/ui/RotationButton.qml:74
 #, kde-format
 msgid "No Rotation"
-msgstr ""
+msgstr "Ingen rotasjon"
 
 #: package/contents/ui/Screen.qml:63
 #, kde-format
@@ -205,7 +210,7 @@ msgstr ""
 #, kde-format
 msgctxt "Itendifies displays with visual indicators"
 msgid "Identify"
-msgstr ""
+msgstr "Identifiser"
 
 #: package/contents/ui/main.qml:44
 #, kde-format
@@ -230,9 +235,10 @@ msgid "Displays could not be saved due to error."
 msgstr ""
 
 #: package/contents/ui/main.qml:78
-#, kde-format
+#, fuzzy, kde-format
 msgid "New global scale applied. Change will come into effect after restart."
 msgstr ""
+"Ny skalering for hele systemet i bruk. Endringer trer i effekt etter omstart."
 
 #: package/contents/ui/main.qml:97
 #, kde-format
