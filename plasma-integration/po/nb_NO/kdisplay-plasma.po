@@ -8,106 +8,110 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-30 21:07+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2020-09-30 20:57+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/kwinft/"
+"kdisplay-plasma-integration/nb_NO/>\n"
 "Language: nb_NO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.3-dev\n"
 
 #: plasma-integration/kded/daemon.cpp:65
-#, kde-format
+#, fuzzy, kde-format
 msgid "Switch Display"
-msgstr ""
+msgstr "Bytt panel"
 
 #: plasma-integration/kded/osdaction.cpp:40
-#, kde-format
+#, fuzzy, kde-format
 msgid "Switch to external display"
-msgstr ""
+msgstr "Bytt til eksternt panel"
 
 #: plasma-integration/kded/osdaction.cpp:42
-#, kde-format
+#, fuzzy, kde-format
 msgid "Switch to laptop display"
-msgstr ""
+msgstr "Bytt til bærbar-panel"
 
 #: plasma-integration/kded/osdaction.cpp:44
-#, kde-format
+#, fuzzy, kde-format
 msgid "Unify displays"
-msgstr ""
+msgstr "Koble sammen paneler"
 
 #: plasma-integration/kded/osdaction.cpp:46
 #, kde-format
 msgid "Extend to left"
-msgstr ""
+msgstr "Utvid til venstre"
 
 #: plasma-integration/kded/osdaction.cpp:48
 #, kde-format
 msgid "Extend to right"
-msgstr ""
+msgstr "Utvid til høyre"
 
 #: plasma-integration/kded/osdaction.cpp:50
 #, kde-format
 msgid "Leave unchanged"
-msgstr ""
+msgstr "Levn uendret"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:39
-#, kde-format
+#, fuzzy, kde-format
 msgid "Enable Presentation Mode"
-msgstr ""
+msgstr "Skru på presentasjonsmodus"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:53
-#, kde-format
+#, fuzzy, kde-format
 msgid "User enabled presentation mode"
-msgstr ""
+msgstr "Bruker skrudde på presentasjonsmodus"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:83
 #, kde-format
 msgid ""
 "This will prevent your display and computer from turning off automatically."
-msgstr ""
+msgstr "Dette forhindrer panelet og datamaskinen fra å bli avslått."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:110
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "Some Application and n others enforce presentation mode"
 msgid "%2 and %1 other application are enforcing presentation mode."
 msgid_plural "%2 and %1 other applications are enforcing presentation mode."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%2 og %1 annet program påtvinger presentasjonsmodus."
+msgstr[1] "%1 og %1 andre programmer påtvinger presentasjonsmodus."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:116
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "Some Application enforce presentation mode"
 msgid "%1 is enforcing presentation mode."
-msgstr ""
+msgstr "%1 påtvinger presentasjonsmodus."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:119
-#, kde-format
+#, fuzzy, kde-format
 msgctxt ""
 "Some Application enforce presentation mode: Reason provided by the app"
 msgid "%1 is enforcing presentation mode: %2"
-msgstr ""
+msgstr "%1 påtvinger presentasjonsmodus: %2"
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:54
-#, kde-format
+#, fuzzy, kde-format
 msgid "Display Layout"
-msgstr ""
+msgstr "Panelanordning"
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:93
-#, kde-format
+#, fuzzy, kde-format
 msgid ""
 "You can only apply a different display layout when there is more than one "
 "display device plugged in."
 msgstr ""
+"Du kan kun bruke en annen panelanordning når det er mer enn en panelenhet "
+"innplugget."
 
 #: plasma-integration/plasmoid/package/contents/ui/main.qml:40
 #, kde-format
 msgid "Presentation mode is enabled"
-msgstr ""
+msgstr "Presentasjonsmodus påslått"
 
 #: plasma-integration/plasmoid/package/contents/ui/main.qml:44
 #, kde-format
 msgctxt "Open the full display settings module"
 msgid "Advanced Display Settings"
-msgstr ""
+msgstr "Avanserte skjerminnstillinger"
