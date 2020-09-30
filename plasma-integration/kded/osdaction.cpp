@@ -37,11 +37,11 @@ QString OsdAction::actionLabel(OsdAction::Action action) const
     switch (action) {
     // this is built by both daemon and plasmoid, needs explicit translation domain here
     case SwitchToExternal:
-        return i18nd("kdisplay", "Switch to external screen");
+        return i18nd("kdisplay", "Switch to external display");
     case SwitchToInternal:
-        return i18nd("kdisplay", "Switch to laptop screen");
+        return i18nd("kdisplay", "Switch to laptop display");
     case Clone:
-        return i18nd("kdisplay", "Unify outputs");
+        return i18nd("kdisplay", "Unify displays");
     case ExtendLeft:
         return i18nd("kdisplay", "Extend to left");
     case ExtendRight:

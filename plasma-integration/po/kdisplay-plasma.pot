@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-30 21:01+0200\n"
+"POT-Creation-Date: 2020-09-30 21:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,17 +25,17 @@ msgstr ""
 
 #: plasma-integration/kded/osdaction.cpp:40
 #, kde-format
-msgid "Switch to external screen"
+msgid "Switch to external display"
 msgstr ""
 
 #: plasma-integration/kded/osdaction.cpp:42
 #, kde-format
-msgid "Switch to laptop screen"
+msgid "Switch to laptop display"
 msgstr ""
 
 #: plasma-integration/kded/osdaction.cpp:44
 #, kde-format
-msgid "Unify outputs"
+msgid "Unify displays"
 msgstr ""
 
 #: plasma-integration/kded/osdaction.cpp:46
@@ -66,7 +66,7 @@ msgstr ""
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:83
 #, kde-format
 msgid ""
-"This will prevent your screen and computer from turning off automatically."
+"This will prevent your display and computer from turning off automatically."
 msgstr ""
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:110
@@ -92,13 +92,13 @@ msgstr ""
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:54
 #, kde-format
-msgid "Screen Layout"
+msgid "Display Layout"
 msgstr ""
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:93
 #, kde-format
 msgid ""
-"You can only apply a different screen layout when there is more than one "
+"You can only apply a different display layout when there is more than one "
 "display device plugged in."
 msgstr ""
 

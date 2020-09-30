@@ -51,7 +51,7 @@ ColumnLayout {
     PlasmaExtras.Heading {
         Layout.fillWidth: true
         level: 3
-        text: i18n("Screen Layout")
+        text: i18n("Display Layout")
     }
 
     // Screen layout selector section
@@ -90,7 +90,7 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.maximumWidth: Math.min(units.gridUnit * 20, implicitWidth)
         wrapMode: Text.Wrap
-        text: i18n("You can only apply a different screen layout when there is more than one display device plugged in.")
+        text: i18n("You can only apply a different display layout when there is more than one display device plugged in.")
         font.pointSize: theme.smallestFont.pointSize
         visible: false
     }

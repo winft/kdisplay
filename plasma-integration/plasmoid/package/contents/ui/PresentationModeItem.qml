@@ -80,7 +80,7 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.leftMargin: checkBoxMetrics.width
         font.pointSize: theme.smallestFont.pointSize
-        text: i18n("This will prevent your screen and computer from turning off automatically.")
+        text: i18n("This will prevent your display and computer from turning off automatically.")
         wrapMode: Text.WordWrap
     }
 
