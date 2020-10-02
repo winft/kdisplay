@@ -1,5 +1,12 @@
 # Changelog
 All notable changes to KDisplay will be documented in this file.
+## [5.20.0-beta.1](https://gitlab.com/kwinft/kdisplay/compare/kdisplay@5.20.0-beta.0...kdisplay@5.20.0-beta.1) (2020-10-02)
+
+
+### Bug Fixes
+
+* **kcm:** snap to other outputs without gap ([b9e18f8](https://gitlab.com/kwinft/kdisplay/commit/b9e18f8cd3f5da90dff4c1107477c45a56641710))
+
 ## [5.20.0-beta.0](https://gitlab.com/kwinft/kdisplay/compare/kdisplay@5.19.0-beta.0...kdisplay@5.20.0-beta.0) (2020-09-25)
 
 
