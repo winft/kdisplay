@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-30 20:39+0200\n"
-"PO-Revision-Date: 2020-09-30 20:14+0000\n"
-"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"PO-Revision-Date: 2020-10-06 14:26+0000\n"
+"Last-Translator: Roman Gilg <subdiff@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/kwinft/"
 "kdisplay-app/nb_NO/>\n"
 "Language: nb_NO\n"
@@ -35,12 +35,12 @@ msgid "Arguments for the config module."
 msgstr "Argumenter for oppsettsmodulen."
 
 #: kcm/kcm.cpp:55
-#, fuzzy, kde-format
+#, kde-format
 msgid "Display Configuration"
 msgstr "Paneloppsett"
 
 #: kcm/kcm.cpp:57
-#, fuzzy, kde-format
+#, kde-format
 msgid "Manage and configure monitors and displays."
 msgstr "Håndter og sett opp skjermer og paneler."
 
@@ -84,12 +84,12 @@ msgid "None"
 msgstr "Ingen"
 
 #: kcm/output_model.cpp:566
-#, fuzzy, kde-format
+#, kde-format
 msgid "Replicated by other display"
 msgstr "Kopi av annet panel"
 
 #: kcm/package/contents/ui/Orientation.qml:23
-#, fuzzy, kde-format
+#, kde-format
 msgid "Orientation:"
 msgstr "Orientasjon:"
 
@@ -106,7 +106,7 @@ msgid "Only when in tablet mode."
 msgstr "Kun i nettbrettmodus."
 
 #: kcm/package/contents/ui/Output.qml:154
-#, fuzzy, kde-format
+#, kde-format
 msgid "Replicas"
 msgstr "Kopier"
 
@@ -121,7 +121,7 @@ msgid "Primary"
 msgstr "Primær"
 
 #: kcm/package/contents/ui/OutputPanel.qml:54
-#, fuzzy, kde-format
+#, kde-format
 msgid "Scale:"
 msgstr "Skalering:"
 
@@ -144,7 +144,7 @@ msgid "Refresh rate:"
 msgstr "Gjenoppfriskningstakt:"
 
 #: kcm/package/contents/ui/OutputPanel.qml:154
-#, fuzzy, kde-format
+#, kde-format
 msgid "Replica of:"
 msgstr "Kopi av:"
 
@@ -154,12 +154,12 @@ msgid "Device:"
 msgstr "Enhet:"
 
 #: kcm/package/contents/ui/Panel.qml:81
-#, fuzzy, kde-format
+#, kde-format
 msgid "Global scale:"
 msgstr "Skalering for hele systemet:"
 
 #: kcm/package/contents/ui/Panel.qml:139
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "The global scale factor is limited to multiples of 6.25% to minimize visual "
 "glitches in applications using the X11 windowing system."
@@ -168,22 +168,22 @@ msgstr ""
 "å minimere visuelle forstyrrelser i programmer som bruker X11-vindussystemet."
 
 #: kcm/package/contents/ui/Panel.qml:151
-#, fuzzy, kde-format
+#, kde-format
 msgid "Save displays' properties:"
 msgstr "Lagre panelets egenskaper:"
 
 #: kcm/package/contents/ui/Panel.qml:157
-#, fuzzy, kde-format
+#, kde-format
 msgid "For any display arrangement"
 msgstr "For alle paneltilpasninger"
 
 #: kcm/package/contents/ui/Panel.qml:164
-#, fuzzy, kde-format
+#, kde-format
 msgid "For only this specific display arrangement"
 msgstr "Kun for denne spesifikke paneltilpasningen"
 
 #: kcm/package/contents/ui/RotationButton.qml:61
-#, fuzzy, kde-format
+#, kde-format
 msgid "90° Clockwise"
 msgstr "90° med klokken"
 
@@ -193,7 +193,7 @@ msgid "Upside Down"
 msgstr "Opp-ned"
 
 #: kcm/package/contents/ui/RotationButton.qml:69
-#, fuzzy, kde-format
+#, kde-format
 msgid "90° Counterclockwise"
 msgstr "90° mot klokken"
 
@@ -203,7 +203,7 @@ msgid "No Rotation"
 msgstr "Ingen rotasjon"
 
 #: kcm/package/contents/ui/Screen.qml:63
-#, fuzzy, kde-format
+#, kde-format
 msgid "Drag displays to re-arrange them"
 msgstr "Dra paneler for å flytte dem"
 
@@ -214,7 +214,7 @@ msgid "Identify"
 msgstr "Identifiser"
 
 #: kcm/package/contents/ui/main.qml:44
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "Are you sure you want to disable all displays? This might render the device "
 "unusable."
@@ -223,7 +223,7 @@ msgstr ""
 "ubrukelig."
 
 #: kcm/package/contents/ui/main.qml:50
-#, fuzzy, kde-format
+#, kde-format
 msgid "Disable all displays"
 msgstr "Skru av alle paneler"
 
@@ -233,12 +233,12 @@ msgid "No Disman backend found. Please check your Disman installation."
 msgstr "Fant ingen Disman-bakende. Sjekk din Disman-installasjon."
 
 #: kcm/package/contents/ui/main.qml:70
-#, fuzzy, kde-format
+#, kde-format
 msgid "Displays could not be saved due to error."
 msgstr "Kunne ikke lagre paneler."
 
 #: kcm/package/contents/ui/main.qml:78
-#, fuzzy, kde-format
+#, kde-format
 msgid "New global scale applied. Change will come into effect after restart."
 msgstr ""
 "Ny skalering for hele systemet i bruk. Endringer trer i effekt etter omstart."
@@ -250,6 +250,6 @@ msgstr ""
 "Et nytt panel har blitt lagt til. Innstillingene har blitt gjeninnlastet."
 
 #: kcm/package/contents/ui/main.qml:99
-#, fuzzy, kde-format
+#, kde-format
 msgid "A display has been removed. Settings have been reloaded."
 msgstr "Et panel har blitt fjernet. Innstillingene har blitt gjeninnlastet."
