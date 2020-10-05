@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-30 21:07+0200\n"
-"PO-Revision-Date: 2020-09-30 20:57+0000\n"
-"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"PO-Revision-Date: 2020-10-06 14:26+0000\n"
+"Last-Translator: Roman Gilg <subdiff@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/kwinft/"
 "kdisplay-plasma-integration/nb_NO/>\n"
 "Language: nb_NO\n"
@@ -20,22 +20,22 @@ msgstr ""
 "X-Generator: Weblate 4.3-dev\n"
 
 #: plasma-integration/kded/daemon.cpp:65
-#, fuzzy, kde-format
+#, kde-format
 msgid "Switch Display"
 msgstr "Bytt panel"
 
 #: plasma-integration/kded/osdaction.cpp:40
-#, fuzzy, kde-format
+#, kde-format
 msgid "Switch to external display"
 msgstr "Bytt til eksternt panel"
 
 #: plasma-integration/kded/osdaction.cpp:42
-#, fuzzy, kde-format
+#, kde-format
 msgid "Switch to laptop display"
 msgstr "Bytt til bærbar-panel"
 
 #: plasma-integration/kded/osdaction.cpp:44
-#, fuzzy, kde-format
+#, kde-format
 msgid "Unify displays"
 msgstr "Koble sammen paneler"
 
@@ -55,12 +55,12 @@ msgid "Leave unchanged"
 msgstr "Levn uendret"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:39
-#, fuzzy, kde-format
+#, kde-format
 msgid "Enable Presentation Mode"
 msgstr "Skru på presentasjonsmodus"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:53
-#, fuzzy, kde-format
+#, kde-format
 msgid "User enabled presentation mode"
 msgstr "Bruker skrudde på presentasjonsmodus"
 
@@ -71,7 +71,7 @@ msgid ""
 msgstr "Dette forhindrer panelet og datamaskinen fra å bli avslått."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:110
-#, fuzzy, kde-format
+#, kde-format
 msgctxt "Some Application and n others enforce presentation mode"
 msgid "%2 and %1 other application are enforcing presentation mode."
 msgid_plural "%2 and %1 other applications are enforcing presentation mode."
@@ -79,25 +79,25 @@ msgstr[0] "%2 og %1 annet program påtvinger presentasjonsmodus."
 msgstr[1] "%1 og %1 andre programmer påtvinger presentasjonsmodus."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:116
-#, fuzzy, kde-format
+#, kde-format
 msgctxt "Some Application enforce presentation mode"
 msgid "%1 is enforcing presentation mode."
 msgstr "%1 påtvinger presentasjonsmodus."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:119
-#, fuzzy, kde-format
+#, kde-format
 msgctxt ""
 "Some Application enforce presentation mode: Reason provided by the app"
 msgid "%1 is enforcing presentation mode: %2"
 msgstr "%1 påtvinger presentasjonsmodus: %2"
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:54
-#, fuzzy, kde-format
+#, kde-format
 msgid "Display Layout"
 msgstr "Panelanordning"
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:93
-#, fuzzy, kde-format
+#, kde-format
 msgid ""
 "You can only apply a different display layout when there is more than one "
 "display device plugged in."
