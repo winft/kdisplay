@@ -55,7 +55,9 @@ Disman::ConfigPtr testScreenConfig::loadConfig(const QByteArray& fileName)
         qWarning() << op->error_string();
         return ConfigPtr();
     }
-    return op->config();
+    auto config = op->config();
+    config->set_supported_features(Config::Feature::PrimaryDisplay);
+    return config;
 }
 
 void testScreenConfig::initTestCase()
