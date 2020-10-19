@@ -8,14 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-30 21:07+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2020-10-19 11:12+0000\n"
+"Last-Translator: Sydney Gems <sydney@gems.technology>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/kwinft/"
+"kdisplay-plasma-integration/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.3.1-dev\n"
 
 #: plasma-integration/kded/daemon.cpp:65
 #, kde-format
@@ -35,17 +37,17 @@ msgstr ""
 #: plasma-integration/kded/osdaction.cpp:44
 #, kde-format
 msgid "Unify displays"
-msgstr ""
+msgstr "Unifier les écrans"
 
 #: plasma-integration/kded/osdaction.cpp:46
 #, kde-format
 msgid "Extend to left"
-msgstr ""
+msgstr "Étendre vers la gauche"
 
 #: plasma-integration/kded/osdaction.cpp:48
 #, kde-format
 msgid "Extend to right"
-msgstr ""
+msgstr "Étendre vers la droite"
 
 #: plasma-integration/kded/osdaction.cpp:50
 #, kde-format
@@ -55,7 +57,7 @@ msgstr ""
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:39
 #, kde-format
 msgid "Enable Presentation Mode"
-msgstr ""
+msgstr "Activer le mode « présentation »"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:53
 #, kde-format
@@ -67,27 +69,28 @@ msgstr ""
 msgid ""
 "This will prevent your display and computer from turning off automatically."
 msgstr ""
+"Cela empêchera votre écran et votre ordinateur de s'éteindre automatiquement."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:110
 #, kde-format
 msgctxt "Some Application and n others enforce presentation mode"
 msgid "%2 and %1 other application are enforcing presentation mode."
 msgid_plural "%2 and %1 other applications are enforcing presentation mode."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%2 et %1 autre application requièrent le mode « présentation »."
+msgstr[1] "%2 et %1 autres applications requièrent le mode « présentation »."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:116
 #, kde-format
 msgctxt "Some Application enforce presentation mode"
 msgid "%1 is enforcing presentation mode."
-msgstr ""
+msgstr "%1 requière le mode « présentation »."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:119
 #, kde-format
 msgctxt ""
 "Some Application enforce presentation mode: Reason provided by the app"
 msgid "%1 is enforcing presentation mode: %2"
-msgstr ""
+msgstr "%1 requière le mode « présentation » : %2"
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:54
 #, kde-format
@@ -100,6 +103,8 @@ msgid ""
 "You can only apply a different display layout when there is more than one "
 "display device plugged in."
 msgstr ""
+"Au moins un second périphérique d'affichage doit être connecté pour que vous "
+"puissiez appliquer une disposition d'écran différente."
 
 #: plasma-integration/plasmoid/package/contents/ui/main.qml:40
 #, kde-format
@@ -110,4 +115,4 @@ msgstr ""
 #, kde-format
 msgctxt "Open the full display settings module"
 msgid "Advanced Display Settings"
-msgstr ""
+msgstr "Configuration avancée de l'affichage"
