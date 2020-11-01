@@ -1,0 +1,246 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-30 20:39+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: kcm/app/main.cpp:20 kcm/app/main.cpp:22
+#, kde-format
+msgid "KDisplay"
+msgstr ""
+
+#: kcm/app/main.cpp:24
+#, kde-format
+msgid "Copyright © 2020 Roman Gilg"
+msgstr ""
+
+#: kcm/app/main.cpp:31
+#, kde-format
+msgid "Arguments for the config module."
+msgstr ""
+
+#: kcm/kcm.cpp:55
+#, kde-format
+msgid "Display Configuration"
+msgstr ""
+
+#: kcm/kcm.cpp:57
+#, kde-format
+msgid "Manage and configure monitors and displays."
+msgstr ""
+
+#: kcm/kcm.cpp:59
+#, kde-format
+msgid "Copyright © 2019 Roman Gilg"
+msgstr ""
+
+#: kcm/kcm.cpp:60
+#, kde-format
+msgid "Maintainer"
+msgstr ""
+
+#: kcm/kcm.cpp:60
+#, kde-format
+msgid "Roman Gilg"
+msgstr ""
+
+#: kcm/output_model.cpp:92
+#, kde-format
+msgctxt "Approximate refresh rate in Hz (rounded to integer)"
+msgid "≈ %1 Hz"
+msgstr ""
+
+#: kcm/output_model.cpp:96
+#, kde-format
+msgctxt "Refresh rate in Hz (rounded to 3 digits)"
+msgid "%1 Hz"
+msgstr ""
+
+#: kcm/output_model.cpp:497
+#, kde-format
+msgctxt "Width x height (aspect ratio)"
+msgid "%1x%2 (%3:%4)"
+msgstr ""
+
+#: kcm/output_model.cpp:559
+#, kde-format
+msgctxt "Displayed when no replication source is selected."
+msgid "None"
+msgstr ""
+
+#: kcm/output_model.cpp:566
+#, kde-format
+msgid "Replicated by other display"
+msgstr ""
+
+#: kcm/package/contents/ui/Orientation.qml:23
+#, kde-format
+msgid "Orientation:"
+msgstr ""
+
+#: kcm/package/contents/ui/Orientation.qml:36
+#: kcm/package/contents/ui/OutputPanel.qml:112
+#: kcm/package/contents/ui/OutputPanel.qml:139
+#, kde-format
+msgid "Auto"
+msgstr ""
+
+#: kcm/package/contents/ui/Orientation.qml:42
+#, kde-format
+msgid "Only when in tablet mode."
+msgstr ""
+
+#: kcm/package/contents/ui/Output.qml:154
+#, kde-format
+msgid "Replicas"
+msgstr ""
+
+#: kcm/package/contents/ui/OutputPanel.qml:31
+#, kde-format
+msgid "Enabled"
+msgstr ""
+
+#: kcm/package/contents/ui/OutputPanel.qml:39
+#, kde-format
+msgid "Primary"
+msgstr ""
+
+#: kcm/package/contents/ui/OutputPanel.qml:54
+#, kde-format
+msgid "Scale:"
+msgstr ""
+
+#: kcm/package/contents/ui/OutputPanel.qml:84
+#: kcm/package/contents/ui/Panel.qml:118
+#, kde-format
+msgctxt "Global scale factor expressed in percentage"
+msgid "%1%"
+msgstr ""
+
+#: kcm/package/contents/ui/OutputPanel.qml:104
+#, kde-format
+msgid "Resolution:"
+msgstr ""
+
+#: kcm/package/contents/ui/OutputPanel.qml:131
+#: kcm/package/contents/ui/OutputPanel.qml:146
+#, kde-format
+msgid "Refresh rate:"
+msgstr ""
+
+#: kcm/package/contents/ui/OutputPanel.qml:154
+#, kde-format
+msgid "Replica of:"
+msgstr ""
+
+#: kcm/package/contents/ui/Panel.qml:30
+#, kde-format
+msgid "Device:"
+msgstr ""
+
+#: kcm/package/contents/ui/Panel.qml:81
+#, kde-format
+msgid "Global scale:"
+msgstr ""
+
+#: kcm/package/contents/ui/Panel.qml:139
+#, kde-format
+msgid ""
+"The global scale factor is limited to multiples of 6.25% to minimize visual "
+"glitches in applications using the X11 windowing system."
+msgstr ""
+
+#: kcm/package/contents/ui/Panel.qml:151
+#, kde-format
+msgid "Save displays' properties:"
+msgstr ""
+
+#: kcm/package/contents/ui/Panel.qml:157
+#, kde-format
+msgid "For any display arrangement"
+msgstr ""
+
+#: kcm/package/contents/ui/Panel.qml:164
+#, kde-format
+msgid "For only this specific display arrangement"
+msgstr ""
+
+#: kcm/package/contents/ui/RotationButton.qml:61
+#, kde-format
+msgid "90° Clockwise"
+msgstr ""
+
+#: kcm/package/contents/ui/RotationButton.qml:65
+#, kde-format
+msgid "Upside Down"
+msgstr ""
+
+#: kcm/package/contents/ui/RotationButton.qml:69
+#, kde-format
+msgid "90° Counterclockwise"
+msgstr ""
+
+#: kcm/package/contents/ui/RotationButton.qml:74
+#, kde-format
+msgid "No Rotation"
+msgstr ""
+
+#: kcm/package/contents/ui/Screen.qml:63
+#, kde-format
+msgid "Drag displays to re-arrange them"
+msgstr ""
+
+#: kcm/package/contents/ui/Screen.qml:76
+#, kde-format
+msgctxt "Itendifies displays with visual indicators"
+msgid "Identify"
+msgstr ""
+
+#: kcm/package/contents/ui/main.qml:44
+#, kde-format
+msgid ""
+"Are you sure you want to disable all displays? This might render the device "
+"unusable."
+msgstr ""
+
+#: kcm/package/contents/ui/main.qml:50
+#, kde-format
+msgid "Disable all displays"
+msgstr ""
+
+#: kcm/package/contents/ui/main.qml:62
+#, kde-format
+msgid "No Disman backend found. Please check your Disman installation."
+msgstr ""
+
+#: kcm/package/contents/ui/main.qml:70
+#, kde-format
+msgid "Displays could not be saved due to error."
+msgstr ""
+
+#: kcm/package/contents/ui/main.qml:78
+#, kde-format
+msgid "New global scale applied. Change will come into effect after restart."
+msgstr ""
+
+#: kcm/package/contents/ui/main.qml:97
+#, kde-format
+msgid "A new display has been added. Settings have been reloaded."
+msgstr ""
+
+#: kcm/package/contents/ui/main.qml:99
+#, kde-format
+msgid "A display has been removed. Settings have been reloaded."
+msgstr ""
