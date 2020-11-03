@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-30 21:07+0200\n"
-"PO-Revision-Date: 2020-10-19 11:12+0000\n"
+"PO-Revision-Date: 2020-11-03 19:59+0000\n"
 "Last-Translator: Sydney Gems <sydney@gems.technology>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/kwinft/"
 "kdisplay-plasma-integration/fr/>\n"
@@ -17,22 +17,22 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.3.1-dev\n"
+"X-Generator: Weblate 4.3.2-dev\n"
 
 #: plasma-integration/kded/daemon.cpp:65
 #, kde-format
 msgid "Switch Display"
-msgstr ""
+msgstr "Basculer l'affichage"
 
 #: plasma-integration/kded/osdaction.cpp:40
 #, kde-format
 msgid "Switch to external display"
-msgstr ""
+msgstr "Basculer vers l'écran externe"
 
 #: plasma-integration/kded/osdaction.cpp:42
 #, kde-format
 msgid "Switch to laptop display"
-msgstr ""
+msgstr "Basculer vers l'écran du portable"
 
 #: plasma-integration/kded/osdaction.cpp:44
 #, kde-format
