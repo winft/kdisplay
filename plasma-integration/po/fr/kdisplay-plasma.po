@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-30 21:07+0200\n"
 "PO-Revision-Date: 2020-11-04 00:28+0000\n"
-"Last-Translator: Sydney Gems <sydney@gems.technology>\n"
+"Last-Translator: Estébastien Robespi <estebastien@mailbox.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/kwinft/"
 "kdisplay-plasma-integration/fr/>\n"
 "Language: fr\n"
@@ -32,7 +32,7 @@ msgstr "Basculer vers l'écran externe"
 #: plasma-integration/kded/osdaction.cpp:42
 #, kde-format
 msgid "Switch to laptop display"
-msgstr "Basculer vers l'écran du portable"
+msgstr "Basculer vers l'écran intégré"
 
 #: plasma-integration/kded/osdaction.cpp:44
 #, kde-format
