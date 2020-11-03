@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-30 21:07+0200\n"
-"PO-Revision-Date: 2020-11-03 19:59+0000\n"
+"PO-Revision-Date: 2020-11-04 00:28+0000\n"
 "Last-Translator: Sydney Gems <sydney@gems.technology>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/kwinft/"
 "kdisplay-plasma-integration/fr/>\n"
@@ -52,7 +52,7 @@ msgstr "Étendre vers la droite"
 #: plasma-integration/kded/osdaction.cpp:50
 #, kde-format
 msgid "Leave unchanged"
-msgstr ""
+msgstr "Garder en l'état"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:39
 #, kde-format
@@ -62,7 +62,7 @@ msgstr "Activer le mode « présentation »"
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:53
 #, kde-format
 msgid "User enabled presentation mode"
-msgstr ""
+msgstr "L'utilisateur a activé le mode « présentation »"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:83
 #, kde-format
@@ -95,7 +95,7 @@ msgstr "%1 requière le mode « présentation » : %2"
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:54
 #, kde-format
 msgid "Display Layout"
-msgstr ""
+msgstr "Disposition d'écran"
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:93
 #, kde-format
@@ -109,7 +109,7 @@ msgstr ""
 #: plasma-integration/plasmoid/package/contents/ui/main.qml:40
 #, kde-format
 msgid "Presentation mode is enabled"
-msgstr ""
+msgstr "Le mode « présentation » est actif"
 
 #: plasma-integration/plasmoid/package/contents/ui/main.qml:44
 #, kde-format
