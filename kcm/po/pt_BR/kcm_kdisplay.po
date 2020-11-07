@@ -8,152 +8,155 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-30 20:39+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2020-11-08 00:51+0000\n"
+"Last-Translator: Blumen Herzenschein <herzenschein@gmail.com>\n"
+"Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
+"kwinft/kdisplay-app/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.3.2\n"
 
 #: kcm/app/main.cpp:20 kcm/app/main.cpp:22
 #, kde-format
 msgid "KDisplay"
-msgstr ""
+msgstr "KDisplay"
 
 #: kcm/app/main.cpp:24
 #, kde-format
 msgid "Copyright © 2020 Roman Gilg"
-msgstr ""
+msgstr "Copyright © 2020 Roman Gilg"
 
 #: kcm/app/main.cpp:31
 #, kde-format
 msgid "Arguments for the config module."
-msgstr ""
+msgstr "Argumentos para o módulo de configuração."
 
 #: kcm/kcm.cpp:55
 #, kde-format
 msgid "Display Configuration"
-msgstr ""
+msgstr "Configuração da tela"
 
 #: kcm/kcm.cpp:57
 #, kde-format
 msgid "Manage and configure monitors and displays."
-msgstr ""
+msgstr "Gerencia e configura monitores e telas."
 
 #: kcm/kcm.cpp:59
 #, kde-format
 msgid "Copyright © 2019 Roman Gilg"
-msgstr ""
+msgstr "Copyright © 2019 Roman Gilg"
 
 #: kcm/kcm.cpp:60
 #, kde-format
 msgid "Maintainer"
-msgstr ""
+msgstr "Mantenedor"
 
 #: kcm/kcm.cpp:60
 #, kde-format
 msgid "Roman Gilg"
-msgstr ""
+msgstr "Roman Gilg"
 
 #: kcm/output_model.cpp:92
 #, kde-format
 msgctxt "Approximate refresh rate in Hz (rounded to integer)"
 msgid "≈ %1 Hz"
-msgstr ""
+msgstr "≈ %1 Hz"
 
 #: kcm/output_model.cpp:96
 #, kde-format
 msgctxt "Refresh rate in Hz (rounded to 3 digits)"
 msgid "%1 Hz"
-msgstr ""
+msgstr "%1 Hz"
 
 #: kcm/output_model.cpp:497
 #, kde-format
 msgctxt "Width x height (aspect ratio)"
 msgid "%1x%2 (%3:%4)"
-msgstr ""
+msgstr "%1x%2 (%3:%4)"
 
 #: kcm/output_model.cpp:559
 #, kde-format
 msgctxt "Displayed when no replication source is selected."
 msgid "None"
-msgstr ""
+msgstr "Nenhum"
 
 #: kcm/output_model.cpp:566
 #, kde-format
 msgid "Replicated by other display"
-msgstr ""
+msgstr "Replicado por outra tela"
 
 #: kcm/package/contents/ui/Orientation.qml:23
 #, kde-format
 msgid "Orientation:"
-msgstr ""
+msgstr "Orientação:"
 
 #: kcm/package/contents/ui/Orientation.qml:36
 #: kcm/package/contents/ui/OutputPanel.qml:112
 #: kcm/package/contents/ui/OutputPanel.qml:139
 #, kde-format
 msgid "Auto"
-msgstr ""
+msgstr "Automático"
 
 #: kcm/package/contents/ui/Orientation.qml:42
 #, kde-format
 msgid "Only when in tablet mode."
-msgstr ""
+msgstr "Apenas quando estiver no modo tablet."
 
 #: kcm/package/contents/ui/Output.qml:154
 #, kde-format
 msgid "Replicas"
-msgstr ""
+msgstr "Réplicas"
 
 #: kcm/package/contents/ui/OutputPanel.qml:31
 #, kde-format
 msgid "Enabled"
-msgstr ""
+msgstr "Ativado"
 
 #: kcm/package/contents/ui/OutputPanel.qml:39
 #, kde-format
 msgid "Primary"
-msgstr ""
+msgstr "Tela primária"
 
 #: kcm/package/contents/ui/OutputPanel.qml:54
 #, kde-format
 msgid "Scale:"
-msgstr ""
+msgstr "Escala:"
 
 #: kcm/package/contents/ui/OutputPanel.qml:84
 #: kcm/package/contents/ui/Panel.qml:118
 #, kde-format
 msgctxt "Global scale factor expressed in percentage"
 msgid "%1%"
-msgstr ""
+msgstr "%1%"
 
 #: kcm/package/contents/ui/OutputPanel.qml:104
 #, kde-format
 msgid "Resolution:"
-msgstr ""
+msgstr "Resolução:"
 
 #: kcm/package/contents/ui/OutputPanel.qml:131
 #: kcm/package/contents/ui/OutputPanel.qml:146
 #, kde-format
 msgid "Refresh rate:"
-msgstr ""
+msgstr "Taxa de atualização:"
 
 #: kcm/package/contents/ui/OutputPanel.qml:154
 #, kde-format
 msgid "Replica of:"
-msgstr ""
+msgstr "Réplica de:"
 
 #: kcm/package/contents/ui/Panel.qml:30
 #, kde-format
 msgid "Device:"
-msgstr ""
+msgstr "Dispositivo:"
 
 #: kcm/package/contents/ui/Panel.qml:81
 #, kde-format
 msgid "Global scale:"
-msgstr ""
+msgstr "Escala global:"
 
 #: kcm/package/contents/ui/Panel.qml:139
 #, kde-format
@@ -161,52 +164,55 @@ msgid ""
 "The global scale factor is limited to multiples of 6.25% to minimize visual "
 "glitches in applications using the X11 windowing system."
 msgstr ""
+"O fator de escala global se limita a múltiplos de 6,25% para minimizar a "
+"quantidade de defeitos visuais em aplicativos usando o sistema de janelas "
+"X11."
 
 #: kcm/package/contents/ui/Panel.qml:151
 #, kde-format
 msgid "Save displays' properties:"
-msgstr ""
+msgstr "Salvar propriedades de tela:"
 
 #: kcm/package/contents/ui/Panel.qml:157
 #, kde-format
 msgid "For any display arrangement"
-msgstr ""
+msgstr "Para qualquer arranjo de telas"
 
 #: kcm/package/contents/ui/Panel.qml:164
 #, kde-format
 msgid "For only this specific display arrangement"
-msgstr ""
+msgstr "Apenas para este arranjo de telas específico"
 
 #: kcm/package/contents/ui/RotationButton.qml:61
 #, kde-format
 msgid "90° Clockwise"
-msgstr ""
+msgstr "90º no sentido horário"
 
 #: kcm/package/contents/ui/RotationButton.qml:65
 #, kde-format
 msgid "Upside Down"
-msgstr ""
+msgstr "Cabeça para baixo"
 
 #: kcm/package/contents/ui/RotationButton.qml:69
 #, kde-format
 msgid "90° Counterclockwise"
-msgstr ""
+msgstr "90º no sentido anti-horário"
 
 #: kcm/package/contents/ui/RotationButton.qml:74
 #, kde-format
 msgid "No Rotation"
-msgstr ""
+msgstr "Sem rotação"
 
 #: kcm/package/contents/ui/Screen.qml:63
 #, kde-format
 msgid "Drag displays to re-arrange them"
-msgstr ""
+msgstr "Arraste as telas para reorganizá-las"
 
 #: kcm/package/contents/ui/Screen.qml:76
 #, kde-format
 msgctxt "Itendifies displays with visual indicators"
 msgid "Identify"
-msgstr ""
+msgstr "Identificar telas"
 
 #: kcm/package/contents/ui/main.qml:44
 #, kde-format
@@ -214,33 +220,38 @@ msgid ""
 "Are you sure you want to disable all displays? This might render the device "
 "unusable."
 msgstr ""
+"Você tem certeza de que quer desativar todas as telas? Isso pode colocar o "
+"dispositivo em um estado inutilizável."
 
 #: kcm/package/contents/ui/main.qml:50
 #, kde-format
 msgid "Disable all displays"
-msgstr ""
+msgstr "Desativar todas as telas"
 
 #: kcm/package/contents/ui/main.qml:62
 #, kde-format
 msgid "No Disman backend found. Please check your Disman installation."
 msgstr ""
+"Nenhum backend do Disman foi encontrado. Cheque sua instalação do Disman."
 
 #: kcm/package/contents/ui/main.qml:70
 #, kde-format
 msgid "Displays could not be saved due to error."
-msgstr ""
+msgstr "As telas não puderam ser salvas devido a um erro."
 
 #: kcm/package/contents/ui/main.qml:78
 #, kde-format
 msgid "New global scale applied. Change will come into effect after restart."
 msgstr ""
+"Foi aplicada uma nova escala global. As mudanças de escala serão percebidas "
+"após reiniciar."
 
 #: kcm/package/contents/ui/main.qml:97
 #, kde-format
 msgid "A new display has been added. Settings have been reloaded."
-msgstr ""
+msgstr "Uma nova tela foi adicionada. As configurações foram recarregadas."
 
 #: kcm/package/contents/ui/main.qml:99
 #, kde-format
 msgid "A display has been removed. Settings have been reloaded."
-msgstr ""
+msgstr "Uma tela foi removida. As configurações foram recarregadas."
