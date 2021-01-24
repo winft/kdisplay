@@ -44,7 +44,7 @@ clang-format:
 
 Localization:
   stage: Compliance
-  image: golang:1.15
+  image: ${IMAGE_BASE}-master:latest
   script:
     - |
       git clone https://gitlab.com/kwinft/tooling
