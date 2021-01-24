@@ -51,7 +51,7 @@ Localization:
       pushd tooling/i18n/extractor
       go install
       popd
-      extractor validate
+      env PATH="$HOME/go/bin:$PATH" extractor validate
 
 .common-master: &common-master
   image: ${IMAGE_BASE}-master:latest
