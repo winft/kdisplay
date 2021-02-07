@@ -1,5 +1,15 @@
 # Changelog
 All notable changes to KDisplay will be documented in this file.
+## [5.21.0-beta.0](https://gitlab.com/kwinft/kdisplay/compare/kdisplay@5.20.0-beta.0...kdisplay@5.21.0-beta.0) (2021-02-07)
+
+
+### Bug Fixes
+
+* use display notion in UI consistently ([04bc0aa](https://gitlab.com/kwinft/kdisplay/commit/04bc0aa8af8dcea1b06fdc6cd2e3279174a53e8f))
+* **kcm:** generate pot-file relative to source root directory ([d818209](https://gitlab.com/kwinft/kdisplay/commit/d8182094834b9374b4723ccf1fb89e30e6d24d12))
+* **kcm:** improve some UI strings ([3475d17](https://gitlab.com/kwinft/kdisplay/commit/3475d17c66405cacbc49b3fe75662a4301035dfe))
+* **kcm:** snap to other outputs without gap ([cb3f985](https://gitlab.com/kwinft/kdisplay/commit/cb3f985b1e59be6a754ee71df2ec5d9de46a8799))
+
 ## [5.20.0](https://gitlab.com/kwinft/kdisplay/compare/kdisplay@5.20.0-beta.1...kdisplay@5.20.0) (2020-10-13)
 
 ## [5.20.0-beta.1](https://gitlab.com/kwinft/kdisplay/compare/kdisplay@5.20.0-beta.0...kdisplay@5.20.0-beta.1) (2020-10-02)
