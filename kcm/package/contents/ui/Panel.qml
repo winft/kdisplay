@@ -48,6 +48,7 @@ ColumnLayout {
                                Qt.binding(function() { return currentIndex; });
 
         Layout.fillWidth: true
+        spacing: Kirigami.Units.smallSpacing
 
         Repeater {
             model: kcm.outputModel
