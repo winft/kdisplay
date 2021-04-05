@@ -492,6 +492,10 @@ QVariantList OutputModel::resolutionsStrings(const Disman::OutputPtr& output) co
         if (size.height() / divisor == 5) {
             divisor /= 2;
         }
+        // Prefer "21:9" over "64:27"
+        else if (size.height() / divisor == 27) {
+            divisor *= 3;
+        }
 
         const QString text = i18nc("Width x height (aspect ratio)",
                                    "%1x%2 (%3:%4)",
