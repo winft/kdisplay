@@ -8,65 +8,69 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-30 21:07+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2021-05-01 14:31+0000\n"
+"Last-Translator: Mihail Donatos Karagkiaouris <mihaildonatos50@gmail.com>\n"
+"Language-Team: Greek <https://hosted.weblate.org/projects/kwinft/"
+"kdisplay-plasma-integration/el/>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.7-dev\n"
 
 #: plasma-integration/kded/daemon.cpp:65
 #, kde-format
 msgid "Switch Display"
-msgstr ""
+msgstr "Εναλλαγή οθόνης"
 
 #: plasma-integration/kded/osdaction.cpp:40
 #, kde-format
 msgid "Switch to external display"
-msgstr ""
+msgstr "Εναλλαγή σε εξωτερική οθόνη"
 
 #: plasma-integration/kded/osdaction.cpp:42
 #, kde-format
 msgid "Switch to laptop display"
-msgstr ""
+msgstr "Εναλλαγή στην οθόνη του λάπτοπ"
 
 #: plasma-integration/kded/osdaction.cpp:44
 #, kde-format
 msgid "Unify displays"
-msgstr ""
+msgstr "Ενοποίηση οθόνων"
 
 #: plasma-integration/kded/osdaction.cpp:46
 #, kde-format
 msgid "Extend to left"
-msgstr ""
+msgstr "Επέκταση στα αριστερά"
 
 #: plasma-integration/kded/osdaction.cpp:48
 #, kde-format
 msgid "Extend to right"
-msgstr ""
+msgstr "Επέκταση στα δεξιά"
 
 #: plasma-integration/kded/osdaction.cpp:50
-#, kde-format
+#, fuzzy, kde-format
 msgid "Leave unchanged"
-msgstr ""
+msgstr "Αναίρεση αλλαγών"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:39
 #, kde-format
 msgid "Enable Presentation Mode"
-msgstr ""
+msgstr "Ενεργοποίηση λειτουργίας παρουσίασης"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:53
-#, kde-format
+#, fuzzy, kde-format
 msgid "User enabled presentation mode"
-msgstr ""
+msgstr "Ο χρήστης ενεργοποίησε την λειτουργία παρουσίασης"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:83
 #, kde-format
 msgid ""
 "This will prevent your display and computer from turning off automatically."
 msgstr ""
+"Αυτό θα αποτρέψει την αυτόματη απενεργοποίηση της οθόνης και του υπολογιστή "
+"σας."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:110
 #, kde-format
@@ -74,25 +78,27 @@ msgctxt "Some Application and n others enforce presentation mode"
 msgid "%2 and %1 other application are enforcing presentation mode."
 msgid_plural "%2 and %1 other applications are enforcing presentation mode."
 msgstr[0] ""
+"Η εφαρμογή %2 και %1 ακόμη εφαρμογή επιβάλλουν την λειτουργία παρουσίασης."
 msgstr[1] ""
+"Η εφαρμογή %2 και %1 ακόμη εφαρμογές επιβάλλουν την λειτουργία παρουσίασης."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:116
 #, kde-format
 msgctxt "Some Application enforce presentation mode"
 msgid "%1 is enforcing presentation mode."
-msgstr ""
+msgstr "Η εφαρμογή %1 επιβάλλει τη λειτουργία παρουσίασης."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:119
 #, kde-format
 msgctxt ""
 "Some Application enforce presentation mode: Reason provided by the app"
 msgid "%1 is enforcing presentation mode: %2"
-msgstr ""
+msgstr "Η εφαρμογή %1 επιβάλλει τη λειτουργία παρουσίασης: %2"
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:54
 #, kde-format
 msgid "Display Layout"
-msgstr ""
+msgstr "Διάταξη οθόνης"
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:93
 #, kde-format
@@ -100,14 +106,16 @@ msgid ""
 "You can only apply a different display layout when there is more than one "
 "display device plugged in."
 msgstr ""
+"Μπορείτε να εφαρμόσετε διαφορετική διάταξη οθόνης μόνο όταν έχουν συνδεθεί "
+"περισσότερες από μία οθόνες."
 
 #: plasma-integration/plasmoid/package/contents/ui/main.qml:40
 #, kde-format
 msgid "Presentation mode is enabled"
-msgstr ""
+msgstr "Η λειτουργία παρουσίασης είναι ενεργοποιημένη"
 
 #: plasma-integration/plasmoid/package/contents/ui/main.qml:44
 #, kde-format
 msgctxt "Open the full display settings module"
 msgid "Advanced Display Settings"
-msgstr ""
+msgstr "Προχωρημένες ρυθμίσεις οθόνης"
