@@ -1,5 +1,18 @@
 # Changelog
 All notable changes to KDisplay will be documented in this file.
+## [5.22.0-beta.0](https://gitlab.com/kwinft/kdisplay/compare/kdisplay@5.21.0-beta.0...kdisplay@5.22.0-beta.0) (2021-05-26)
+
+
+### Bug Fixes
+
+* **kded:** pass the action id directly ([f7d0be0](https://gitlab.com/kwinft/kdisplay/commit/f7d0be077355894eb4a80a323999ba885ab4508f))
+* **kded:** reference modelData.action directly ([0925338](https://gitlab.com/kwinft/kdisplay/commit/092533807f0e0e4f6d09aae3b0a23b566b3883c5))
+
+
+### Refactors
+
+* **kded:** use Layout ([738051d](https://gitlab.com/kwinft/kdisplay/commit/738051d045cc3ced1eb4af8e3cf9565f29841ce7))
+
 ## [5.21.0](https://gitlab.com/kwinft/kdisplay/compare/kdisplay@5.21.0-beta.0...kdisplay@5.21.0) (2021-02-16)
 
 ## [5.21.0-beta.0](https://gitlab.com/kwinft/kdisplay/compare/kdisplay@5.20.0-beta.0...kdisplay@5.21.0-beta.0) (2021-02-07)
