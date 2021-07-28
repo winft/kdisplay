@@ -8,13 +8,17 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-30 20:39+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2021-07-29 03:33+0000\n"
+"Last-Translator: Stanislav <inklesspen@yandex.ru>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/kwinft/"
+"kdisplay-app/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.7.2-dev\n"
 
 #: kcm/app/main.cpp:20 kcm/app/main.cpp:22
 #, kde-format
@@ -60,19 +64,19 @@ msgstr ""
 #, kde-format
 msgctxt "Approximate refresh rate in Hz (rounded to integer)"
 msgid "≈ %1 Hz"
-msgstr ""
+msgstr "≈ %1 Гц"
 
 #: kcm/output_model.cpp:96
 #, kde-format
 msgctxt "Refresh rate in Hz (rounded to 3 digits)"
 msgid "%1 Hz"
-msgstr ""
+msgstr "%1 Гц"
 
 #: kcm/output_model.cpp:497
 #, kde-format
 msgctxt "Width x height (aspect ratio)"
 msgid "%1x%2 (%3:%4)"
-msgstr ""
+msgstr "%1x%2 (%3:%4)"
 
 #: kcm/output_model.cpp:559
 #, kde-format
@@ -127,18 +131,18 @@ msgstr ""
 #, kde-format
 msgctxt "Global scale factor expressed in percentage"
 msgid "%1%"
-msgstr ""
+msgstr "%1%"
 
 #: kcm/package/contents/ui/OutputPanel.qml:104
 #, kde-format
 msgid "Resolution:"
-msgstr ""
+msgstr "Разрешение:"
 
 #: kcm/package/contents/ui/OutputPanel.qml:131
 #: kcm/package/contents/ui/OutputPanel.qml:146
 #, kde-format
 msgid "Refresh rate:"
-msgstr ""
+msgstr "Частота обновлений:"
 
 #: kcm/package/contents/ui/OutputPanel.qml:154
 #, kde-format
@@ -148,7 +152,7 @@ msgstr ""
 #: kcm/package/contents/ui/Panel.qml:30
 #, kde-format
 msgid "Device:"
-msgstr ""
+msgstr "Устройство:"
 
 #: kcm/package/contents/ui/Panel.qml:81
 #, kde-format
@@ -163,9 +167,9 @@ msgid ""
 msgstr ""
 
 #: kcm/package/contents/ui/Panel.qml:151
-#, kde-format
+#, fuzzy, kde-format
 msgid "Save displays' properties:"
-msgstr ""
+msgstr "Сохранить настройки экрана:"
 
 #: kcm/package/contents/ui/Panel.qml:157
 #, kde-format
