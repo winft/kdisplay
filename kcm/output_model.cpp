@@ -223,7 +223,7 @@ QHash<int, QByteArray> OutputModel::roleNames() const
 void OutputModel::add(const Disman::OutputPtr& output)
 {
     const int insertPos = m_outputs.count();
-    Q_EMIT beginInsertRows(QModelIndex(), insertPos, insertPos);
+    beginInsertRows(QModelIndex(), insertPos, insertPos);
 
     int i = 0;
     while (i < m_outputs.size()) {
@@ -249,7 +249,7 @@ void OutputModel::add(const Disman::OutputPtr& output)
             &Disman::Config::primary_output_changed,
             this,
             [this, output] { roleChanged(output->id(), PrimaryRole); });
-    Q_EMIT endInsertRows();
+    endInsertRows();
 
     // Update replications.
     for (int j = 0; j < m_outputs.size(); j++) {
@@ -270,9 +270,9 @@ void OutputModel::remove(int outputId)
     });
     if (it != m_outputs.end()) {
         const int index = it - m_outputs.begin();
-        Q_EMIT beginRemoveRows(QModelIndex(), index, index);
+        beginRemoveRows(QModelIndex(), index, index);
         m_outputs.erase(it);
-        Q_EMIT endRemoveRows();
+        endRemoveRows();
     }
 }
 
