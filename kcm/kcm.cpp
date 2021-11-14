@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <disman/output.h>
 #include <disman/setconfigoperation.h>
 
-#include <KAboutData>
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KPluginFactory>
@@ -49,14 +48,6 @@ KCMKDisplay::KCMKDisplay(QObject* parent, const KPluginMetaData& data, const QVa
 
     Log::instance();
 
-    KAboutData* about = new KAboutData(QStringLiteral("kcm_kdisplay"),
-                                       i18n("Display Configuration"),
-                                       QStringLiteral(KDISPLAY_VERSION),
-                                       i18n("Manage and configure monitors and displays."),
-                                       KAboutLicense::GPL,
-                                       i18n("Copyright © 2019 Roman Gilg"));
-    about->addAuthor(i18n("Roman Gilg"), i18n("Maintainer"), QStringLiteral("subdiff@gmail.com"));
-    setAboutData(about);
     setButtons(Apply);
 
     m_loadCompressor = new QTimer(this);

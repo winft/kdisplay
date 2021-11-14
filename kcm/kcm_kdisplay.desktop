@@ -7,6 +7,8 @@ X-KDE-Library=kcm_kdisplay
 X-KDE-ParentApp=kcontrol
 X-KDE-System-Settings-Parent-Category=display
 X-KDE-Weight=40
+X-KDE-FormFactors=tablet,handset,desktop
+X-Plasma-MainScript=ui/main.qml
 
 Name=Displays
 
