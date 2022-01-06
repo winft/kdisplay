@@ -8,91 +8,94 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-30 21:07+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2022-01-07 16:52+0000\n"
+"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/kwinft/"
+"kdisplay-plasma-integration/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: plasma-integration/kded/daemon.cpp:65
 #, kde-format
 msgid "Switch Display"
-msgstr ""
+msgstr "Overschakelen naar beeldscherm"
 
 #: plasma-integration/kded/osdaction.cpp:40
 #, kde-format
 msgid "Switch to external display"
-msgstr ""
+msgstr "Overschakelen naar extern beeldscherm"
 
 #: plasma-integration/kded/osdaction.cpp:42
 #, kde-format
 msgid "Switch to laptop display"
-msgstr ""
+msgstr "Overschakelen naar laptopscherm"
 
 #: plasma-integration/kded/osdaction.cpp:44
 #, kde-format
 msgid "Unify displays"
-msgstr ""
+msgstr "Schermen delen"
 
 #: plasma-integration/kded/osdaction.cpp:46
 #, kde-format
 msgid "Extend to left"
-msgstr ""
+msgstr "Uitbreiden naar links"
 
 #: plasma-integration/kded/osdaction.cpp:48
 #, kde-format
 msgid "Extend to right"
-msgstr ""
+msgstr "Uitbreiden naar rechts"
 
 #: plasma-integration/kded/osdaction.cpp:50
 #, kde-format
 msgid "Leave unchanged"
-msgstr ""
+msgstr "Ongewijzigd laten"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:39
 #, kde-format
 msgid "Enable Presentation Mode"
-msgstr ""
+msgstr "Presentatiemodus inschakelen"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:53
 #, kde-format
 msgid "User enabled presentation mode"
-msgstr ""
+msgstr "Gebruikers-presentatiemodus"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:83
 #, kde-format
 msgid ""
 "This will prevent your display and computer from turning off automatically."
 msgstr ""
+"Hierdoor worden het scherm en de computer niet automatisch uitgeschakeld."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:110
 #, kde-format
 msgctxt "Some Application and n others enforce presentation mode"
 msgid "%2 and %1 other application are enforcing presentation mode."
 msgid_plural "%2 and %1 other applications are enforcing presentation mode."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%2 en %1 ander programma hebben de presentatiemodus ingeschakeld."
+msgstr[1] "%2 en %1 andere programma's hebben de presentatiemodus ingeschakeld."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:116
 #, kde-format
 msgctxt "Some Application enforce presentation mode"
 msgid "%1 is enforcing presentation mode."
-msgstr ""
+msgstr "%1 heeft de presentatiemodus ingeschakeld."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:119
 #, kde-format
 msgctxt ""
 "Some Application enforce presentation mode: Reason provided by the app"
 msgid "%1 is enforcing presentation mode: %2"
-msgstr ""
+msgstr "%1 heeft de presentatiemodus ingeschakeld: %2"
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:54
 #, kde-format
 msgid "Display Layout"
-msgstr ""
+msgstr "Schermindeling"
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:93
 #, kde-format
@@ -100,14 +103,16 @@ msgid ""
 "You can only apply a different display layout when there is more than one "
 "display device plugged in."
 msgstr ""
+"Voor het kiezen van een andere indeling dient er meer dan één beeldscherm "
+"aanwezig te zijn."
 
 #: plasma-integration/plasmoid/package/contents/ui/main.qml:40
 #, kde-format
 msgid "Presentation mode is enabled"
-msgstr ""
+msgstr "De presentatiemodus is ingeschakeld"
 
 #: plasma-integration/plasmoid/package/contents/ui/main.qml:44
 #, kde-format
 msgctxt "Open the full display settings module"
 msgid "Advanced Display Settings"
-msgstr ""
+msgstr "Geavanceerde beeldscherminstellingen"
