@@ -1,0 +1,13 @@
+translations:
+- name: kcm_kdisplay
+  root: /kcm
+  outdir: /po
+  inputs:
+    - '/**/*.cpp'
+    - '/**/*.qml'
+- name: kdisplay-plasma
+  root: /plasma-integration
+  outdir: /po
+  inputs:
+    - '/**/*.cpp'
+    - '/**/*.qml'

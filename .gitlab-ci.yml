@@ -45,8 +45,13 @@ clang-format:
 Localization:
   stage: Compliance
   image: ${IMAGE_BASE}-master:latest
-  script: bash ci/compliance/i18n-diff.sh
-
+  script:
+    - |
+      git clone https://gitlab.com/kwinft/tooling
+      pushd tooling/i18n/extractor
+      go install
+      popd
+      env PATH="$HOME/go/bin:$PATH" extractor validate
 
 .common-master: &common-master
   image: ${IMAGE_BASE}-master:latest
