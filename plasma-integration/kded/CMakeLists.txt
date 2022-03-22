@@ -1,4 +1,4 @@
-add_definitions(-DTRANSLATION_DOMAIN=\"kdisplay-plasma-integration\")
+add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_org.kwinft.kdisplay\")
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/../)
 

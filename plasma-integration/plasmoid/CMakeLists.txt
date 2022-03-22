@@ -1,4 +1,4 @@
-add_definitions(-DTRANSLATION_DOMAIN=\"kdisplay-plasma-integration\")
+add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_org.kwinft.kdisplay\")
 
 # WARNING PlasmaQuick provides unversioned CMake config
 find_package(KF5 REQUIRED COMPONENTS PlasmaQuick)
