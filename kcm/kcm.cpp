@@ -299,7 +299,7 @@ void KCMKDisplay::load()
     // gracefully cleaning up the QML side and only then we will delete it.
     auto* oldConfig = m_config.release();
     if (oldConfig) {
-        emit outputModelChanged();
+        Q_EMIT outputModelChanged();
         delete oldConfig;
     }
 

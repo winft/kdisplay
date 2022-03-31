@@ -104,7 +104,7 @@ void KDisplayApplet::checkOutputs()
     m_connectedOutputCount = outputs.size();
 
     if (m_connectedOutputCount != oldConnectedOutputCount) {
-        emit connectedOutputCountChanged();
+        Q_EMIT connectedOutputCountChanged();
     }
 }
 
