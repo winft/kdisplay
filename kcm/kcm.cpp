@@ -46,7 +46,7 @@ using namespace Disman;
 KCMKDisplay::KCMKDisplay(QObject* parent, const QVariantList& args)
     : KQuickAddons::ConfigModule(parent, args)
 {
-    qmlRegisterType<OutputModel>();
+    qmlRegisterAnonymousType<OutputModel>("org.kwinft.private.kcm.screen", 1);
     qmlRegisterType<Disman::Output>("org.kwinft.private.kcm.kdisplay", 1, 0, "Output");
 
     Log::instance();
