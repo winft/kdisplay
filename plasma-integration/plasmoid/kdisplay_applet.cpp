@@ -37,8 +37,10 @@
 
 #include <algorithm>
 
-KDisplayApplet::KDisplayApplet(QObject* parent, const QVariantList& data)
-    : Plasma::Applet(parent, data)
+KDisplayApplet::KDisplayApplet(QObject* parent,
+                               const KPluginMetaData& data,
+                               const QVariantList& args)
+    : Plasma::Applet(parent, data, args)
 {
 }
 
