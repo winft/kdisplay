@@ -37,7 +37,7 @@ class KDisplayApplet : public Plasma::Applet
         int connectedOutputCount READ connectedOutputCount NOTIFY connectedOutputCountChanged)
 
 public:
-    explicit KDisplayApplet(QObject* parent, const QVariantList& data);
+    explicit KDisplayApplet(QObject* parent, const KPluginMetaData& data, const QVariantList& args);
     ~KDisplayApplet() override;
 
     enum Action { SwitchToExternal, SwitchToInternal, Clone, ExtendLeft, ExtendRight };
