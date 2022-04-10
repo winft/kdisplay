@@ -37,9 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QTimer>
 
-K_PLUGIN_FACTORY_WITH_JSON(KCMDisplayConfigurationFactory,
-                           "kcm_kdisplay.json",
-                           registerPlugin<KCMKDisplay>();)
+K_PLUGIN_CLASS_WITH_JSON(KCMKDisplay, "kcm_kdisplay.json")
 
 using namespace Disman;
 

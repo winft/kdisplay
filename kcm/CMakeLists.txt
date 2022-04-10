@@ -36,11 +36,7 @@ target_link_libraries(kcm_kdisplay
     Disman::Disman
 )
 
-kcoreaddons_desktop_to_json(kcm_kdisplay "kcm_kdisplay.desktop" SERVICE_TYPES kcmodule.desktop)
+kcoreaddons_desktop_to_json(kcm_kdisplay "kcm_kdisplay.desktop")
 
-#this desktop file is installed only for retrocompatibility with sycoca
-install(FILES kcm_kdisplay.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
-
-install(TARGETS kcm_kdisplay DESTINATION ${KDE_INSTALL_PLUGINDIR}/kcms)
-
-kpackage_install_package(package kcm_kdisplay kcms)
+install(TARGETS kcm_kdisplay DESTINATION ${PLUGIN_INSTALL_DIR})
+install(FILES kcm_kdisplay.desktop DESTINATION ${SERVICES_INSTALL_DIR})
