@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-30 20:39+0200\n"
+"POT-Creation-Date: 2022-04-10 17:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -31,27 +31,27 @@ msgstr ""
 msgid "Arguments for the config module."
 msgstr ""
 
-#: kcm/kcm.cpp:55
+#: kcm/kcm.cpp:53
 #, kde-format
 msgid "Display Configuration"
 msgstr ""
 
-#: kcm/kcm.cpp:57
+#: kcm/kcm.cpp:55
 #, kde-format
 msgid "Manage and configure monitors and displays."
 msgstr ""
 
-#: kcm/kcm.cpp:59
+#: kcm/kcm.cpp:57
 #, kde-format
 msgid "Copyright © 2019 Roman Gilg"
 msgstr ""
 
-#: kcm/kcm.cpp:60
+#: kcm/kcm.cpp:58
 #, kde-format
 msgid "Maintainer"
 msgstr ""
 
-#: kcm/kcm.cpp:60
+#: kcm/kcm.cpp:58
 #, kde-format
 msgid "Roman Gilg"
 msgstr ""

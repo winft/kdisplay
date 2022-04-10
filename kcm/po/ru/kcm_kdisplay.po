@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-30 20:39+0200\n"
+"POT-Creation-Date: 2022-04-10 17:19+0200\n"
 "PO-Revision-Date: 2021-08-22 15:32+0000\n"
 "Last-Translator: S3aBreeze <paperwork@evilcorp.ltd>\n"
-"Language-Team: Russian <https://hosted.weblate.org/projects/kwinft/"
-"kdisplay-app/ru/>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/kwinft/kdisplay-"
+"app/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,27 +35,27 @@ msgstr "Copyright © 2020 Roman Gilg"
 msgid "Arguments for the config module."
 msgstr "Аргументы для конфигурационного модуля."
 
-#: kcm/kcm.cpp:55
+#: kcm/kcm.cpp:53
 #, kde-format
 msgid "Display Configuration"
 msgstr "Конфигурация дисплея"
 
-#: kcm/kcm.cpp:57
+#: kcm/kcm.cpp:55
 #, kde-format
 msgid "Manage and configure monitors and displays."
 msgstr "Управление и настройка мониторов и дисплеев."
 
-#: kcm/kcm.cpp:59
+#: kcm/kcm.cpp:57
 #, kde-format
 msgid "Copyright © 2019 Roman Gilg"
 msgstr "Copyright © 2019 Roman Gilg"
 
-#: kcm/kcm.cpp:60
+#: kcm/kcm.cpp:58
 #, kde-format
 msgid "Maintainer"
 msgstr "Сопровождающий"
 
-#: kcm/kcm.cpp:60
+#: kcm/kcm.cpp:58
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"

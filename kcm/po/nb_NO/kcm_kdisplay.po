@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-30 20:39+0200\n"
+"POT-Creation-Date: 2022-04-10 17:19+0200\n"
 "PO-Revision-Date: 2020-10-06 14:26+0000\n"
 "Last-Translator: Roman Gilg <subdiff@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/kwinft/"
@@ -34,27 +34,27 @@ msgstr "Opphavsrett © 2020 Roman Gilg"
 msgid "Arguments for the config module."
 msgstr "Argumenter for oppsettsmodulen."
 
-#: kcm/kcm.cpp:55
+#: kcm/kcm.cpp:53
 #, kde-format
 msgid "Display Configuration"
 msgstr "Paneloppsett"
 
-#: kcm/kcm.cpp:57
+#: kcm/kcm.cpp:55
 #, kde-format
 msgid "Manage and configure monitors and displays."
 msgstr "Håndter og sett opp skjermer og paneler."
 
-#: kcm/kcm.cpp:59
+#: kcm/kcm.cpp:57
 #, kde-format
 msgid "Copyright © 2019 Roman Gilg"
 msgstr "Opphavsrett © Roman Gilg"
 
-#: kcm/kcm.cpp:60
+#: kcm/kcm.cpp:58
 #, kde-format
 msgid "Maintainer"
 msgstr "Vedlikeholder"
 
-#: kcm/kcm.cpp:60
+#: kcm/kcm.cpp:58
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
