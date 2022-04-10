@@ -37,16 +37,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QTimer>
 
-K_PLUGIN_FACTORY_WITH_JSON(KCMDisplayConfigurationFactory,
-                           "kcm_kdisplay.json",
-                           registerPlugin<KCMKDisplay>();)
+K_PLUGIN_CLASS_WITH_JSON(KCMKDisplay, "kcm_kdisplay.json")
 
 using namespace Disman;
 
 KCMKDisplay::KCMKDisplay(QObject* parent, const QVariantList& args)
     : KQuickAddons::ConfigModule(parent, args)
 {
-    qmlRegisterType<OutputModel>();
+    qmlRegisterAnonymousType<OutputModel>("org.kwinft.private.kcm.screen", 1);
     qmlRegisterType<Disman::Output>("org.kwinft.private.kcm.kdisplay", 1, 0, "Output");
 
     Log::instance();
@@ -299,7 +297,7 @@ void KCMKDisplay::load()
     // gracefully cleaning up the QML side and only then we will delete it.
     auto* oldConfig = m_config.release();
     if (oldConfig) {
-        emit outputModelChanged();
+        Q_EMIT outputModelChanged();
         delete oldConfig;
     }
 
@@ -383,7 +381,8 @@ void KCMKDisplay::writeGlobalScale()
     if (qFuzzyCompare(m_globalScale, 1.0)) {
         // if dpi is the default (96) remove the entry rather than setting it
         QProcess proc;
-        proc.start(QStringLiteral("xrdb -quiet -remove -nocpp"));
+        proc.start(QStringLiteral("xrdb"),
+                   {QStringLiteral("-quiet"), QStringLiteral("-remove"), QStringLiteral("-nocpp")});
         if (proc.waitForStarted()) {
             proc.write(QByteArray("Xft.dpi\n"));
             proc.closeWriteChannel();
@@ -393,7 +392,8 @@ void KCMKDisplay::writeGlobalScale()
     } else {
         const int scaleDpi = qRound(m_globalScale * 96.0);
         QProcess proc;
-        proc.start(QStringLiteral("xrdb -quiet -merge -nocpp"));
+        proc.start(QStringLiteral("xrdb"),
+                   {QStringLiteral("-quiet"), QStringLiteral("-merge"), QStringLiteral("-nocpp")});
         if (proc.waitForStarted()) {
             proc.write(QByteArray("Xft.dpi: " + QString::number(scaleDpi).toLatin1()));
             proc.closeWriteChannel();

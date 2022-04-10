@@ -34,8 +34,9 @@ int main(int argc, char** argv)
     parser.process(app);
     about.processCommandLine(&parser);
 
-    KCMultiDialog* dialog = new KCMultiDialog;
-    dialog->addModule(QStringLiteral("kcm_kdisplay"), {parser.value(QStringLiteral("args"))});
+    auto dialog = new KCMultiDialog;
+    dialog->addModule(KPluginMetaData(QStringLiteral("kcm_kdisplay")),
+                      {parser.value(QStringLiteral("args"))});
 
     auto style = dialog->style();
     dialog->setContentsMargins(style->pixelMetric(QStyle::PM_LayoutLeftMargin),

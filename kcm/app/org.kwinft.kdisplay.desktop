@@ -7,3 +7,4 @@ Name=KDisplay
 GenericName=Control displays settings
 Categories=Qt;KDE;Settings;HardwareSettings;
 NotShowIn=KDE;
+SingleMainWindow=true
