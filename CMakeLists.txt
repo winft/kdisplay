@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.16)
 
 project(KDisplay)
 set(PROJECT_VERSION "5.24.80")
@@ -6,15 +6,16 @@ set(KDISPLAY_VERSION ${PROJECT_VERSION})
 
 add_definitions("-DKDISPLAY_VERSION=\"${KDISPLAY_VERSION}\"")
 
-set(QT_MIN_VERSION "5.14.0")
-set(KF5_MIN_VERSION "5.66.0")
+set(QT_MIN_VERSION "5.15.0")
+set(KF5_MIN_VERSION "5.91")
+set(KDE_COMPILERSETTINGS_LEVEL "5.84")
 
 find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 include(KDEInstallDirs)
 include(KDECMakeSettings)
-include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
+include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMInstallIcons)
 include(ECMMarkAsTest)
 include(ECMQtDeclareLoggingCategory)
