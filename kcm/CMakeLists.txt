@@ -33,7 +33,7 @@ target_link_libraries(kcm_kdisplay
     KF5::I18n
     KF5::Kirigami2
     KF5::QuickAddons
-    Disman::Disman
+    disman::lib
 )
 
 kcoreaddons_desktop_to_json(kcm_kdisplay "kcm_kdisplay.desktop")
