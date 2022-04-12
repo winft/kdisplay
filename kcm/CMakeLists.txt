@@ -40,3 +40,5 @@ kcoreaddons_desktop_to_json(kcm_kdisplay "kcm_kdisplay.desktop")
 
 install(TARGETS kcm_kdisplay DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES kcm_kdisplay.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+
+kpackage_install_package(package kcm_kdisplay kcms)
