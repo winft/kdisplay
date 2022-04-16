@@ -1,5 +1,3 @@
-add_definitions(-DTRANSLATION_DOMAIN="kdisplay")
-
 include_directories(${CMAKE_BINARY_DIR})
 
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
