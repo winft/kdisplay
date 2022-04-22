@@ -32,7 +32,7 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
 )
 
 set(MIN_DISMAN_VERSION "0.519.80")
-find_package(Disman ${MIN_DISMAN_VERSION} REQUIRED)
+find_package(disman ${MIN_DISMAN_VERSION} REQUIRED)
 
 add_subdirectory(kcm)
 add_subdirectory(plasma-integration)

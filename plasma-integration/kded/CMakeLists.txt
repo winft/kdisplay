@@ -38,7 +38,7 @@ add_library(kdisplayd MODULE ${kdisplay_daemon_SRCS})
 target_link_libraries(kdisplayd
                               Qt5::Sensors
                               KF5::Declarative
-                              Disman::Disman
+                              disman::lib
                               KF5::DBusAddons
                               KF5::I18n
                               KF5::XmlGui
