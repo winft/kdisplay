@@ -14,7 +14,7 @@ target_link_libraries(osdtest Qt5::Core
                               Qt5::DBus
                               Qt5::Quick
                               Qt5::Qml
-                              Disman::Disman
+                              disman::lib
                               KF5::I18n
                               KF5::Declarative
 )
