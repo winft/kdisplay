@@ -10,8 +10,8 @@ msgstr ""
 "POT-Creation-Date: 2020-09-30 21:07+0200\n"
 "PO-Revision-Date: 2021-08-22 15:32+0000\n"
 "Last-Translator: S3aBreeze <paperwork@evilcorp.ltd>\n"
-"Language-Team: Russian <https://hosted.weblate.org/projects/kwinft/"
-"kdisplay-plasma-integration/ru/>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/kwinft/kdisplay-"
+"plasma-integration/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,16 +69,20 @@ msgstr "Включённый пользователем режим презен�
 #, kde-format
 msgid ""
 "This will prevent your display and computer from turning off automatically."
-msgstr "Это предотвратит автоматическое отключение вашего дисплея и компьютера."
+msgstr ""
+"Это предотвратит автоматическое отключение вашего дисплея и компьютера."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:110
 #, kde-format
 msgctxt "Some Application and n others enforce presentation mode"
 msgid "%2 and %1 other application are enforcing presentation mode."
 msgid_plural "%2 and %1 other applications are enforcing presentation mode."
-msgstr[0] "%2 и %1 другое приложение принудительно используют режим презентации."
-msgstr[1] "%2 и %1 других приложения принудительно используют режим презентации."
-msgstr[2] "%2 и %1 других приложений принудительно используют режим презентации."
+msgstr[0] ""
+"%2 и %1 другое приложение принудительно используют режим презентации."
+msgstr[1] ""
+"%2 и %1 других приложения принудительно используют режим презентации."
+msgstr[2] ""
+"%2 и %1 других приложений принудительно используют режим презентации."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:116
 #, kde-format
