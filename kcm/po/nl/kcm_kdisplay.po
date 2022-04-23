@@ -46,19 +46,19 @@ msgctxt "Refresh rate in Hz (rounded to 3 digits)"
 msgid "%1 Hz"
 msgstr "%1 Hz"
 
-#: kcm/output_model.cpp:497
+#: kcm/output_model.cpp:501
 #, kde-format
 msgctxt "Width x height (aspect ratio)"
 msgid "%1x%2 (%3:%4)"
 msgstr "%1x%2 (%3:%4)"
 
-#: kcm/output_model.cpp:559
+#: kcm/output_model.cpp:563
 #, kde-format
 msgctxt "Displayed when no replication source is selected."
 msgid "None"
 msgstr "Geen"
 
-#: kcm/output_model.cpp:566
+#: kcm/output_model.cpp:570
 #, kde-format
 msgid "Replicated by other display"
 msgstr "Zoals ingesteld door ander beeldscherm"
@@ -69,8 +69,8 @@ msgid "Orientation:"
 msgstr "Oriëntatie:"
 
 #: kcm/package/contents/ui/Orientation.qml:36
-#: kcm/package/contents/ui/OutputPanel.qml:112
-#: kcm/package/contents/ui/OutputPanel.qml:139
+#: kcm/package/contents/ui/OutputPanel.qml:114
+#: kcm/package/contents/ui/OutputPanel.qml:141
 #, kde-format
 msgid "Auto"
 msgstr "Automatisch"
@@ -95,30 +95,30 @@ msgstr "Ingeschakeld"
 msgid "Primary"
 msgstr "Primair"
 
-#: kcm/package/contents/ui/OutputPanel.qml:54
+#: kcm/package/contents/ui/OutputPanel.qml:56
 #, kde-format
 msgid "Scale:"
 msgstr "Schaal:"
 
-#: kcm/package/contents/ui/OutputPanel.qml:84
-#: kcm/package/contents/ui/Panel.qml:118
+#: kcm/package/contents/ui/OutputPanel.qml:86
+#: kcm/package/contents/ui/Panel.qml:119
 #, kde-format
 msgctxt "Global scale factor expressed in percentage"
 msgid "%1%"
 msgstr "%1%"
 
-#: kcm/package/contents/ui/OutputPanel.qml:104
+#: kcm/package/contents/ui/OutputPanel.qml:106
 #, kde-format
 msgid "Resolution:"
 msgstr "Resolutie:"
 
-#: kcm/package/contents/ui/OutputPanel.qml:131
-#: kcm/package/contents/ui/OutputPanel.qml:146
+#: kcm/package/contents/ui/OutputPanel.qml:133
+#: kcm/package/contents/ui/OutputPanel.qml:148
 #, kde-format
 msgid "Refresh rate:"
 msgstr "Ververssnelheid:"
 
-#: kcm/package/contents/ui/OutputPanel.qml:154
+#: kcm/package/contents/ui/OutputPanel.qml:156
 #, kde-format
 msgid "Replica of:"
 msgstr "Gedeeld met:"
@@ -128,12 +128,12 @@ msgstr "Gedeeld met:"
 msgid "Device:"
 msgstr "Apparaat:"
 
-#: kcm/package/contents/ui/Panel.qml:81
+#: kcm/package/contents/ui/Panel.qml:82
 #, kde-format
 msgid "Global scale:"
 msgstr "Algemene schaal:"
 
-#: kcm/package/contents/ui/Panel.qml:139
+#: kcm/package/contents/ui/Panel.qml:140
 #, kde-format
 msgid ""
 "The global scale factor is limited to multiples of 6.25% to minimize visual "
@@ -142,17 +142,17 @@ msgstr ""
 "De algemene schaalfactor is beperkt tot veelvouden van 6.25%. Dit is zo "
 "gedaan om het aantal visuele storingen in X11-programma's te beperken."
 
-#: kcm/package/contents/ui/Panel.qml:151
+#: kcm/package/contents/ui/Panel.qml:152
 #, kde-format
 msgid "Save displays' properties:"
 msgstr "Beeldschermeigenschappen bewaren:"
 
-#: kcm/package/contents/ui/Panel.qml:157
+#: kcm/package/contents/ui/Panel.qml:158
 #, kde-format
 msgid "For any display arrangement"
 msgstr "Van elke schermindeling"
 
-#: kcm/package/contents/ui/Panel.qml:164
+#: kcm/package/contents/ui/Panel.qml:165
 #, kde-format
 msgid "For only this specific display arrangement"
 msgstr "Alleen van deze schermindeling"
@@ -220,12 +220,12 @@ msgstr ""
 "Er is een nieuwe algemene schaal toegepast. Herstart je computer om de "
 "wijzigingen toe te passen."
 
-#: kcm/package/contents/ui/main.qml:97
+#: kcm/package/contents/ui/main.qml:103
 #, kde-format
 msgid "A new display has been added. Settings have been reloaded."
 msgstr "De instellingen zijn herladen omdat er een beeldscherm is toegevoegd."
 
-#: kcm/package/contents/ui/main.qml:99
+#: kcm/package/contents/ui/main.qml:105
 #, kde-format
 msgid "A display has been removed. Settings have been reloaded."
 msgstr "De instellingen zijn herladen omdat er een beeldscherm is verwijderd."

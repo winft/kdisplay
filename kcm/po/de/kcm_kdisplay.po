@@ -46,19 +46,19 @@ msgctxt "Refresh rate in Hz (rounded to 3 digits)"
 msgid "%1 Hz"
 msgstr "%1 Hz"
 
-#: kcm/output_model.cpp:497
+#: kcm/output_model.cpp:501
 #, kde-format
 msgctxt "Width x height (aspect ratio)"
 msgid "%1x%2 (%3:%4)"
 msgstr "%1x%2 (%3:%4)"
 
-#: kcm/output_model.cpp:559
+#: kcm/output_model.cpp:563
 #, kde-format
 msgctxt "Displayed when no replication source is selected."
 msgid "None"
 msgstr "Nichts"
 
-#: kcm/output_model.cpp:566
+#: kcm/output_model.cpp:570
 #, kde-format
 msgid "Replicated by other display"
 msgstr "Repliziert von anderem Bildschirm"
@@ -69,8 +69,8 @@ msgid "Orientation:"
 msgstr "Orientierung:"
 
 #: kcm/package/contents/ui/Orientation.qml:36
-#: kcm/package/contents/ui/OutputPanel.qml:112
-#: kcm/package/contents/ui/OutputPanel.qml:139
+#: kcm/package/contents/ui/OutputPanel.qml:114
+#: kcm/package/contents/ui/OutputPanel.qml:141
 #, kde-format
 msgid "Auto"
 msgstr "Automatisch"
@@ -95,30 +95,30 @@ msgstr "Aktiviert"
 msgid "Primary"
 msgstr "Primärer Bildschirm"
 
-#: kcm/package/contents/ui/OutputPanel.qml:54
+#: kcm/package/contents/ui/OutputPanel.qml:56
 #, kde-format
 msgid "Scale:"
 msgstr "Skalierung:"
 
-#: kcm/package/contents/ui/OutputPanel.qml:84
-#: kcm/package/contents/ui/Panel.qml:118
+#: kcm/package/contents/ui/OutputPanel.qml:86
+#: kcm/package/contents/ui/Panel.qml:119
 #, kde-format
 msgctxt "Global scale factor expressed in percentage"
 msgid "%1%"
 msgstr "%1%"
 
-#: kcm/package/contents/ui/OutputPanel.qml:104
+#: kcm/package/contents/ui/OutputPanel.qml:106
 #, kde-format
 msgid "Resolution:"
 msgstr "Auflösung:"
 
-#: kcm/package/contents/ui/OutputPanel.qml:131
-#: kcm/package/contents/ui/OutputPanel.qml:146
+#: kcm/package/contents/ui/OutputPanel.qml:133
+#: kcm/package/contents/ui/OutputPanel.qml:148
 #, kde-format
 msgid "Refresh rate:"
 msgstr "Bildwiederholrate:"
 
-#: kcm/package/contents/ui/OutputPanel.qml:154
+#: kcm/package/contents/ui/OutputPanel.qml:156
 #, kde-format
 msgid "Replica of:"
 msgstr "Replika von:"
@@ -128,12 +128,12 @@ msgstr "Replika von:"
 msgid "Device:"
 msgstr "Gerät:"
 
-#: kcm/package/contents/ui/Panel.qml:81
+#: kcm/package/contents/ui/Panel.qml:82
 #, kde-format
 msgid "Global scale:"
 msgstr "Globale Skalierung:"
 
-#: kcm/package/contents/ui/Panel.qml:139
+#: kcm/package/contents/ui/Panel.qml:140
 #, kde-format
 msgid ""
 "The global scale factor is limited to multiples of 6.25% to minimize visual "
@@ -143,17 +143,17 @@ msgstr ""
 "da dies Bildfehler in Programmen welche das X11 Fenstersystem nutzen, "
 "minimiert."
 
-#: kcm/package/contents/ui/Panel.qml:151
+#: kcm/package/contents/ui/Panel.qml:152
 #, kde-format
 msgid "Save displays' properties:"
 msgstr "Speichere Bildschirmeigenschaften:"
 
-#: kcm/package/contents/ui/Panel.qml:157
+#: kcm/package/contents/ui/Panel.qml:158
 #, kde-format
 msgid "For any display arrangement"
 msgstr "Für jede Bildschirmanordnung"
 
-#: kcm/package/contents/ui/Panel.qml:164
+#: kcm/package/contents/ui/Panel.qml:165
 #, kde-format
 msgid "For only this specific display arrangement"
 msgstr "Nur für diese spezielle Bildschirmkombination"
@@ -221,13 +221,13 @@ msgstr ""
 "Neuer globaler Skalierungsfaktor gesetzt. Die Änderung wird erst nach einem "
 "Neustart Auswirkungen haben."
 
-#: kcm/package/contents/ui/main.qml:97
+#: kcm/package/contents/ui/main.qml:103
 #, kde-format
 msgid "A new display has been added. Settings have been reloaded."
 msgstr ""
 "Ein neuer Bildschirm wurde hinzugefügt. Einstellungen wurden neu geladen."
 
-#: kcm/package/contents/ui/main.qml:99
+#: kcm/package/contents/ui/main.qml:105
 #, kde-format
 msgid "A display has been removed. Settings have been reloaded."
 msgstr "Ein Bildschirm wurde entfernt. Einstellungen wurden neu geladen."
