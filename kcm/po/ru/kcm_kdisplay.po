@@ -35,31 +35,6 @@ msgstr "Copyright © 2020 Roman Gilg"
 msgid "Arguments for the config module."
 msgstr "Аргументы для конфигурационного модуля."
 
-#: kcm/kcm.cpp:53
-#, kde-format
-msgid "Display Configuration"
-msgstr "Конфигурация дисплея"
-
-#: kcm/kcm.cpp:55
-#, kde-format
-msgid "Manage and configure monitors and displays."
-msgstr "Управление и настройка мониторов и дисплеев."
-
-#: kcm/kcm.cpp:57
-#, kde-format
-msgid "Copyright © 2019 Roman Gilg"
-msgstr "Copyright © 2019 Roman Gilg"
-
-#: kcm/kcm.cpp:58
-#, kde-format
-msgid "Maintainer"
-msgstr "Сопровождающий"
-
-#: kcm/kcm.cpp:58
-#, kde-format
-msgid "Roman Gilg"
-msgstr "Roman Gilg"
-
 #: kcm/output_model.cpp:92
 #, kde-format
 msgctxt "Approximate refresh rate in Hz (rounded to integer)"

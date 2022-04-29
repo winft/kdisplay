@@ -31,31 +31,6 @@ msgstr ""
 msgid "Arguments for the config module."
 msgstr ""
 
-#: kcm/kcm.cpp:53
-#, kde-format
-msgid "Display Configuration"
-msgstr ""
-
-#: kcm/kcm.cpp:55
-#, kde-format
-msgid "Manage and configure monitors and displays."
-msgstr ""
-
-#: kcm/kcm.cpp:57
-#, kde-format
-msgid "Copyright © 2019 Roman Gilg"
-msgstr ""
-
-#: kcm/kcm.cpp:58
-#, kde-format
-msgid "Maintainer"
-msgstr ""
-
-#: kcm/kcm.cpp:58
-#, kde-format
-msgid "Roman Gilg"
-msgstr ""
-
 #: kcm/output_model.cpp:92
 #, kde-format
 msgctxt "Approximate refresh rate in Hz (rounded to integer)"
