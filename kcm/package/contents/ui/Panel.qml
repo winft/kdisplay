@@ -48,6 +48,7 @@ ColumnLayout {
                                Qt.binding(function() { return currentIndex; });
 
         Layout.fillWidth: true
+        spacing: Kirigami.Units.smallSpacing
 
         Repeater {
             model: kcm.outputModel
@@ -118,7 +119,7 @@ ColumnLayout {
                                  "%1%", parseFloat(value * 1.0 / factor * 100.0));
                 }
                 valueFromText: function(text, locale) {
-                    return Number.fromLocaleString(locale, text) * factor / 100.0
+                    return Number.fromLocaleString(locale, text.replace("%", "")) * factor / 100.0
                 }
                 onValueModified: {
                     kcm.globalScale = realValue;
@@ -135,7 +136,7 @@ ColumnLayout {
             id: weirdScaleFactorMsg
             Kirigami.FormData.isSection: true
             Layout.fillWidth: true
-            type: Kirigami.MessageType.Info
+            type: Kirigami.MessageType.Information
             text: i18n("The global scale factor is limited to multiples of 6.25% to minimize visual glitches in applications using the X11 windowing system.")
             visible: false
             showCloseButton: true

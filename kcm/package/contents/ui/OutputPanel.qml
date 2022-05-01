@@ -49,6 +49,8 @@ Kirigami.FormLayout {
 
     RowLayout {
         Layout.fillWidth: true
+        // Set the same limit as the device ComboBox
+        Layout.maximumWidth: Kirigami.Units.gridUnit * 16
 
         visible: kcm.perOutputScaling
         Kirigami.FormData.label: i18n("Scale:")
@@ -84,7 +86,7 @@ Kirigami.FormLayout {
                              "%1%", parseFloat(value * 1.0 / factor * 100.0));
             }
             valueFromText: function(text, locale) {
-                return Number.fromLocaleString(locale, text) * factor / 100.0
+                return Number.fromLocaleString(locale, text.replace("%", "")) * factor / 100.0
             }
             onValueModified: element.scale = realValue
         }

@@ -18,6 +18,5 @@ X-KDE-PluginInfo-Name=org.kde.plasma.kdisplay
 X-KDE-PluginInfo-Version=@KDISPLAY_VERSION@
 X-KDE-PluginInfo-Website=https://kwinft.org
 X-KDE-PluginInfo-Category=System Information
-X-KDE-PluginInfo-Depends=
 X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=true
