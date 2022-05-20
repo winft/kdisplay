@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-23 17:41-0500\n"
-"PO-Revision-Date: 2022-01-07 16:52+0000\n"
+"PO-Revision-Date: 2022-05-21 11:14+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
-"Language-Team: Dutch <https://hosted.weblate.org/projects/kwinft/kdisplay-"
-"plasma-integration/nl/>\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/kwinft/"
+"kdisplay-plasma-integration/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.13-dev\n"
 
 #: plasma-integration/kded/daemon.cpp:65
 #, kde-format
@@ -115,4 +115,4 @@ msgstr "De presentatiemodus is ingeschakeld"
 #: plasma-integration/plasmoid/package/contents/ui/main.qml:101
 #, kde-format
 msgid "Configure Display Settings…"
-msgstr ""
+msgstr "Beeldscherm instellen…"
