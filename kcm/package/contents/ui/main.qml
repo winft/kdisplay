@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-import QtQuick 2.9
+import QtQuick 2.15
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.3 as Controls
 import org.kde.kirigami 2.4 as Kirigami
@@ -89,10 +89,16 @@ KCM.SimpleKCM {
 
         Connections {
             target: kcm
-            onDangerousSave: dangerousSaveMsg.visible = true;
-            onErrorOnSave: errSaveMsg.visible = true;
-            onGlobalScaleWritten: scaleMsg.visible = true;
-            onOutputConnect: {
+            function onDangerousSave() {
+                dangerousSaveMsg.visible = true;
+            }
+            function onErrorOnSave() {
+                errSaveMsg.visible = true;
+            }
+            function onGlobalScaleWritten() {
+                scaleMsg.visible = true;
+            }
+            function onOutputConnect(connected) {
                 if (connected) {
                     connectMsg.text = i18n("A new display has been added. Settings have been reloaded.");
                 } else {
@@ -100,9 +106,11 @@ KCM.SimpleKCM {
                 }
                 connectMsg.visible = true;
             }
-            onBackendError: errBackendMsg.visible = true;
+            function onBackendError() {
+                errBackendMsg.visible = true;
+            }
 
-            onChanged: {
+            function onChanged() {
                 dangerousSaveMsg.visible = false;
                 errSaveMsg.visible = false;
                 scaleMsg.visible = false;
@@ -115,7 +123,7 @@ KCM.SimpleKCM {
             Layout.alignment: Qt.AlignHCenter
             Layout.preferredWidth: Math.max(root.width * 0.8, Kirigami.Units.gridUnit * 26)
             Layout.topMargin: Kirigami.Units.smallSpacing
-            Layout.bottomMargin: Kirigami.Units.largeSpacing * 2
+            Layout.bottomMargin: Kirigami.Units.largeSpacing
 
             enabled: kcm.outputModel && kcm.backendReady
             outputs: kcm.outputModel
