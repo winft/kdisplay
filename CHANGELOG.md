@@ -1,5 +1,43 @@
 # Changelog
 All notable changes to KDisplay will be documented in this file.
+## [5.25.0-beta.0](https://gitlab.com/kwinft/kdisplay/compare/kdisplay@5.24.0-beta.0...kdisplay@5.25.0-beta.0) (2022-06-12)
+
+
+### Features
+
+* hint to run single instance only ([44a47d4](https://gitlab.com/kwinft/kdisplay/commit/44a47d46276354c10e2841b1531e2bca68d31045))
+* **kcm:** make orientation icons more obvious ([bb73b8b](https://gitlab.com/kwinft/kdisplay/commit/bb73b8b9175cc937dd36804622b3336abdacf5f7))
+* **kcm:** show on mobile ([6f6fea6](https://gitlab.com/kwinft/kdisplay/commit/6f6fea678ac8abe4b8bc596ea24bef3e355d2739))
+
+
+### Bug Fixes
+
+* compiler warning TRANSLATION_DOMAIN redefined ([5253335](https://gitlab.com/kwinft/kdisplay/commit/525333526c0326a63b1435563b1a29c8f9981b2b))
+* **kcm:** a typo causing warnings ([e70a5d0](https://gitlab.com/kwinft/kdisplay/commit/e70a5d0c5d410f011e52273a02141bd0cc967d5a))
+* **kcm:** add correct spacing to the swipeview ([df8fa0b](https://gitlab.com/kwinft/kdisplay/commit/df8fa0b312f3f69bd69bccd3675d770dc839256b))
+* **kcm:** connections warnings ([cf8d7cb](https://gitlab.com/kwinft/kdisplay/commit/cf8d7cb1d2a691d692e94f92a28244878c09cf70))
+* **kcm:** error while loading the QML-file ([9b40ffa](https://gitlab.com/kwinft/kdisplay/commit/9b40ffa680d56a910a11ac10ae3326a4dee52ede))
+* **kcm:** import QtQuick 2.15 ([cbbfb0a](https://gitlab.com/kwinft/kdisplay/commit/cbbfb0a12d46caa395bd8726b7941fd7e0e42715))
+* **kcm:** limit the width of the scaling slider ([5c3dbd7](https://gitlab.com/kwinft/kdisplay/commit/5c3dbd7aae47ac5f354828bf3d86534c028c27c6))
+* **kcm:** removal of Xft.dpi from Xresources ([57ca530](https://gitlab.com/kwinft/kdisplay/commit/57ca5306f8e9c6b7a0541572eb8b8df4f29c47a2))
+* **kcm:** replace qmlRegisterType with qmlRegisterAnonymousType ([74dbb04](https://gitlab.com/kwinft/kdisplay/commit/74dbb04487c846ecd256e50b64ee1e0ed7b7ec44))
+* **kcm:** replace valueFromText for scale spinboxes ([5e05507](https://gitlab.com/kwinft/kdisplay/commit/5e05507947e4c15306d00297a43d99b1797b6cf1))
+* **kcm:** split up QProcess arguments ([ec882ac](https://gitlab.com/kwinft/kdisplay/commit/ec882acec0bf79f1e0da85c219586000ebb551ec))
+* **kcm:** warning open build service RPM_Lint ([fafcfa9](https://gitlab.com/kwinft/kdisplay/commit/fafcfa97652fecff74c2bdbb6aff3df1fba18f16))
+* plasmoid/kded wrong TRANSLATION_DOMAIN name ([2644623](https://gitlab.com/kwinft/kdisplay/commit/26446239632934df5ee9b46e0933cf073510eb98))
+* **plasmoid:** change arguments for KDisplayApplet ([6560437](https://gitlab.com/kwinft/kdisplay/commit/6560437593a64ab74909a6c2e6fa457aa75c8895))
+* **plasmoid:** modernize applet configuration UI ([2048abf](https://gitlab.com/kwinft/kdisplay/commit/2048abfd89197605dae44c64c4ecbff7c9b71239))
+
+
+### Refactors
+
+* **kcm/plasmoid:** replace emit with Q_EMIT ([c0362f3](https://gitlab.com/kwinft/kdisplay/commit/c0362f395aa01655b61186099e437bb3231d298f))
+* **kcm:** only show auto-rotate options when sensor is available ([cada31f](https://gitlab.com/kwinft/kdisplay/commit/cada31f2862bf821e3737729da53a82d28cdcbe9))
+* **kcm:** port away from KAboutData and KPackage metadata ([aa966d1](https://gitlab.com/kwinft/kdisplay/commit/aa966d1f82dd85573f7bff8ca67557f849ddf5c2))
+* **kcm:** prefer 21:9 over 64:27 aspect ratio ([9a947b3](https://gitlab.com/kwinft/kdisplay/commit/9a947b3caff31fbdfcb43ded90f29c27f9af278a))
+* **kcm:** reduce margin between screens previews and form ([5886cfe](https://gitlab.com/kwinft/kdisplay/commit/5886cfef7a9756daabdedff3d58f6dfb490a2047))
+* **kcm:** remove Q_EMIT placed on non-signals ([7e3901b](https://gitlab.com/kwinft/kdisplay/commit/7e3901b69135602547f6f666eb54b8a485197ac5))
+
 ## [5.24.0](https://gitlab.com/kwinft/kdisplay/compare/kdisplay@5.24.0-beta.0...kdisplay@5.24.0) (2022-02-08)
 
 ## [5.24.0-beta.0](https://gitlab.com/kwinft/kdisplay/compare/kdisplay@5.23.0-beta.0...kdisplay@5.24.0-beta.0) (2022-02-03)
