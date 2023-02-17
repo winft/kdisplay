@@ -1,5 +1,7 @@
 # Changelog
 All notable changes to KDisplay will be documented in this file.
+## [5.27.0](https://gitlab.com/kwinft/kdisplay/compare/kdisplay@5.27.0-beta.0...kdisplay@5.27.0) (2023-02-17)
+
 ## [5.27.0-beta.0](https://gitlab.com/kwinft/kdisplay/compare/kdisplay@5.26.0-beta.0...kdisplay@5.27.0-beta.0) (2023-02-16)
 
 ## [5.26.0](https://gitlab.com/kwinft/kdisplay/compare/kdisplay@5.26.0-beta.0...kdisplay@5.26.0) (2022-10-11)
