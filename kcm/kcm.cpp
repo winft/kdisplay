@@ -79,6 +79,7 @@ void KCMKDisplay::configReady(ConfigOperation* op)
     m_config->setConfig(config);
     setBackendReady(true);
     Q_EMIT perOutputScalingChanged();
+    Q_EMIT supports_adaptive_sync_changed();
     Q_EMIT primaryOutputSupportedChanged();
     Q_EMIT outputReplicationSupportedChanged();
     Q_EMIT tabletModeAvailableChanged();
@@ -126,6 +127,10 @@ void KCMKDisplay::doSave(bool force)
                               << "    Scale:"
                               << (perOutputScaling() ? QString::number(output->scale())
                                                      : QStringLiteral("global"))
+                              << "\n"
+                              << "    Adapt Sync:" << output->adaptive_sync()
+                              << (output->adaptive_sync_toggle_support() ? "(no toggle support)"
+                                                                         : ("supports toggle"))
                               << "\n"
                               << "    Replicates:"
                               << (output->replication_source() == 0 ? "no" : "yes");
@@ -218,6 +223,14 @@ bool KCMKDisplay::perOutputScaling() const
     return m_config->config()->supported_features().testFlag(Config::Feature::PerOutputScaling);
 }
 
+bool KCMKDisplay::supports_adaptive_sync() const
+{
+    if (!m_config || !m_config->config()) {
+        return false;
+    }
+    return m_config->config()->supported_features().testFlag(Config::Feature::AdaptiveSync);
+}
+
 bool KCMKDisplay::primaryOutputSupported() const
 {
     if (!m_config || !m_config->config()) {
@@ -294,6 +307,7 @@ void KCMKDisplay::load()
 
     m_config.reset(new ConfigHandler(this));
     Q_EMIT perOutputScalingChanged();
+    Q_EMIT supports_adaptive_sync_changed();
     connect(
         m_config.get(), &ConfigHandler::outputModelChanged, this, &KCMKDisplay::outputModelChanged);
     connect(m_config.get(), &ConfigHandler::outputConnect, this, [this](bool connected) {

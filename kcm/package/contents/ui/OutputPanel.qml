@@ -150,6 +150,14 @@ Kirigami.FormLayout {
             currentIndex: element.refreshRateIndex
             onActivated: element.refreshRateIndex = currentIndex
         }
+
+        Controls.Switch {
+            text: i18n("Adaptive Sync")
+            visible: kcm.adaptiveSyncSupported
+            enabled: element.adaptiveSyncToggleSupport
+            checked: element.adaptiveSync
+            onToggled: element.adaptiveSync = checked
+        }
     }
 
     Controls.ComboBox {
