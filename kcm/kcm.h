@@ -36,6 +36,8 @@ class KCMKDisplay : public KQuickAddons::ConfigModule
     Q_PROPERTY(bool backendReady READ backendReady NOTIFY backendReadyChanged)
     Q_PROPERTY(bool screenNormalized READ screenNormalized NOTIFY screenNormalizedChanged)
     Q_PROPERTY(bool perOutputScaling READ perOutputScaling NOTIFY perOutputScalingChanged)
+    Q_PROPERTY(bool adaptiveSyncSupported READ supports_adaptive_sync NOTIFY
+                   supports_adaptive_sync_changed)
     Q_PROPERTY(bool primaryOutputSupported READ primaryOutputSupported NOTIFY
                    primaryOutputSupportedChanged)
     Q_PROPERTY(bool outputReplicationSupported READ outputReplicationSupported NOTIFY
@@ -70,6 +72,7 @@ public:
 
     bool perOutputScaling() const;
     bool primaryOutputSupported() const;
+    bool supports_adaptive_sync() const;
     bool outputReplicationSupported() const;
 
     qreal globalScale() const;
@@ -92,6 +95,7 @@ Q_SIGNALS:
     void changed();
     void screenNormalizedChanged();
     void perOutputScalingChanged();
+    void supports_adaptive_sync_changed();
     void primaryOutputSupportedChanged();
     void outputReplicationSupportedChanged();
     void globalScaleChanged();

@@ -83,7 +83,7 @@ QVariant OutputModel::data(const QModelIndex& index, int role) const
         return replicationSourceIndex(index.row());
     case ReplicasModelRole:
         return replicasModel(output);
-    case RefreshRatesRole:
+    case RefreshRatesRole: {
         QVariantList ret;
         for (auto rate : refreshRates(output)) {
             if (output->auto_refresh_rate()) {
@@ -98,6 +98,11 @@ QVariant OutputModel::data(const QModelIndex& index, int role) const
             }
         }
         return ret;
+    }
+    case AdaptiveSyncToggleSupportRole:
+        return output->adaptive_sync_toggle_support();
+    case AdaptiveSyncRole:
+        return output->adaptive_sync();
     }
     return QVariant();
 }
@@ -181,7 +186,7 @@ bool OutputModel::setData(const QModelIndex& index, const QVariant& value, int r
             return setReplicationSourceIndex(index.row(), value.toInt() - 1);
         }
         break;
-    case ScaleRole:
+    case ScaleRole: {
         bool ok;
         const qreal scale = value.toReal(&ok);
         if (ok && !qFuzzyCompare(output.ptr->scale(), scale)) {
@@ -189,6 +194,12 @@ bool OutputModel::setData(const QModelIndex& index, const QVariant& value, int r
             Q_EMIT sizeChanged();
             Q_EMIT dataChanged(index, index, {role, SizeRole});
             return true;
+        }
+        break;
+    }
+    case AdaptiveSyncRole:
+        if (value.canConvert<bool>()) {
+            return set_adaptive_sync(index.row(), value.value<bool>());
         }
         break;
     }
@@ -217,6 +228,8 @@ QHash<int, QByteArray> OutputModel::roleNames() const
     roles[ReplicationSourceModelRole] = "replicationSourceModel";
     roles[ReplicationSourceIndexRole] = "replicationSourceIndex";
     roles[ReplicasModelRole] = "replicasModel";
+    roles[AdaptiveSyncToggleSupportRole] = "adaptiveSyncToggleSupport";
+    roles[AdaptiveSyncRole] = "adaptiveSync";
     return roles;
 }
 
@@ -439,6 +452,20 @@ bool OutputModel::setRotation(int outputIndex, Disman::Output::Rotation rotation
     QModelIndex index = createIndex(outputIndex, 0);
     Q_EMIT dataChanged(index, index, {RotationRole, SizeRole});
     Q_EMIT sizeChanged();
+    return true;
+}
+
+bool OutputModel::set_adaptive_sync(int outputIndex, bool value)
+{
+    Output& output = m_outputs[outputIndex];
+
+    if (output.ptr->adaptive_sync() == value) {
+        return false;
+    }
+    output.ptr->set_adaptive_sync(value);
+
+    auto index = createIndex(outputIndex, 0);
+    Q_EMIT dataChanged(index, index, {AdaptiveSyncRole});
     return true;
 }
 

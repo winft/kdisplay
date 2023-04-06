@@ -49,7 +49,9 @@ public:
         RefreshRatesRole,
         ReplicationSourceModelRole,
         ReplicationSourceIndexRole,
-        ReplicasModelRole
+        ReplicasModelRole,
+        AdaptiveSyncToggleSupportRole,
+        AdaptiveSyncRole,
     };
 
     explicit OutputModel(ConfigHandler* configHandler);
@@ -129,6 +131,7 @@ private:
     bool setResolution(int outputIndex, int resIndex);
     bool setRefreshRate(int outputIndex, int refIndex);
     bool setRotation(int outputIndex, Disman::Output::Rotation rotation);
+    bool set_adaptive_sync(int outputIndex, bool value);
 
     bool setAutoResolution(int outputIndex, bool value);
     bool setAutoRefreshRate(int outputIndex, bool value);
