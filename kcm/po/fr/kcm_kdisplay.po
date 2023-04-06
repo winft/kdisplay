@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-01 13:44-0500\n"
+"POT-Creation-Date: 2023-03-31 00:13+0200\n"
 "PO-Revision-Date: 2020-10-16 19:26+0000\n"
 "Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/kwinft/kdisplay-"
@@ -46,19 +46,19 @@ msgctxt "Refresh rate in Hz (rounded to 3 digits)"
 msgid "%1 Hz"
 msgstr "%1 Hz"
 
-#: kcm/output_model.cpp:501
+#: kcm/output_model.cpp:528
 #, kde-format
 msgctxt "Width x height (aspect ratio)"
 msgid "%1x%2 (%3:%4)"
 msgstr "%1x%2 (%3:%4)"
 
-#: kcm/output_model.cpp:563
+#: kcm/output_model.cpp:590
 #, kde-format
 msgctxt "Displayed when no replication source is selected."
 msgid "None"
 msgstr "Aucun"
 
-#: kcm/output_model.cpp:570
+#: kcm/output_model.cpp:597
 #, kde-format
 msgid "Replicated by other display"
 msgstr "Reproduit par un autre écran"
@@ -118,7 +118,12 @@ msgstr "Résolution :"
 msgid "Refresh rate:"
 msgstr "Taux d’actualisation :"
 
-#: kcm/package/contents/ui/OutputPanel.qml:156
+#: kcm/package/contents/ui/OutputPanel.qml:155
+#, kde-format
+msgid "Adaptive Sync"
+msgstr ""
+
+#: kcm/package/contents/ui/OutputPanel.qml:164
 #, kde-format
 msgid "Replica of:"
 msgstr "Réplique de :"
