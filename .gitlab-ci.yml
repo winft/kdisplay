@@ -81,7 +81,7 @@ Master Build:
     - mkdir -p disman-bench/build && cd disman-bench
     - git clone --branch master https://gitlab.com/kwinft/disman.git src
     - cd build
-    - cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr ../src
+    - cmake -DBUILD_TESTING=Off -DCMAKE_INSTALL_PREFIX:PATH=/usr ../src
     - make -j$(nproc)
     - make install -j$(nproc)
     - cd ../..
