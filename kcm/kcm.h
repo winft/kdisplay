@@ -16,7 +16,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #pragma once
 
-#include <KQuickAddons/ConfigModule>
+#include "output_model.h"
+
+#include <KQuickManagedConfigModule>
 
 namespace Disman
 {
@@ -26,9 +28,8 @@ class ConfigOperation;
 class ConfigHandler;
 class OrientationSensor;
 class OutputIdentifier;
-class OutputModel;
 
-class KCMKDisplay : public KQuickAddons::ConfigModule
+class KCMKDisplay : public KQuickManagedConfigModule
 {
     Q_OBJECT
 
@@ -52,9 +53,7 @@ class KCMKDisplay : public KQuickAddons::ConfigModule
     Q_PROPERTY(bool tabletModeAvailable READ tabletModeAvailable NOTIFY tabletModeAvailableChanged)
 
 public:
-    explicit KCMKDisplay(QObject* parent = nullptr,
-                         const KPluginMetaData& metaData = KPluginMetaData(),
-                         const QVariantList& args = QVariantList());
+    KCMKDisplay(QObject* parent, const KPluginMetaData& data, const QVariantList& args);
     ~KCMKDisplay() override = default;
 
     void load() override;

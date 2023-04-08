@@ -108,6 +108,6 @@ void KDisplayApplet::checkOutputs()
     }
 }
 
-K_EXPORT_PLASMA_APPLET_WITH_JSON(kdisplay, KDisplayApplet, "metadata.json")
+K_PLUGIN_CLASS_WITH_JSON(KDisplayApplet, "package/metadata.json")
 
 #include "kdisplay_applet.moc"

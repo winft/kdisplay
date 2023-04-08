@@ -14,9 +14,9 @@ add_executable(osdtest
 )
 
 target_link_libraries(osdtest
-  KF5::I18n
-  Qt5::Core
-  Qt5::DBus
+  KF6::I18n
+  Qt6::Core
+  Qt6::DBus
 )
 
 add_test(NAME kdisplay-kded-osdtest COMMAND osdtest)

@@ -35,7 +35,7 @@ int main(int argc, char** argv)
     about.processCommandLine(&parser);
 
     auto dialog = new KCMultiDialog;
-    dialog->addModule(KPluginMetaData(QStringLiteral("kcm_kdisplay")),
+    dialog->addModule(KPluginMetaData(QStringLiteral("plasma/kcms/systemsettings/kcm_kdisplay")),
                       {parser.value(QStringLiteral("args"))});
 
     auto style = dialog->style();

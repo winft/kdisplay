@@ -16,8 +16,8 @@ target_sources(kdisplay_osd_service PRIVATE ${dbus_SRCS})
 
 target_link_libraries(kdisplay_osd_service PRIVATE
   disman::lib
-  KF5::I18n
-  KF5::WindowSystem
+  KF6::I18n
+  KF6::WindowSystem
   LayerShellQt::Interface
   Qt::DBus
   Qt::Quick
