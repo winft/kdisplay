@@ -7,7 +7,7 @@
 #ifndef KSCREEN_DAEMON_H
 #define KSCREEN_DAEMON_H
 
-#include "osdaction.h"
+#include "../osd/osdaction.h"
 
 #include <disman/config.h>
 
@@ -15,13 +15,14 @@
 
 #include <QVariant>
 
+class OrgKwinftKdisplayOsdServiceInterface;
+
 namespace Disman
 {
 class ConfigOperation;
 }
 
 class OrientationSensor;
-class OsdManager;
 
 class KDisplayDaemon : public KDEDModule
 {
@@ -50,13 +51,11 @@ private:
     void displayButton();
     void setMonitorForChanges(bool enabled);
 
-    void showOutputIdentifier();
-    void applyOsdAction(OsdAction::Action action);
+    void show_osd();
+    void applyOsdAction(KDisplay::OsdAction::Action action);
 
     void doApplyConfig(Disman::ConfigPtr const& config);
     void refreshConfig();
-
-    void showOsd(const QString& icon, const QString& text);
 
     void update_auto_rotate();
     void updateOrientation();
@@ -64,7 +63,7 @@ private:
     Disman::ConfigPtr m_monitoredConfig;
     bool m_monitoring;
     bool m_configDirty = true;
-    OsdManager* m_osdManager;
+    OrgKwinftKdisplayOsdServiceInterface* m_osdServiceInterface;
     OrientationSensor* m_orientationSensor;
     bool m_startingUp = true;
 };

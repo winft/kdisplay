@@ -1,0 +1,12 @@
+[Unit]
+Description=KDisplay OSD service
+PartOf=graphical-session.target
+
+[Service]
+ExecStart=@KDE_INSTALL_FULL_LIBEXECDIR@/kdisplay_osd_service
+Type=dbus
+BusName=org.kwinft.kdisplay.osdService
+TimeoutSec=5sec
+Slice=background.slice
+# Disable restart as we're dbus activated anyway
+Restart=no

@@ -5,7 +5,7 @@ find_package(KF5 REQUIRED COMPONENTS PlasmaQuick)
 
 set(kdisplayApplet_SRCS
     kdisplay_applet.cpp
-    ../kded/osdaction.cpp
+    ../osd/osdaction.cpp
 )
 
 add_library(plasma_applet_kdisplay MODULE ${kdisplayApplet_SRCS})

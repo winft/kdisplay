@@ -13,7 +13,7 @@
 #include "generator.h"
 #include "kdisplay_daemon_debug.h"
 #include "kdisplayadaptor.h"
-#include "osdmanager.h"
+#include "osdservice_interface.h"
 
 #include <disman/configmonitor.h>
 #include <disman/getconfigoperation.h>
@@ -37,6 +37,7 @@ KDisplayDaemon::KDisplayDaemon(QObject* parent, const QList<QVariant>&)
     , m_orientationSensor(new OrientationSensor(this))
 {
     Disman::Log::instance();
+    qMetaTypeId<KDisplay::OsdAction>();
 
     connect(new Disman::GetConfigOperation,
             &Disman::GetConfigOperation::finished,
@@ -68,8 +69,15 @@ void KDisplayDaemon::init(Disman::ConfigOperation* op)
     connect(action, &QAction::triggered, this, &KDisplayDaemon::displayButton);
 
     new KdisplayAdaptor(this);
-    // Initialize OSD manager to register its dbus interface
-    m_osdManager = new OsdManager(this);
+
+    QString const osdService = QStringLiteral("org.kwinft.kdisplay.osdService");
+    QString const osdPath = QStringLiteral("/org/kwinft/kdisplay/osdService");
+    m_osdServiceInterface = new OrgKwinftKdisplayOsdServiceInterface(
+        osdService, osdPath, QDBusConnection::sessionBus(), this);
+
+    // Set a longer timeout to not assume timeout while the osd is still shown
+    m_osdServiceInterface->setTimeout(
+        std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::seconds(60)).count());
 
     connect(cfg, &Disman::Config::output_added, this, &KDisplayDaemon::applyConfig);
     connect(cfg, &Disman::Config::output_removed, this, &KDisplayDaemon::applyConfig);
@@ -160,26 +168,25 @@ void KDisplayDaemon::applyConfig()
 {
     qCDebug(KDISPLAY_KDED) << "Applying config";
 
-    const bool showOsd = m_monitoredConfig->outputs().size() > 1 && !m_startingUp
+    auto const should_show_osd = m_monitoredConfig->outputs().size() > 1 && !m_startingUp
         && m_monitoredConfig->cause() == Disman::Config::Cause::generated;
 
-    if (showOsd) {
+    if (should_show_osd) {
         qCDebug(KDISPLAY_KDED) << "Getting ideal config from user via OSD...";
-        auto action = m_osdManager->showActionSelector();
-        connect(action, &OsdAction::selected, this, &KDisplayDaemon::applyOsdAction);
+        show_osd();
     } else {
-        m_osdManager->hideOsd();
+        m_osdServiceInterface->hideOsd();
     }
 }
 
 void KDisplayDaemon::applyLayoutPreset(const QString& presetName)
 {
-    const QMetaEnum actionEnum = QMetaEnum::fromType<OsdAction::Action>();
+    auto const actionEnum = QMetaEnum::fromType<KDisplay::OsdAction::Action>();
     Q_ASSERT(actionEnum.isValid());
 
     bool ok;
-    auto action
-        = static_cast<OsdAction::Action>(actionEnum.keyToValue(qPrintable(presetName), &ok));
+    auto action = static_cast<KDisplay::OsdAction::Action>(
+        actionEnum.keyToValue(qPrintable(presetName), &ok));
     if (!ok) {
         qCWarning(KDISPLAY_KDED) << "Cannot apply unknown screen layout preset named" << presetName;
         return;
@@ -201,7 +208,7 @@ void KDisplayDaemon::setAutoRotate(bool value)
     refreshConfig();
 }
 
-void KDisplayDaemon::applyOsdAction(OsdAction::Action action)
+void KDisplayDaemon::applyOsdAction(KDisplay::OsdAction::Action action)
 {
     qCDebug(KDISPLAY_KDED) << "Applying OSD action:" << action;
 
@@ -218,27 +225,24 @@ void KDisplayDaemon::configChanged()
     updateOrientation();
 }
 
-void KDisplayDaemon::showOsd(const QString& icon, const QString& text)
+void KDisplayDaemon::show_osd()
 {
-    QDBusMessage msg = QDBusMessage::createMethodCall(QLatin1String("org.kde.plasmashell"),
-                                                      QLatin1String("/org/kde/osdService"),
-                                                      QLatin1String("org.kde.osdService"),
-                                                      QLatin1String("showText"));
-    msg << icon << text;
-    QDBusConnection::sessionBus().asyncCall(msg);
-}
-
-void KDisplayDaemon::showOutputIdentifier()
-{
-    m_osdManager->showOutputIdentifiers();
+    auto call = m_osdServiceInterface->showActionSelector();
+    auto watcher = new QDBusPendingCallWatcher(call);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, watcher] {
+        watcher->deleteLater();
+        QDBusReply<int> reply = *watcher;
+        if (!reply.isValid()) {
+            return;
+        }
+        applyOsdAction(static_cast<KDisplay::OsdAction::Action>(reply.value()));
+    });
 }
 
 void KDisplayDaemon::displayButton()
 {
     qCDebug(KDISPLAY_KDED) << "displayBtn triggered";
-
-    auto action = m_osdManager->showActionSelector();
-    connect(action, &OsdAction::selected, this, &KDisplayDaemon::applyOsdAction);
+    show_osd();
 }
 
 void KDisplayDaemon::setMonitorForChanges(bool enabled)

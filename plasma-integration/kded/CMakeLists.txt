@@ -11,9 +11,7 @@ set(kdisplay_daemon_SRCS
     daemon.cpp
     config.cpp
     generator.cpp
-    osd.cpp
-    osdmanager.cpp
-    osdaction.cpp
+    ../osd/osdaction.cpp
     ${CMAKE_SOURCE_DIR}/common/orientation_sensor.cpp
     ${CMAKE_SOURCE_DIR}/common/utils.cpp
 )
@@ -31,6 +29,10 @@ qt5_add_dbus_adaptor(kdisplay_daemon_SRCS
     org.kwinft.kdisplay.xml
     daemon.h
     KDisplayDaemon
+)
+qt5_add_dbus_interface(kdisplay_daemon_SRCS
+  ../osd/org.kwinft.kdisplay.osdService.xml
+  osdservice_interface
 )
 
 add_library(kdisplayd MODULE ${kdisplay_daemon_SRCS})
@@ -51,12 +53,3 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/kdisplayd.desktop.cmake
 kcoreaddons_desktop_to_json(kdisplayd ${CMAKE_CURRENT_BINARY_DIR}/kdisplayd.desktop)
 
 install(TARGETS kdisplayd DESTINATION ${KDE_INSTALL_PLUGINDIR}/kf5/kded)
-
-set(QML_FILES
-    qml/Osd.qml
-    qml/OsdItem.qml
-    qml/OsdSelector.qml
-    qml/OutputIdentifier.qml
-)
-
-install(FILES ${QML_FILES} DESTINATION ${KDE_INSTALL_DATADIR}/kded_kdisplay/qml)

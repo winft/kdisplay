@@ -16,6 +16,8 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
+include(ECMConfiguredInstall)
+include(ECMGenerateDBusServiceFile)
 include(ECMInstallIcons)
 include(ECMMarkAsTest)
 include(ECMQtDeclareLoggingCategory)
@@ -29,6 +31,15 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     DBusAddons
     Declarative
     I18n
+    WindowSystem
+)
+
+find_package(LayerShellQt)
+set_package_properties(LayerShellQt PROPERTIES
+    DESCRIPTION "Layer shell Qt bindings"
+    URL "https://invent.kde.org/plasma/layer-shell-qt"
+    PURPOSE "Required for the screen selection osd"
+    TYPE REQUIRED
 )
 
 set(MIN_DISMAN_VERSION "0.519.80")
