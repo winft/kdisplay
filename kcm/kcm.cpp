@@ -85,17 +85,7 @@ void KCMKDisplay::configReady(ConfigOperation* op)
     Q_EMIT outputRetentionChanged();
 }
 
-void KCMKDisplay::forceSave()
-{
-    doSave(true);
-}
-
 void KCMKDisplay::save()
-{
-    doSave(false);
-}
-
-void KCMKDisplay::doSave(bool force)
 {
     if (!m_config) {
         Q_EMIT errorOnSave();
@@ -134,8 +124,8 @@ void KCMKDisplay::doSave(bool force)
                               << (output->replication_source() == 0 ? "no" : "yes");
     }
 
-    if (!atLeastOneEnabledOutput && !force) {
-        Q_EMIT dangerousSave();
+    if (!atLeastOneEnabledOutput) {
+        Q_EMIT invalidConfig(InvalidConfigReason::NoEnabledOutputs);
         m_config->checkNeedsSave();
         return;
     }

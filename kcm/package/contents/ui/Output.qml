@@ -15,16 +15,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-import QtQuick 2.12
-import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.3 as Controls
-import QtGraphicalEffects 1.0
-import org.kde.kirigami 2.4 as Kirigami
+import QtQuick 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Controls 2.15 as QQC2
+import org.kde.kirigami 2.20 as Kirigami
 
 Item {
     id: output
 
-    property bool isSelected: root.selectedOutput === model.index
+    readonly property bool isSelected: root.selectedOutput === model.index
     property size outputSize: model.size
 
     onIsSelectedChanged: {
@@ -37,7 +36,7 @@ Item {
 
     function getAbsolutePosition(pos) {
         return Qt.point((pos.x - screen.xOffset) * screen.relativeFactor,
-                        (pos.y - screen.yOffset) * screen.relativeFactor) ;
+                        (pos.y - screen.yOffset) * screen.relativeFactor);
     }
 
     visible: model.enabled && model.replicationSourceIndex === 0
@@ -51,24 +50,44 @@ Item {
     width: model.size ? model.size.width / screen.relativeFactor : 1
     height: model.size ? model.size.height / screen.relativeFactor : 1
 
-    SystemPalette {
-        id: palette
-    }
-
     Rectangle {
         id: outline
-        radius: 4
-        color: palette.window
 
-        anchors.fill: parent
+        readonly property int orientationPanelWidth: 10
+        readonly property real orientationPanelPosition: 1 - (orientationPanelWidth / outline.height)
+
+        anchors.centerIn: parent
+        width: parent.width
+        height: parent.height
+        radius: Kirigami.Units.smallSpacing
+
+        gradient: Gradient {
+            GradientStop {
+                position: 0.0
+                color: Kirigami.Theme.alternateBackgroundColor
+            }
+            GradientStop {
+                // Create a hard cut. Can't use the same number otherwise it gets confused.
+                position: outline.orientationPanelPosition - Number.EPSILON
+                color: Kirigami.Theme.alternateBackgroundColor
+            }
+            GradientStop {
+                position: outline.orientationPanelPosition
+                color: outline.border.color
+            }
+            GradientStop {
+                position: 1.0
+                color: outline.border.color
+            }
+        }
 
         border {
-            color: isSelected ? palette.highlight : palette.shadow
+            color: isSelected ? Kirigami.Theme.highlightColor : Kirigami.Theme.disabledTextColor
             width: 1
 
             Behavior on color {
                 PropertyAnimation {
-                    duration: 150
+                    duration: Kirigami.Units.longDuration
                 }
             }
         }
@@ -76,16 +95,31 @@ Item {
 
     Item {
         anchors.fill: parent
+        // So we can show a grabby hand cursor when hovered over
+        HoverHandler {
+            cursorShape: kcm.outputModel && kcm.outputModel.rowCount() > 1 ? Qt.SizeAllCursor : undefined
+        }
+        z: 2
+    }
 
+    Item {
+        id: labelContainer
+        anchors {
+            fill: parent
+            margins: outline.border.width
+        }
+
+        // so the text is drawn above orientationPanelContainer
+        z: 1
         ColumnLayout {
             anchors.centerIn: parent
             spacing: 0
             width: parent.width
             Layout.maximumHeight: parent.height
 
-            Controls.Label {
+            QQC2.Label {
                 Layout.fillWidth: true
-                Layout.margins: Kirigami.Units.smallSpacing
+                Layout.maximumHeight: labelContainer.height - resolutionLabel.implicitHeight
 
                 text: model.display
                 wrapMode: Text.Wrap
@@ -93,16 +127,75 @@ Item {
                 elide: Text.ElideRight
             }
 
-            Controls.Label {
+            QQC2.Label {
+                id: resolutionLabel
                 Layout.fillWidth: true
-                Layout.bottomMargin: Kirigami.Units.smallSpacing
 
                 text: "(" + model.size.width + "x" + model.size.height + ")"
+                wrapMode: Text.Wrap
                 horizontalAlignment: Text.AlignHCenter
                 elide: Text.ElideRight
             }
         }
     }
+
+    states: [
+        State {
+            name: "transposed"
+            PropertyChanges {
+                target: outline
+                width: output.height
+                height: output.width
+            }
+        },
+
+        State {
+            name: "rot0"
+            when: model.rotation === 1
+            PropertyChanges {
+                target: labelContainer
+                anchors.bottomMargin: outline.orientationPanelWidth + outline.border.width
+            }
+        },
+        State {
+            name: "rot90"
+            extend: "transposed"
+            when: model.rotation === 2
+            PropertyChanges {
+                target: outline
+                rotation: 90
+            }
+            PropertyChanges {
+                target: labelContainer
+                anchors.leftMargin: outline.orientationPanelWidth + outline.border.width
+            }
+        },
+        State {
+            name: "rot180"
+            when: model.rotation === 4
+            PropertyChanges {
+                target: outline
+                rotation: 180
+            }
+            PropertyChanges {
+                target: labelContainer
+                anchors.topMargin: outline.orientationPanelWidth + outline.border.width
+            }
+        },
+        State {
+            name: "rot270"
+            extend: "transposed"
+            when: model.rotation === 8
+            PropertyChanges {
+                target: outline
+                rotation: 270
+            }
+            PropertyChanges {
+                target: labelContainer
+                anchors.rightMargin: outline.orientationPanelWidth + outline.border.width
+            }
+        }
+    ]
 
     Rectangle {
         id: posLabel
@@ -117,7 +210,7 @@ Item {
                  (tapHandler.isLongPressed || dragHandler.active) ? 0.9 : 0.0
 
 
-        color: palette.shadow
+        color: Kirigami.Theme.disabledTextColor
 
         Text {
             id: posLabelText
@@ -131,12 +224,12 @@ Item {
 
         Behavior on opacity {
             PropertyAnimation {
-                duration: 100;
+                duration: Kirigami.Units.longDuration
             }
         }
     }
 
-    Controls.ToolButton {
+    QQC2.ToolButton {
         id: replicas
 
         property int selectedReplica: -1
@@ -150,7 +243,7 @@ Item {
         visible: model.replicasModel.length > 0
         icon.name: "osd-duplicate"
 
-        Controls.ToolTip {
+        QQC2.ToolTip {
             text: i18n("Replicas")
         }
 
@@ -163,79 +256,6 @@ Item {
                 root.selectedOutput = model.replicasModel[index];
             }
         }
-
-    }
-
-    Item {
-        id: orientationPanelContainer
-
-        anchors.fill: output
-        visible: false
-
-        Rectangle {
-            id: orientationPanel
-            anchors {
-                left: parent.left
-                right: parent.right
-                bottom: parent.bottom
-            }
-
-            height: 10
-            color: isSelected ? palette.highlight : palette.shadow
-            smooth: true
-
-            Behavior on color {
-                PropertyAnimation {
-                    duration: 150
-                }
-            }
-        }
-    }
-
-    states: [
-        State {
-            name: "rot90"
-            when: model.rotation === 2
-            PropertyChanges {
-                target: orientationPanel
-                height: undefined
-                width: 10
-            }
-            AnchorChanges {
-                target: orientationPanel
-                anchors.right: undefined
-                anchors.top: orientationPanelContainer.top
-            }
-        },
-        State {
-            name: "rot180"
-            when: model.rotation === 4
-            AnchorChanges {
-                target: orientationPanel
-                anchors.top: orientationPanelContainer.top
-                anchors.bottom: undefined
-            }
-        },
-        State {
-            name: "rot270"
-            when: model.rotation === 8
-            PropertyChanges {
-                target: orientationPanel
-                height: undefined
-                width: 10
-            }
-            AnchorChanges {
-                target: orientationPanel
-                anchors.left: undefined
-                anchors.top: orientationPanelContainer.top
-            }
-        }
-    ]
-
-    OpacityMask {
-        anchors.fill: orientationPanelContainer
-        source: orientationPanelContainer
-        maskSource: outline
     }
 
     property point dragStartPosition
@@ -243,14 +263,11 @@ Item {
     TapHandler {
         id: tapHandler
         property bool isLongPressed: false
+        gesturePolicy: TapHandler.WithinBounds
 
-        function bindSelectedOutput() {
-            root.selectedOutput
-                    = Qt.binding(function() { return model.index; });
-        }
         onPressedChanged: {
             if (pressed) {
-                bindSelectedOutput();
+                root.selectedOutput = model.index;
                 dragStartPosition = Qt.point(output.x, output.y)
             } else {
                 isLongPressed = false;
@@ -263,6 +280,7 @@ Item {
         id: dragHandler
         enabled: kcm.outputModel && kcm.outputModel.rowCount() > 1
         acceptedButtons: Qt.LeftButton
+        grabPermissions: PointerHandler.CanTakeOverFromAnything | PointerHandler.TakeOverForbidden
         target: null
 
         onTranslationChanged: {
@@ -271,18 +289,10 @@ Item {
             model.position = getAbsolutePosition(Qt.point(newX, newY));
         }
         onActiveChanged: {
+            model.interactiveMove = active;
             if (!active) {
                 screen.resetTotalSize();
             }
         }
     }
-
-    // So we can show a grabby hand cursor when hovered over
-    MouseArea {
-        anchors.fill: parent
-        cursorShape: Qt.SizeAllCursor
-        acceptedButtons: Qt.NoButton // Otherwise it interferes with the drag handler
-        visible: kcm.outputModel && kcm.outputModel.rowCount() > 1
-    }
 }
-

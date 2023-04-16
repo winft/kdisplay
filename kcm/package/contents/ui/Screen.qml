@@ -14,12 +14,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-import QtQuick 2.9
-import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.3 as Controls
-import org.kde.kirigami 2.5 as Kirigami
+import QtQuick 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Controls 2.15 as QQC2
+import org.kde.kirigami 2.20 as Kirigami
 
-Controls.ScrollView {
+QQC2.ScrollView {
     property var outputs
     property size totalSize
 
@@ -30,7 +30,7 @@ Controls.ScrollView {
     onWidthChanged: resetTotalSize()
     onHeightChanged: resetTotalSize()
 
-    property real relativeFactor: {
+    readonly property real relativeFactor: {
         var relativeSize = Qt.size(totalSize.width / (0.6 * width),
                                    totalSize.height / (0.6 * height));
         if (relativeSize.width > relativeSize.height) {
@@ -42,12 +42,8 @@ Controls.ScrollView {
         }
     }
 
-    property int xOffset: (width - totalSize.width / relativeFactor) / 2;
-    property int yOffset: (height - totalSize.height / relativeFactor) / 2;
-
-    implicitHeight: Math.max(root.height * 0.4, Kirigami.Units.gridUnit * 13)
-
-    Component.onCompleted: background.visible = true;
+    readonly property int xOffset: (width - totalSize.width / relativeFactor) / 2;
+    readonly property int yOffset: (height - totalSize.height / relativeFactor) / 2;
 
     Kirigami.Heading {
         z: 90
@@ -60,11 +56,11 @@ Controls.ScrollView {
         level: 4
         opacity: 0.6
         horizontalAlignment: Text.AlignHCenter
-        text: i18n("Drag displays to re-arrange them")
+        text: i18n("Drag screens to re-arrange them")
         visible: kcm.outputModel && kcm.outputModel.rowCount() > 1
     }
 
-    Controls.Button {
+    QQC2.Button {
         anchors {
             bottom: parent.bottom
             horizontalCenter: parent.horizontalCenter
@@ -73,7 +69,7 @@ Controls.ScrollView {
         z: 90
 
         onClicked: kcm.identifyOutputs()
-        text: i18nc("Itendifies displays with visual indicators", "Identify")
+        text: i18n("Identify")
         icon.name: "documentinfo"
         focusPolicy: Qt.NoFocus
         visible: kcm.outputModel && kcm.outputModel.rowCount() > 1

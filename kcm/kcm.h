@@ -53,6 +53,12 @@ class KCMKDisplay : public KQuickManagedConfigModule
     Q_PROPERTY(bool tabletModeAvailable READ tabletModeAvailable NOTIFY tabletModeAvailableChanged)
 
 public:
+    enum InvalidConfigReason {
+        NoEnabledOutputs,
+        ConfigHasGaps,
+    };
+    Q_ENUM(InvalidConfigReason)
+
     KCMKDisplay(QObject* parent, const KPluginMetaData& data, const QVariantList& args);
     ~KCMKDisplay() override = default;
 
@@ -84,9 +90,6 @@ public:
     bool orientationSensorAvailable() const;
     bool tabletModeAvailable() const;
 
-    Q_INVOKABLE void forceSave();
-    void doSave(bool force);
-
 Q_SIGNALS:
     void backendReadyChanged();
     void backendError();
@@ -102,7 +105,7 @@ Q_SIGNALS:
     void autoRotationSupportedChanged();
     void orientationSensorAvailableChanged();
     void tabletModeAvailableChanged();
-    void dangerousSave();
+    void invalidConfig(InvalidConfigReason);
     void errorOnSave();
     void globalScaleWritten();
     void outputConnect(bool connected);
