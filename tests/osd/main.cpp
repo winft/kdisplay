@@ -1,67 +1,42 @@
-/*************************************************************************************
- *  Copyright 2014-2016 by Sebastian Kügler <sebas@kde.org>                          *
- *                                                                                   *
- *  This program is free software; you can redistribute it and/or                    *
- *  modify it under the terms of the GNU General Public License                      *
- *  as published by the Free Software Foundation; either version 2                   *
- *  of the License, or (at your option) any later version.                           *
- *                                                                                   *
- *  This program is distributed in the hope that it will be useful,                  *
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of                   *
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                    *
- *  GNU General Public License for more details.                                     *
- *                                                                                   *
- *  You should have received a copy of the GNU General Public License                *
- *  along with this program; if not, write to the Free Software                      *
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA   *
- *************************************************************************************/
-#include "osdtest.h"
+/*
+    SPDX-FileCopyrightText: 2014-2016 Sebastian Kügler <sebas@kde.org>
+    SPDX-FileCopyrightText: 2022 David Redondo <kde@david-redondo.de>
 
-#include <QCommandLineParser>
-#include <QGuiApplication>
+ SPDX-License-Identifier: GPL-2.0-or-later
+*/
+
+#include "../../plasma-integration/osd/osdaction.h"
+#include "osdservice_interface.h"
+
+#include <QCoreApplication>
+#include <QDBusConnection>
 
 int main(int argc, char** argv)
 {
-    QGuiApplication app(argc, argv);
+    QCoreApplication app(argc, argv);
 
-    QCommandLineOption dbus
-        = QCommandLineOption(QStringList() << QStringLiteral("d") << QStringLiteral("dbus"),
-                             QStringLiteral("Call over dbus"));
-    QCommandLineOption outputid = QCommandLineOption(
-        QStringList() << QStringLiteral("o") << QStringLiteral("outputidentifiers"),
-        QStringLiteral("Show output identifier"));
-    QCommandLineOption icon
-        = QCommandLineOption(QStringList() << QStringLiteral("i") << QStringLiteral("icon"),
-                             QStringLiteral("Icon to use for OSD"),
-                             QStringLiteral("preferences-desktop-display-randr"));
-    QCommandLineOption message
-        = QCommandLineOption(QStringList() << QStringLiteral("m") << QStringLiteral("message"),
-                             QStringLiteral("Icon to use for OSD"),
-                             QStringLiteral("OSD Test"));
-    QCommandLineOption selector
-        = QCommandLineOption({QStringLiteral("s"), QStringLiteral("selector")},
-                             QStringLiteral("Show new screen action selector"));
-    OsdTest osdtest;
-    QCommandLineParser parser;
-    parser.addHelpOption();
-    parser.addOption(dbus);
-    parser.addOption(outputid);
-    parser.addOption(icon);
-    parser.addOption(message);
-    parser.addOption(selector);
-    parser.process(app);
+    QString const name = QStringLiteral("org.kwinft.kdisplay.osdService");
+    QString const path = QStringLiteral("/org/kwinft/kdisplay/osdService");
+    auto osdService
+        = new OrgKwinftKdisplayOsdServiceInterface(name, path, QDBusConnection::sessionBus());
 
-    if (parser.isSet(dbus)) {
-        osdtest.setUseDBus(true);
+    auto reply = osdService->showActionSelector();
+
+    // TODO(romangg): Currently does not start the actual service on the bus. Abort here.
+    return 0;
+
+    if (!reply.isValid()) {
+        qDebug() << "Error calling osdService:";
+        qDebug() << reply.error();
+        return 1;
     }
-    if (parser.isSet(outputid)) {
-        osdtest.showOutputIdentifiers();
-    } else if (parser.isSet(selector)) {
-        osdtest.showActionSelector();
-    } else {
-        osdtest.showGenericOsd(parser.value(icon), parser.value(message));
-    }
-    if (parser.isSet(outputid)) { }
 
-    return app.exec();
+    auto actionEnum = QMetaEnum::fromType<KDisplay::OsdAction::Action>();
+    auto const value = actionEnum.valueToKey(reply.value());
+    if (!value) {
+        qDebug() << "Got invalid action" << reply.value();
+        return 1;
+    }
+    qDebug() << "Selected Action" << value;
+    return 0;
 }

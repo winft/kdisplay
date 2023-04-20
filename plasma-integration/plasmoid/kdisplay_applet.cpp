@@ -22,6 +22,8 @@
  */
 #include "kdisplay_applet.h"
 
+#include "../osd/osdaction.h"
+
 #include <QMetaEnum>
 #include <QQmlEngine> // for qmlRegisterType
 
@@ -32,8 +34,6 @@
 #include <disman/configmonitor.h>
 #include <disman/getconfigoperation.h>
 #include <disman/output.h>
-
-#include "../kded/osdaction.h"
 
 #include <algorithm>
 
@@ -48,10 +48,8 @@ KDisplayApplet::~KDisplayApplet() = default;
 
 void KDisplayApplet::init()
 {
-    qmlRegisterSingletonType<OsdAction>(
-        "org.kwinft.private.kdisplay", 1, 0, "OsdAction", [](QQmlEngine*, QJSEngine*) -> QObject* {
-            return new OsdAction();
-        });
+    qmlRegisterUncreatableType<KDisplay::OsdAction>(
+        "org.kwinft.private.kdisplay", 1, 0, "OsdAction", QStringLiteral("Can't create OsdAction"));
 
     connect(new Disman::GetConfigOperation,
             &Disman::ConfigOperation::finished,
@@ -76,7 +74,7 @@ int KDisplayApplet::connectedOutputCount() const
 
 void KDisplayApplet::applyLayoutPreset(Action action)
 {
-    const QMetaEnum actionEnum = QMetaEnum::fromType<OsdAction::Action>();
+    auto const actionEnum = QMetaEnum::fromType<KDisplay::OsdAction::Action>();
     Q_ASSERT(actionEnum.isValid());
 
     const QString presetName = QString::fromLatin1(actionEnum.valueToKey(action));
@@ -110,6 +108,6 @@ void KDisplayApplet::checkOutputs()
     }
 }
 
-K_EXPORT_PLASMA_APPLET_WITH_JSON(kdisplay, KDisplayApplet, "metadata.json")
+K_PLUGIN_CLASS_WITH_JSON(KDisplayApplet, "package/metadata.json")
 
 #include "kdisplay_applet.moc"

@@ -16,7 +16,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #pragma once
 
-#include <KQuickAddons/ConfigModule>
+#include "output_model.h"
+
+#include <KQuickManagedConfigModule>
 
 namespace Disman
 {
@@ -26,9 +28,8 @@ class ConfigOperation;
 class ConfigHandler;
 class OrientationSensor;
 class OutputIdentifier;
-class OutputModel;
 
-class KCMKDisplay : public KQuickAddons::ConfigModule
+class KCMKDisplay : public KQuickManagedConfigModule
 {
     Q_OBJECT
 
@@ -52,9 +53,13 @@ class KCMKDisplay : public KQuickAddons::ConfigModule
     Q_PROPERTY(bool tabletModeAvailable READ tabletModeAvailable NOTIFY tabletModeAvailableChanged)
 
 public:
-    explicit KCMKDisplay(QObject* parent = nullptr,
-                         const KPluginMetaData& metaData = KPluginMetaData(),
-                         const QVariantList& args = QVariantList());
+    enum InvalidConfigReason {
+        NoEnabledOutputs,
+        ConfigHasGaps,
+    };
+    Q_ENUM(InvalidConfigReason)
+
+    KCMKDisplay(QObject* parent, const KPluginMetaData& data, const QVariantList& args);
     ~KCMKDisplay() override = default;
 
     void load() override;
@@ -85,9 +90,6 @@ public:
     bool orientationSensorAvailable() const;
     bool tabletModeAvailable() const;
 
-    Q_INVOKABLE void forceSave();
-    void doSave(bool force);
-
 Q_SIGNALS:
     void backendReadyChanged();
     void backendError();
@@ -103,7 +105,7 @@ Q_SIGNALS:
     void autoRotationSupportedChanged();
     void orientationSensorAvailableChanged();
     void tabletModeAvailableChanged();
-    void dangerousSave();
+    void invalidConfig(InvalidConfigReason);
     void errorOnSave();
     void globalScaleWritten();
     void outputConnect(bool connected);

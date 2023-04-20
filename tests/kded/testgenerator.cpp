@@ -78,7 +78,7 @@ void testScreenConfig::switchDisplayTwoScreens()
     QVERIFY(currentConfig);
 
     // Clone all
-    auto config = Generator::displaySwitch(OsdAction::Clone, currentConfig);
+    auto config = Generator::displaySwitch(KDisplay::OsdAction::Clone, currentConfig);
     OutputPtr laptop = config->outputs().at(1);
     OutputPtr external = config->outputs().at(2);
     QCOMPARE(laptop->auto_mode()->id(), "3");
@@ -93,7 +93,7 @@ void testScreenConfig::switchDisplayTwoScreens()
     QCOMPARE(external->replication_source(), 1);
 
     // Extend to left
-    config = Generator::displaySwitch(OsdAction::ExtendLeft, currentConfig);
+    config = Generator::displaySwitch(KDisplay::OsdAction::ExtendLeft, currentConfig);
     laptop = config->outputs().at(1);
     external = config->outputs().at(2);
     QCOMPARE(laptop->auto_mode()->id(), "3");
@@ -105,7 +105,7 @@ void testScreenConfig::switchDisplayTwoScreens()
     QCOMPARE(config->primary_output(), laptop);
 
     // Disable embedded,. enable external
-    config = Generator::displaySwitch(OsdAction::SwitchToExternal, currentConfig);
+    config = Generator::displaySwitch(KDisplay::OsdAction::SwitchToExternal, currentConfig);
     laptop = config->outputs().at(1);
     external = config->outputs().at(2);
     ;
@@ -116,11 +116,11 @@ void testScreenConfig::switchDisplayTwoScreens()
     QCOMPARE(config->primary_output(), external);
 
     // Enable embedded, disable external
-    config = Generator::displaySwitch(OsdAction::SwitchToInternal, currentConfig);
+    config = Generator::displaySwitch(KDisplay::OsdAction::SwitchToInternal, currentConfig);
     QVERIFY(!config);
 
     // Extend to right
-    config = Generator::displaySwitch(OsdAction::ExtendRight, currentConfig);
+    config = Generator::displaySwitch(KDisplay::OsdAction::ExtendRight, currentConfig);
     laptop = config->outputs().at(1);
     external = config->outputs().at(2);
     QCOMPARE(laptop->auto_mode()->id(), "3");
@@ -137,7 +137,7 @@ void testScreenConfig::switchDisplayTwoScreensNoCommonMode()
     const ConfigPtr currentConfig = loadConfig("switchDisplayTwoScreensNoCommonMode.json");
     QVERIFY(currentConfig);
 
-    auto config = Generator::displaySwitch(OsdAction::Clone, currentConfig);
+    auto config = Generator::displaySwitch(KDisplay::OsdAction::Clone, currentConfig);
     OutputPtr laptop = config->outputs().at(1);
     OutputPtr external = config->outputs().at(2);
 

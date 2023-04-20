@@ -14,14 +14,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-import QtQuick 2.9
-import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.3 as Controls
-import org.kde.kirigami 2.4 as Kirigami
+import QtQuick 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Controls 2.15 as QQC2
+import org.kde.kirigami 2.20 as Kirigami
 
 ColumnLayout {
     Kirigami.FormData.label: i18n("Orientation:")
-    Kirigami.FormData.buddyFor: auto_rotate_switch
+    Kirigami.FormData.buddyFor: autoRotateColumn.visible ? autoRotateRadio : orientation
     spacing: Kirigami.Units.smallSpacing
 
     ColumnLayout {
@@ -31,26 +31,38 @@ ColumnLayout {
         enabled: element.internal
         visible: kcm.autoRotationSupported && kcm.orientationSensorAvailable
 
-        Controls.Switch {
-            id: auto_rotate_switch
-            text: i18n("Auto")
-            checked: enabled && element.autoRotate
-            onToggled: element.autoRotate = checked
+        ColumnLayout {
+            QQC2.RadioButton {
+                id: autoRotateRadio
+                text: i18n("Automatic")
+                checked: autoRotateColumn.enabled && element.autoRotate
+                onToggled: element.autoRotate = true
+            }
+
+            QQC2.CheckBox {
+                id: autoRotateOnlyInTabletMode
+                Layout.leftMargin: Kirigami.Units.gridUnit
+
+                text: i18n("Only when in tablet mode")
+                enabled: autoRotateRadio.checked
+                checked: enabled && element.autoRotateOnlyInTabletMode
+                onToggled: element.autoRotateOnlyInTabletMode = checked
+            }
         }
 
-        Controls.Switch {
-            text: i18n("Only when in tablet mode.")
-            visible: auto_rotate_switch.checked
-            checked: element.autoRotateOnlyInTabletMode
-            onToggled: element.autoRotateOnlyInTabletMode = checked
+        QQC2.RadioButton {
+            id: manualRotateRadio
+            text: i18n("Manual")
+            checked: !element.autoRotate || !autoRotateColumn.enabled
+            onToggled: element.autoRotate = false
         }
     }
 
     RowLayout {
        id: orientation
-       visible: !auto_rotate_switch.checked || !kcm.autoRotationSupported
+       enabled: !element.autoRotate || !autoRotateColumn.enabled || !autoRotateColumn.visible
 
-       Controls.ButtonGroup {
+       QQC2.ButtonGroup {
            buttons: orientation.children
        }
 

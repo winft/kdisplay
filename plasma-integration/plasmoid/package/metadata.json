@@ -1,0 +1,24 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "kde@broulik.de",
+                "Name": "Kai Uwe Broulik"
+            }
+        ],
+        "Category": "Utilities",
+        "Description": "Quickly switch between screen layouts and presentation mode",
+        "EnabledByDefault": true,
+        "Icon": "preferences-desktop-display-randr",
+        "Id": "org.kde.kdisplay",
+        "License": "GPL",
+        "Name": "Display Configuration",
+        "Version": "1.0",
+        "Website": "https://kde.org/plasma-desktop"
+    },
+    "X-Plasma-API": "declarativeappletscript",
+    "X-Plasma-MainScript": "ui/main.qml",
+    "X-Plasma-NotificationArea": "true",
+    "X-Plasma-NotificationAreaCategory": "Hardware"
+}

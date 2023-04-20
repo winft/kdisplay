@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config_handler.h"
 #include "kcm_kdisplay_debug.h"
 #include "output_identifier.h"
-#include "output_model.h"
 
 #include <disman/config.h>
 #include <disman/getconfigoperation.h>
@@ -31,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KPluginFactory>
-#include <KPluginLoader>
 #include <KSharedConfig>
 
 #include <QTimer>
@@ -41,7 +39,7 @@ K_PLUGIN_CLASS_WITH_JSON(KCMKDisplay, "kcm_kdisplay.json")
 using namespace Disman;
 
 KCMKDisplay::KCMKDisplay(QObject* parent, const KPluginMetaData& data, const QVariantList& args)
-    : KQuickAddons::ConfigModule(parent, data, args)
+    : KQuickManagedConfigModule(parent, data, args)
 {
     qmlRegisterAnonymousType<OutputModel>("org.kwinft.private.kcm.screen", 1);
     qmlRegisterType<Disman::Output>("org.kwinft.private.kcm.kdisplay", 1, 0, "Output");
@@ -87,17 +85,7 @@ void KCMKDisplay::configReady(ConfigOperation* op)
     Q_EMIT outputRetentionChanged();
 }
 
-void KCMKDisplay::forceSave()
-{
-    doSave(true);
-}
-
 void KCMKDisplay::save()
-{
-    doSave(false);
-}
-
-void KCMKDisplay::doSave(bool force)
 {
     if (!m_config) {
         Q_EMIT errorOnSave();
@@ -136,8 +124,8 @@ void KCMKDisplay::doSave(bool force)
                               << (output->replication_source() == 0 ? "no" : "yes");
     }
 
-    if (!atLeastOneEnabledOutput && !force) {
-        Q_EMIT dangerousSave();
+    if (!atLeastOneEnabledOutput) {
+        Q_EMIT invalidConfig(InvalidConfigReason::NoEnabledOutputs);
         m_config->checkNeedsSave();
         return;
     }
