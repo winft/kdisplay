@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-16 21:14+0200\n"
-"PO-Revision-Date: 2023-04-08 13:48+0000\n"
+"PO-Revision-Date: 2023-04-22 08:52+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
-"Language-Team: Dutch <https://hosted.weblate.org/projects/kwinft/kdisplay-"
-"app/nl/>\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/kwinft/"
+"kdisplay-app/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: kcm/app/main.cpp:20 kcm/app/main.cpp:22
 #, kde-format
@@ -69,21 +69,19 @@ msgid "Orientation:"
 msgstr "Oriëntatie:"
 
 #: kcm/package/contents/ui/Orientation.qml:37
-#, fuzzy, kde-format
-#| msgid "Auto"
+#, kde-format
 msgid "Automatic"
 msgstr "Automatisch"
 
 #: kcm/package/contents/ui/Orientation.qml:46
-#, fuzzy, kde-format
-#| msgid "Only when in tablet mode."
+#, kde-format
 msgid "Only when in tablet mode"
-msgstr "Alleen in de tabletmodus."
+msgstr "Alleen in de tabletmodus"
 
 #: kcm/package/contents/ui/Orientation.qml:55
 #, kde-format
 msgid "Manual"
-msgstr ""
+msgstr "Handmatig"
 
 #: kcm/package/contents/ui/Output.qml:247
 #, kde-format
@@ -194,15 +192,12 @@ msgid "No Rotation"
 msgstr "Niet draaien"
 
 #: kcm/package/contents/ui/Screen.qml:59
-#, fuzzy, kde-format
-#| msgid "Drag displays to re-arrange them"
+#, kde-format
 msgid "Drag screens to re-arrange them"
 msgstr "Versleep beeldschermen om ze te herschikken"
 
 #: kcm/package/contents/ui/Screen.qml:72
-#, fuzzy, kde-format
-#| msgctxt "Itendifies displays with visual indicators"
-#| msgid "Identify"
+#, kde-format
 msgid "Identify"
 msgstr "Identificeren"
 
@@ -210,7 +205,7 @@ msgstr "Identificeren"
 #, kde-format
 msgctxt "@info"
 msgid "All displays are disabled. Enable at least one."
-msgstr ""
+msgstr "Alle beeldeschermen zijn uitgeschakeld - schakel er minimaal één in."
 
 #: kcm/package/contents/ui/main.qml:53 kcm/package/contents/ui/main.qml:154
 #, kde-format
@@ -218,16 +213,16 @@ msgctxt "@info"
 msgid ""
 "Gaps between displays are not supported. Make sure all displays are touching."
 msgstr ""
+"Ruimte tussen beeldschermen wordt niet ondersteund. Zorg dat alle "
+"beeldschermen pal naast elkaar staan."
 
 #: kcm/package/contents/ui/main.qml:65 kcm/package/contents/ui/main.qml:167
-#, fuzzy, kde-format
-#| msgid "A new display has been added. Settings have been reloaded."
+#, kde-format
 msgid "A new output has been added. Settings have been reloaded."
 msgstr "De instellingen zijn herladen omdat er een beeldscherm is toegevoegd."
 
 #: kcm/package/contents/ui/main.qml:67 kcm/package/contents/ui/main.qml:169
-#, fuzzy, kde-format
-#| msgid "A display has been removed. Settings have been reloaded."
+#, kde-format
 msgid "An output has been removed. Settings have been reloaded."
 msgstr "De instellingen zijn herladen omdat er een beeldscherm is verwijderd."
 
@@ -243,9 +238,7 @@ msgid "Displays could not be saved due to error."
 msgstr "De beeldschermen kunnen niet worden opgeslagen."
 
 #: kcm/package/contents/ui/main.qml:127
-#, fuzzy, kde-format
-#| msgid ""
-#| "New global scale applied. Change will come into effect after restart."
+#, kde-format
 msgid ""
 "Global scale changes will come into effect after the system is restarted."
 msgstr ""
@@ -255,7 +248,7 @@ msgstr ""
 #: kcm/package/contents/ui/main.qml:133
 #, kde-format
 msgid "Restart"
-msgstr ""
+msgstr "Herstarten"
 
 #, kde-format
 #~ msgid ""
