@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-23 17:41-0500\n"
+"POT-Creation-Date: 2023-04-09 16:44+0200\n"
 "PO-Revision-Date: 2022-05-21 11:14+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
-"Language-Team: Dutch <https://hosted.weblate.org/projects/kwinft/"
-"kdisplay-plasma-integration/nl/>\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/kwinft/kdisplay-"
+"plasma-integration/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,37 +19,37 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.13-dev\n"
 
-#: plasma-integration/kded/daemon.cpp:65
+#: plasma-integration/kded/daemon.cpp:66
 #, kde-format
 msgid "Switch Display"
 msgstr "Overschakelen naar beeldscherm"
 
-#: plasma-integration/kded/osdaction.cpp:40
+#: plasma-integration/osd/osdaction.cpp:22
 #, kde-format
 msgid "Switch to external display"
 msgstr "Overschakelen naar extern beeldscherm"
 
-#: plasma-integration/kded/osdaction.cpp:42
+#: plasma-integration/osd/osdaction.cpp:25
 #, kde-format
 msgid "Switch to laptop display"
 msgstr "Overschakelen naar laptopscherm"
 
-#: plasma-integration/kded/osdaction.cpp:44
+#: plasma-integration/osd/osdaction.cpp:27
 #, kde-format
 msgid "Unify displays"
 msgstr "Schermen delen"
 
-#: plasma-integration/kded/osdaction.cpp:46
+#: plasma-integration/osd/osdaction.cpp:28
 #, kde-format
 msgid "Extend to left"
 msgstr "Uitbreiden naar links"
 
-#: plasma-integration/kded/osdaction.cpp:48
+#: plasma-integration/osd/osdaction.cpp:30
 #, kde-format
 msgid "Extend to right"
 msgstr "Uitbreiden naar rechts"
 
-#: plasma-integration/kded/osdaction.cpp:50
+#: plasma-integration/osd/osdaction.cpp:32
 #, kde-format
 msgid "Leave unchanged"
 msgstr "Ongewijzigd laten"

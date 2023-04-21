@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-23 17:41-0500\n"
+"POT-Creation-Date: 2023-04-09 16:44+0200\n"
 "PO-Revision-Date: 2020-11-08 00:51+0000\n"
 "Last-Translator: Blumen Herzenschein <herzenschein@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -19,37 +19,37 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 4.3.2\n"
 
-#: plasma-integration/kded/daemon.cpp:65
+#: plasma-integration/kded/daemon.cpp:66
 #, kde-format
 msgid "Switch Display"
 msgstr "Alternar tela"
 
-#: plasma-integration/kded/osdaction.cpp:40
+#: plasma-integration/osd/osdaction.cpp:22
 #, kde-format
 msgid "Switch to external display"
 msgstr "Alternar para a tela externa"
 
-#: plasma-integration/kded/osdaction.cpp:42
+#: plasma-integration/osd/osdaction.cpp:25
 #, kde-format
 msgid "Switch to laptop display"
 msgstr "Alternar para a tela do laptop"
 
-#: plasma-integration/kded/osdaction.cpp:44
+#: plasma-integration/osd/osdaction.cpp:27
 #, kde-format
 msgid "Unify displays"
 msgstr "Unificar saídas"
 
-#: plasma-integration/kded/osdaction.cpp:46
+#: plasma-integration/osd/osdaction.cpp:28
 #, kde-format
 msgid "Extend to left"
 msgstr "Estender para a esquerda"
 
-#: plasma-integration/kded/osdaction.cpp:48
+#: plasma-integration/osd/osdaction.cpp:30
 #, kde-format
 msgid "Extend to right"
 msgstr "Estender para a direita"
 
-#: plasma-integration/kded/osdaction.cpp:50
+#: plasma-integration/osd/osdaction.cpp:32
 #, kde-format
 msgid "Leave unchanged"
 msgstr "Deixar sem alteração"
