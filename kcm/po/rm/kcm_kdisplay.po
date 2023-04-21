@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-31 00:13+0200\n"
+"POT-Creation-Date: 2023-04-16 21:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -65,19 +65,22 @@ msgstr ""
 msgid "Orientation:"
 msgstr ""
 
-#: kcm/package/contents/ui/Orientation.qml:36
-#: kcm/package/contents/ui/OutputPanel.qml:114
-#: kcm/package/contents/ui/OutputPanel.qml:141
+#: kcm/package/contents/ui/Orientation.qml:37
 #, kde-format
-msgid "Auto"
+msgid "Automatic"
 msgstr ""
 
-#: kcm/package/contents/ui/Orientation.qml:42
+#: kcm/package/contents/ui/Orientation.qml:46
 #, kde-format
-msgid "Only when in tablet mode."
+msgid "Only when in tablet mode"
 msgstr ""
 
-#: kcm/package/contents/ui/Output.qml:154
+#: kcm/package/contents/ui/Orientation.qml:55
+#, kde-format
+msgid "Manual"
+msgstr ""
+
+#: kcm/package/contents/ui/Output.qml:247
 #, kde-format
 msgid "Replicas"
 msgstr ""
@@ -107,6 +110,12 @@ msgstr ""
 #: kcm/package/contents/ui/OutputPanel.qml:106
 #, kde-format
 msgid "Resolution:"
+msgstr ""
+
+#: kcm/package/contents/ui/OutputPanel.qml:114
+#: kcm/package/contents/ui/OutputPanel.qml:141
+#, kde-format
+msgid "Auto"
 msgstr ""
 
 #: kcm/package/contents/ui/OutputPanel.qml:133
@@ -177,50 +186,56 @@ msgstr ""
 msgid "No Rotation"
 msgstr ""
 
-#: kcm/package/contents/ui/Screen.qml:63
+#: kcm/package/contents/ui/Screen.qml:59
 #, kde-format
-msgid "Drag displays to re-arrange them"
+msgid "Drag screens to re-arrange them"
 msgstr ""
 
-#: kcm/package/contents/ui/Screen.qml:76
+#: kcm/package/contents/ui/Screen.qml:72
 #, kde-format
-msgctxt "Itendifies displays with visual indicators"
 msgid "Identify"
 msgstr ""
 
-#: kcm/package/contents/ui/main.qml:44
+#: kcm/package/contents/ui/main.qml:51 kcm/package/contents/ui/main.qml:152
 #, kde-format
+msgctxt "@info"
+msgid "All displays are disabled. Enable at least one."
+msgstr ""
+
+#: kcm/package/contents/ui/main.qml:53 kcm/package/contents/ui/main.qml:154
+#, kde-format
+msgctxt "@info"
 msgid ""
-"Are you sure you want to disable all displays? This might render the device "
-"unusable."
+"Gaps between displays are not supported. Make sure all displays are touching."
 msgstr ""
 
-#: kcm/package/contents/ui/main.qml:50
+#: kcm/package/contents/ui/main.qml:65 kcm/package/contents/ui/main.qml:167
 #, kde-format
-msgid "Disable all displays"
+msgid "A new output has been added. Settings have been reloaded."
 msgstr ""
 
-#: kcm/package/contents/ui/main.qml:62
+#: kcm/package/contents/ui/main.qml:67 kcm/package/contents/ui/main.qml:169
+#, kde-format
+msgid "An output has been removed. Settings have been reloaded."
+msgstr ""
+
+#: kcm/package/contents/ui/main.qml:107
 #, kde-format
 msgid "No Disman backend found. Please check your Disman installation."
 msgstr ""
 
-#: kcm/package/contents/ui/main.qml:70
+#: kcm/package/contents/ui/main.qml:117
 #, kde-format
 msgid "Displays could not be saved due to error."
 msgstr ""
 
-#: kcm/package/contents/ui/main.qml:78
+#: kcm/package/contents/ui/main.qml:127
 #, kde-format
-msgid "New global scale applied. Change will come into effect after restart."
+msgid ""
+"Global scale changes will come into effect after the system is restarted."
 msgstr ""
 
-#: kcm/package/contents/ui/main.qml:103
+#: kcm/package/contents/ui/main.qml:133
 #, kde-format
-msgid "A new display has been added. Settings have been reloaded."
-msgstr ""
-
-#: kcm/package/contents/ui/main.qml:105
-#, kde-format
-msgid "A display has been removed. Settings have been reloaded."
+msgid "Restart"
 msgstr ""

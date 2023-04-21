@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-31 00:13+0200\n"
+"POT-Creation-Date: 2023-04-16 21:14+0200\n"
 "PO-Revision-Date: 2023-04-14 17:48+0000\n"
 "Last-Translator: S3aBreeze <S3aBreeze@users.noreply.hosted.weblate.org>\n"
-"Language-Team: Russian <https://hosted.weblate.org/projects/kwinft/"
-"kdisplay-app/ru/>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/kwinft/kdisplay-"
+"app/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 4.17-dev\n"
 
 #: kcm/app/main.cpp:20 kcm/app/main.cpp:22
@@ -69,19 +69,24 @@ msgstr "Скопировано на другом дисплее"
 msgid "Orientation:"
 msgstr "Ориентация:"
 
-#: kcm/package/contents/ui/Orientation.qml:36
-#: kcm/package/contents/ui/OutputPanel.qml:114
-#: kcm/package/contents/ui/OutputPanel.qml:141
-#, kde-format
-msgid "Auto"
+#: kcm/package/contents/ui/Orientation.qml:37
+#, fuzzy, kde-format
+#| msgid "Auto"
+msgid "Automatic"
 msgstr "Автоматическая"
 
-#: kcm/package/contents/ui/Orientation.qml:42
-#, kde-format
-msgid "Only when in tablet mode."
+#: kcm/package/contents/ui/Orientation.qml:46
+#, fuzzy, kde-format
+#| msgid "Only when in tablet mode."
+msgid "Only when in tablet mode"
 msgstr "Только в режиме планшета."
 
-#: kcm/package/contents/ui/Output.qml:154
+#: kcm/package/contents/ui/Orientation.qml:55
+#, kde-format
+msgid "Manual"
+msgstr ""
+
+#: kcm/package/contents/ui/Output.qml:247
 #, kde-format
 msgid "Replicas"
 msgstr "Копии"
@@ -112,6 +117,12 @@ msgstr "%1%"
 #, kde-format
 msgid "Resolution:"
 msgstr "Разрешение:"
+
+#: kcm/package/contents/ui/OutputPanel.qml:114
+#: kcm/package/contents/ui/OutputPanel.qml:141
+#, kde-format
+msgid "Auto"
+msgstr "Автоматическая"
 
 #: kcm/package/contents/ui/OutputPanel.qml:133
 #: kcm/package/contents/ui/OutputPanel.qml:148
@@ -184,56 +195,79 @@ msgstr "90° против часовой стрелки"
 msgid "No Rotation"
 msgstr "Без вращения"
 
-#: kcm/package/contents/ui/Screen.qml:63
-#, kde-format
-msgid "Drag displays to re-arrange them"
+#: kcm/package/contents/ui/Screen.qml:59
+#, fuzzy, kde-format
+#| msgid "Drag displays to re-arrange them"
+msgid "Drag screens to re-arrange them"
 msgstr "Перетащите дисплеи чтобы переместить их"
 
-#: kcm/package/contents/ui/Screen.qml:76
-#, kde-format
-msgctxt "Itendifies displays with visual indicators"
+#: kcm/package/contents/ui/Screen.qml:72
+#, fuzzy, kde-format
+#| msgctxt "Itendifies displays with visual indicators"
+#| msgid "Identify"
 msgid "Identify"
 msgstr "Определить"
 
-#: kcm/package/contents/ui/main.qml:44
+#: kcm/package/contents/ui/main.qml:51 kcm/package/contents/ui/main.qml:152
 #, kde-format
-msgid ""
-"Are you sure you want to disable all displays? This might render the device "
-"unusable."
+msgctxt "@info"
+msgid "All displays are disabled. Enable at least one."
 msgstr ""
-"Вы уверены, что хотите отключить все дисплеи? Это может сделать устройство "
-"непригодным для использования."
 
-#: kcm/package/contents/ui/main.qml:50
+#: kcm/package/contents/ui/main.qml:53 kcm/package/contents/ui/main.qml:154
 #, kde-format
-msgid "Disable all displays"
-msgstr "Отключить все дисплеи"
+msgctxt "@info"
+msgid ""
+"Gaps between displays are not supported. Make sure all displays are touching."
+msgstr ""
 
-#: kcm/package/contents/ui/main.qml:62
+#: kcm/package/contents/ui/main.qml:65 kcm/package/contents/ui/main.qml:167
+#, fuzzy, kde-format
+#| msgid "A new display has been added. Settings have been reloaded."
+msgid "A new output has been added. Settings have been reloaded."
+msgstr "Добавлен новый дисплей. Настройки были перезагружены."
+
+#: kcm/package/contents/ui/main.qml:67 kcm/package/contents/ui/main.qml:169
+#, fuzzy, kde-format
+#| msgid "A display has been removed. Settings have been reloaded."
+msgid "An output has been removed. Settings have been reloaded."
+msgstr "Дисплей удалён. Настройки были перезагружены."
+
+#: kcm/package/contents/ui/main.qml:107
 #, kde-format
 msgid "No Disman backend found. Please check your Disman installation."
 msgstr ""
 "Бэкенд Disman не обнаружен. Пожалуйста, проверьте, установлен ли у вас "
 "Disman."
 
-#: kcm/package/contents/ui/main.qml:70
+#: kcm/package/contents/ui/main.qml:117
 #, kde-format
 msgid "Displays could not be saved due to error."
 msgstr "Не удалось сохранить дисплеи из-за ошибки."
 
-#: kcm/package/contents/ui/main.qml:78
-#, kde-format
-msgid "New global scale applied. Change will come into effect after restart."
+#: kcm/package/contents/ui/main.qml:127
+#, fuzzy, kde-format
+#| msgid ""
+#| "New global scale applied. Change will come into effect after restart."
+msgid ""
+"Global scale changes will come into effect after the system is restarted."
 msgstr ""
 "Новый глобальный масштаб применён. Изменения вступят в силу после "
 "перезапуска."
 
-#: kcm/package/contents/ui/main.qml:103
+#: kcm/package/contents/ui/main.qml:133
 #, kde-format
-msgid "A new display has been added. Settings have been reloaded."
-msgstr "Добавлен новый дисплей. Настройки были перезагружены."
+msgid "Restart"
+msgstr ""
 
-#: kcm/package/contents/ui/main.qml:105
 #, kde-format
-msgid "A display has been removed. Settings have been reloaded."
-msgstr "Дисплей удалён. Настройки были перезагружены."
+#~ msgid ""
+#~ "Are you sure you want to disable all displays? This might render the "
+#~ "device unusable."
+#~ msgstr ""
+#~ "Вы уверены, что хотите отключить все дисплеи? Это может сделать "
+#~ "устройство непригодным для использования."
+
+#, kde-format
+#~ msgid "Disable all displays"
+#~ msgstr "Отключить все дисплеи"
