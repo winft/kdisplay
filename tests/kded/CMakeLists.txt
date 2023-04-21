@@ -11,7 +11,7 @@ macro(ADD_KDED_TEST testname)
     )
     ecm_qt_declare_logging_category(test_SRCS HEADER kdisplay_daemon_debug.h IDENTIFIER KDISPLAY_KDED CATEGORY_NAME kdisplay.kded)
 
-    qt5_add_dbus_interface(test_SRCS
+    qt6_add_dbus_interface(test_SRCS
         ${CMAKE_SOURCE_DIR}/plasma-integration/kded/org.freedesktop.DBus.Properties.xml
         freedesktop_interface
     )
@@ -19,7 +19,7 @@ macro(ADD_KDED_TEST testname)
     add_executable(${testname} ${test_SRCS})
     add_dependencies(${testname} kdisplayd) # make sure the dbus interfaces are generated
     target_compile_definitions(${testname} PRIVATE "-DTEST_DATA=\"${CMAKE_CURRENT_SOURCE_DIR}/\"")
-    target_link_libraries(${testname} Qt5::Test Qt5::DBus Qt5::Gui Qt5::Sensors disman::lib)
+    target_link_libraries(${testname} Qt6::Test Qt6::DBus Qt6::Gui Qt6::Sensors disman::lib)
     add_test(NAME kdisplay-kded-${testname} COMMAND ${testname})
     ecm_mark_as_test(${testname})
 endmacro()

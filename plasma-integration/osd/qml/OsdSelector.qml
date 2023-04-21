@@ -1,22 +1,11 @@
 /*
- * Copyright 2017 Daniel Vrátil <dvratil@kde.org>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+    SPDX-FileCopyrightText: 2017 Daniel Vrátil <dvratil@kde.org>
 
-import QtQuick 2.5
-import QtQuick.Window 2.2
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
+
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.10
 
 import org.kde.plasma.core 2.0 as PlasmaCore
@@ -25,40 +14,30 @@ import org.kde.plasma.components 3.0 as PlasmaComponents
 
 import org.kwinft.kdisplay 1.0
 
-PlasmaCore.Dialog {
+
+Control {
     id: root
-    location: PlasmaCore.Types.Floating
-    type: PlasmaCore.Dialog.Normal
     property string infoText
-    property var screenGeometry
-
-    onScreenGeometryChanged: {
-        root.x = screenGeometry.x + (screenGeometry.width - mainItem.width) / 2
-        root.y = screenGeometry.y + (screenGeometry.height - mainItem.height) / 2
-    }
-
+    property var actions
     signal clicked(int actionId)
 
-    mainItem: ColumnLayout {
+    leftPadding: shadow.margins.left + background.margins.left
+    rightPadding: shadow.margins.right + background.margins.right
+    topPadding: shadow.margins.top + background.margins.top
+    bottomPadding: shadow.margins.bottom + background.margins.bottom
+
+    contentItem : ColumnLayout {
         RowLayout {
             Repeater {
                 id: actionRepeater
                 property int currentIndex: 0
-                model: {
-                    return OsdAction.actionOrder().map(function (layout) {
-                        return {
-                            iconSource: OsdAction.actionIconName(layout),
-                            label: OsdAction.actionLabel(layout),
-                            action: layout
-                        }
-                    })
-                }
+                model: root.actions
                 delegate: PlasmaComponents.Button {
                     property int actionId: modelData.action
 
                     Accessible.name: modelData.label
 
-                    icon.name: modelData.iconSource
+                    icon.name: modelData.iconName
                     icon.height: PlasmaCore.Units.gridUnit * 8
                     icon.width: PlasmaCore.Units.gridUnit * 8
 
@@ -88,6 +67,7 @@ PlasmaCore.Dialog {
                 }
             }
         }
+
         PlasmaExtras.Heading {
             text: root.infoText
             horizontalAlignment: Text.AlignHCenter
@@ -98,8 +78,25 @@ PlasmaCore.Dialog {
             Layout.margins: Math.floor(PlasmaCore.Units.smallSpacing / 2)
         }
 
-        function move(delta) {
-            actionRepeater.currentIndex = ((actionRepeater.currentIndex + delta) + actionRepeater.count) % actionRepeater.count
+        // Shift current by delta, but do not wrap around when repeat is true.
+        function wrappingAdd(count: int, current: int, delta: int, repeat: bool): int {
+            const next = current + delta;
+            // Rule out invalid states.
+            if (count === 0 || current < 0 || current >= count) {
+                return current;
+            }
+            // Don't wrap on autorepeat.
+            if (repeat && (next < 0 || next >= count)) {
+                return current;
+            }
+            // Add an extra `count`, so that wrapping % works predictably with positive values only.
+            // This assumes that delta is not smaller than `-count` (usually just -1, 0 or +1).
+            return (next + count) % count;
+        }
+
+        function move(event) {
+            actionRepeater.currentIndex = wrappingAdd(actionRepeater.count, actionRepeater.currentIndex,
+                (event.key === Qt.Key_Left) ? -1 : 1, event.isAutoRepeat);
         }
 
         Keys.onPressed: {
@@ -109,15 +106,29 @@ PlasmaCore.Dialog {
                     clicked(actionRepeater.itemAt(actionRepeater.currentIndex).actionId)
                     break
                 case Qt.Key_Right:
-                    move(1)
-                    break
                 case Qt.Key_Left:
-                    move(-1)
+                    move(event)
                     break
                 case Qt.Key_Escape:
                     clicked(OsdAction.NoAction)
                     break
             }
+        }
+    }
+
+      background: PlasmaCore.FrameSvgItem {
+        id: shadow
+        imagePath: "dialogs/background"
+        prefix: "shadow"
+
+        PlasmaCore.FrameSvgItem {
+            id: background
+            anchors.leftMargin: shadow.margins.left
+            anchors.rightMargin: shadow.margins.right
+            anchors.topMargin: shadow.margins.top
+            anchors.bottomMargin: shadow.margins.bottom
+            anchors.fill: parent
+            imagePath: "solid/dialogs/background"
         }
     }
 }

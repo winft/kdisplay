@@ -6,13 +6,14 @@
 */
 #pragma once
 
-#include "osdaction.h"
+#include "../osd/osdaction.h"
 
 #include <disman/types.h>
 
 namespace Generator
 {
 
-Disman::ConfigPtr displaySwitch(OsdAction::Action action, Disman::ConfigPtr const& config);
+Disman::ConfigPtr displaySwitch(KDisplay::OsdAction::Action action,
+                                Disman::ConfigPtr const& config);
 
 }

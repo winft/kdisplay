@@ -1,0 +1,16 @@
+{
+    "KPlugin": {
+        "BugReportUrl": "https://gitlab.com/kwinft/kdisplay/-/issues",
+        "Description": "Manage and configure monitors and displays",
+        "FormFactors": [
+            "tablet",
+            "handset",
+            "desktop"
+        ],
+        "Icon": "preferences-desktop-display-randr",
+        "Name": "Display Management"
+    },
+    "X-KDE-Keywords": "display,monitor,screen,scale,scaling,resolution,orientation,rotate,rotation,output,outputs,refresh,desktop size,hardware,devices,device,fractional,dpi,graphics,framerate,frame rate,fps,hertz,hz,arrange monitors,screen arrangement,aspect ratio,secondary screen,secondary monitor,secondary display,vrr,variable refresh rate,hdr,high dynamic range,freesync,g-sync,quality,hdmi,display port,displayport,dp,vga,dvi,type-c,thunderbolt display,external display,external monitor,external screen,pixels,16:9,21:9,4:3,720p,1080p,1440p,4k,5k,8k,12k,16k,display grid,tablet mode",
+    "X-KDE-System-Settings-Parent-Category": "display",
+    "X-KDE-Weight": 40
+}

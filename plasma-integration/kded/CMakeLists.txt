@@ -1,62 +1,50 @@
 add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_org.kwinft.kdisplay\")
 
+kcoreaddons_add_plugin(kdisplayd INSTALL_NAMESPACE "kf6/kded")
+
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/../)
 
-find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
-    GlobalAccel
-    XmlGui
-)
-
-set(kdisplay_daemon_SRCS
+target_sources(kdisplayd
+  PRIVATE
     daemon.cpp
     config.cpp
     generator.cpp
-    osd.cpp
-    osdmanager.cpp
-    osdaction.cpp
+    ../osd/osdaction.cpp
     ${CMAKE_SOURCE_DIR}/common/orientation_sensor.cpp
     ${CMAKE_SOURCE_DIR}/common/utils.cpp
 )
 
-ecm_qt_declare_logging_category(kdisplay_daemon_SRCS
+ecm_qt_declare_logging_category(kdisplayd
     HEADER kdisplay_daemon_debug.h
     IDENTIFIER KDISPLAY_KDED
     CATEGORY_NAME kdisplay.kded
 )
 
-qt5_add_dbus_interface(kdisplay_daemon_SRCS
+qt_add_dbus_interface(dbus_SRCS
     org.freedesktop.DBus.Properties.xml
     freedesktop_interface)
-qt5_add_dbus_adaptor(kdisplay_daemon_SRCS
+qt_add_dbus_adaptor(dbus_SRCS
     org.kwinft.kdisplay.xml
     daemon.h
     KDisplayDaemon
 )
-
-add_library(kdisplayd MODULE ${kdisplay_daemon_SRCS})
-
-target_link_libraries(kdisplayd
-                              Qt5::Sensors
-                              KF5::Declarative
-                              disman::lib
-                              KF5::DBusAddons
-                              KF5::I18n
-                              KF5::XmlGui
-                              KF5::GlobalAccel)
-
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/kdisplayd.desktop.cmake
-               ${CMAKE_CURRENT_BINARY_DIR}/kdisplayd.desktop
-               @ONLY)
-
-kcoreaddons_desktop_to_json(kdisplayd ${CMAKE_CURRENT_BINARY_DIR}/kdisplayd.desktop)
-
-install(TARGETS kdisplayd DESTINATION ${KDE_INSTALL_PLUGINDIR}/kf5/kded)
-
-set(QML_FILES
-    qml/Osd.qml
-    qml/OsdItem.qml
-    qml/OsdSelector.qml
-    qml/OutputIdentifier.qml
+qt_add_dbus_interface(dbus_SRCS
+  ../osd/org.kwinft.kdisplay.osdService.xml
+  osdservice_interface
 )
 
-install(FILES ${QML_FILES} DESTINATION ${KDE_INSTALL_DATADIR}/kded_kdisplay/qml)
+target_sources(kdisplayd PRIVATE ${dbus_SRCS})
+
+target_link_libraries(kdisplayd
+  disman::lib
+  KF6::CoreAddons
+  KF6::DBusAddons
+  KF6::I18n
+  KF6::XmlGui
+  KF6::GlobalAccel
+  Qt6::Sensors
+)
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/kdisplayd.json.in
+               ${CMAKE_CURRENT_BINARY_DIR}/kdisplayd.json
+               @ONLY)

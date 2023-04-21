@@ -2,21 +2,21 @@ include_directories(
     ${CMAKE_BINARY_DIR}/plasma-integration/kded
 )
 
-add_executable(osdtest main.cpp
-                       osdtest.cpp
-                       ../../plasma-integration/kded/osd.cpp
-                       ../../plasma-integration/kded/osdmanager.cpp
-                       ../../plasma-integration/kded/osdaction.cpp
-                       ../../common/utils.cpp
+qt_add_dbus_interface(OsdInterface
+  ../../plasma-integration/osd/org.kwinft.kdisplay.osdService.xml
+  osdservice_interface
 )
 
-target_link_libraries(osdtest Qt5::Core
-                              Qt5::DBus
-                              Qt5::Quick
-                              Qt5::Qml
-                              disman::lib
-                              KF5::I18n
-                              KF5::Declarative
+add_executable(osdtest
+  main.cpp
+  ../../plasma-integration/osd/osdaction.cpp
+  ${OsdInterface}
+)
+
+target_link_libraries(osdtest
+  KF6::I18n
+  Qt6::Core
+  Qt6::DBus
 )
 
 add_test(NAME kdisplay-kded-osdtest COMMAND osdtest)
