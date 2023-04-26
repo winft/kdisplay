@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-16 21:14+0200\n"
-"PO-Revision-Date: 2023-04-08 13:48+0000\n"
+"PO-Revision-Date: 2023-04-27 23:49+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
-"Language-Team: Spanish <https://hosted.weblate.org/projects/kwinft/kdisplay-"
-"app/es/>\n"
+"Language-Team: Spanish <https://hosted.weblate.org/projects/kwinft/"
+"kdisplay-app/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: kcm/app/main.cpp:20 kcm/app/main.cpp:22
 #, kde-format
@@ -69,21 +69,19 @@ msgid "Orientation:"
 msgstr "Orientación:"
 
 #: kcm/package/contents/ui/Orientation.qml:37
-#, fuzzy, kde-format
-#| msgid "Auto"
+#, kde-format
 msgid "Automatic"
-msgstr "Automática"
+msgstr "Automático"
 
 #: kcm/package/contents/ui/Orientation.qml:46
-#, fuzzy, kde-format
-#| msgid "Only when in tablet mode."
+#, kde-format
 msgid "Only when in tablet mode"
-msgstr "Solo cuando está en modo tableta."
+msgstr "Solo en modo tableta"
 
 #: kcm/package/contents/ui/Orientation.qml:55
 #, kde-format
 msgid "Manual"
-msgstr ""
+msgstr "Manual"
 
 #: kcm/package/contents/ui/Output.qml:247
 #, kde-format
@@ -195,15 +193,12 @@ msgid "No Rotation"
 msgstr "Sin rotación"
 
 #: kcm/package/contents/ui/Screen.qml:59
-#, fuzzy, kde-format
-#| msgid "Drag displays to re-arrange them"
+#, kde-format
 msgid "Drag screens to re-arrange them"
-msgstr "Arrastre las pantallas para reorganizarlas"
+msgstr "Arrastra las pantallas para reordenarlas"
 
 #: kcm/package/contents/ui/Screen.qml:72
-#, fuzzy, kde-format
-#| msgctxt "Itendifies displays with visual indicators"
-#| msgid "Identify"
+#, kde-format
 msgid "Identify"
 msgstr "Identificar"
 
@@ -211,7 +206,7 @@ msgstr "Identificar"
 #, kde-format
 msgctxt "@info"
 msgid "All displays are disabled. Enable at least one."
-msgstr ""
+msgstr "Todas las pantallas están desactivadas. Activa al menos una."
 
 #: kcm/package/contents/ui/main.qml:53 kcm/package/contents/ui/main.qml:154
 #, kde-format
@@ -219,18 +214,18 @@ msgctxt "@info"
 msgid ""
 "Gaps between displays are not supported. Make sure all displays are touching."
 msgstr ""
+"No se admiten huecos entre pantallas. Asegúrate de que todas las pantallas "
+"estén en contacto."
 
 #: kcm/package/contents/ui/main.qml:65 kcm/package/contents/ui/main.qml:167
-#, fuzzy, kde-format
-#| msgid "A new display has been added. Settings have been reloaded."
+#, kde-format
 msgid "A new output has been added. Settings have been reloaded."
-msgstr "Se ha añadido una nueva pantalla. Se han vuelto a cargar los ajustes."
+msgstr "Se ha añadido una nueva salida. Se han recargado los ajustes."
 
 #: kcm/package/contents/ui/main.qml:67 kcm/package/contents/ui/main.qml:169
-#, fuzzy, kde-format
-#| msgid "A display has been removed. Settings have been reloaded."
+#, kde-format
 msgid "An output has been removed. Settings have been reloaded."
-msgstr "Se ha eliminado una pantalla. Los ajustes se han recargado."
+msgstr "Se ha eliminado una salida. Se ha vuelto a cargar la configuración."
 
 #: kcm/package/contents/ui/main.qml:107
 #, kde-format
@@ -245,19 +240,17 @@ msgstr ""
 "Las configuraciones de las pantallas no se guardaron debido a un error."
 
 #: kcm/package/contents/ui/main.qml:127
-#, fuzzy, kde-format
-#| msgid ""
-#| "New global scale applied. Change will come into effect after restart."
+#, kde-format
 msgid ""
 "Global scale changes will come into effect after the system is restarted."
 msgstr ""
-"Nueva escala global aplicada. Es necesario un reinicio para aplicar los "
-"cambios."
+"Los cambios globales en la escala entrarán en vigor tras reiniciar el "
+"sistema."
 
 #: kcm/package/contents/ui/main.qml:133
 #, kde-format
 msgid "Restart"
-msgstr ""
+msgstr "Reiniciar"
 
 #, kde-format
 #~ msgid ""
