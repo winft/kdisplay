@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-16 21:14+0200\n"
-"PO-Revision-Date: 2023-04-14 17:48+0000\n"
+"PO-Revision-Date: 2023-06-07 10:52+0000\n"
 "Last-Translator: S3aBreeze <S3aBreeze@users.noreply.hosted.weblate.org>\n"
-"Language-Team: Russian <https://hosted.weblate.org/projects/kwinft/kdisplay-"
-"app/ru/>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/kwinft/"
+"kdisplay-app/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: kcm/app/main.cpp:20 kcm/app/main.cpp:22
 #, kde-format
@@ -70,21 +70,19 @@ msgid "Orientation:"
 msgstr "Ориентация:"
 
 #: kcm/package/contents/ui/Orientation.qml:37
-#, fuzzy, kde-format
-#| msgid "Auto"
+#, kde-format
 msgid "Automatic"
 msgstr "Автоматическая"
 
 #: kcm/package/contents/ui/Orientation.qml:46
-#, fuzzy, kde-format
-#| msgid "Only when in tablet mode."
+#, kde-format
 msgid "Only when in tablet mode"
-msgstr "Только в режиме планшета."
+msgstr "Только в режиме планшета"
 
 #: kcm/package/contents/ui/Orientation.qml:55
 #, kde-format
 msgid "Manual"
-msgstr ""
+msgstr "Ручная"
 
 #: kcm/package/contents/ui/Output.qml:247
 #, kde-format
@@ -196,15 +194,12 @@ msgid "No Rotation"
 msgstr "Без вращения"
 
 #: kcm/package/contents/ui/Screen.qml:59
-#, fuzzy, kde-format
-#| msgid "Drag displays to re-arrange them"
+#, kde-format
 msgid "Drag screens to re-arrange them"
-msgstr "Перетащите дисплеи чтобы переместить их"
+msgstr "Перетащите экраны чтобы переместить их"
 
 #: kcm/package/contents/ui/Screen.qml:72
-#, fuzzy, kde-format
-#| msgctxt "Itendifies displays with visual indicators"
-#| msgid "Identify"
+#, kde-format
 msgid "Identify"
 msgstr "Определить"
 
@@ -212,7 +207,7 @@ msgstr "Определить"
 #, kde-format
 msgctxt "@info"
 msgid "All displays are disabled. Enable at least one."
-msgstr ""
+msgstr "Все дисплеи выключены. Включите как минимум один."
 
 #: kcm/package/contents/ui/main.qml:53 kcm/package/contents/ui/main.qml:154
 #, kde-format
@@ -220,18 +215,18 @@ msgctxt "@info"
 msgid ""
 "Gaps between displays are not supported. Make sure all displays are touching."
 msgstr ""
+"Зазоры между дисплеями не поддерживаются. Убедитесь, что все дисплеи "
+"соприкасаются друг с другом."
 
 #: kcm/package/contents/ui/main.qml:65 kcm/package/contents/ui/main.qml:167
-#, fuzzy, kde-format
-#| msgid "A new display has been added. Settings have been reloaded."
+#, kde-format
 msgid "A new output has been added. Settings have been reloaded."
-msgstr "Добавлен новый дисплей. Настройки были перезагружены."
+msgstr "Добавлен новый вывод. Настройки были перезагружены."
 
 #: kcm/package/contents/ui/main.qml:67 kcm/package/contents/ui/main.qml:169
-#, fuzzy, kde-format
-#| msgid "A display has been removed. Settings have been reloaded."
+#, kde-format
 msgid "An output has been removed. Settings have been reloaded."
-msgstr "Дисплей удалён. Настройки были перезагружены."
+msgstr "Вывод удалён. Настройки были перезагружены."
 
 #: kcm/package/contents/ui/main.qml:107
 #, kde-format
@@ -246,19 +241,16 @@ msgid "Displays could not be saved due to error."
 msgstr "Не удалось сохранить дисплеи из-за ошибки."
 
 #: kcm/package/contents/ui/main.qml:127
-#, fuzzy, kde-format
-#| msgid ""
-#| "New global scale applied. Change will come into effect after restart."
+#, kde-format
 msgid ""
 "Global scale changes will come into effect after the system is restarted."
 msgstr ""
-"Новый глобальный масштаб применён. Изменения вступят в силу после "
-"перезапуска."
+"Изменения глобального масштаба вступят в силу после перезапуска системы."
 
 #: kcm/package/contents/ui/main.qml:133
 #, kde-format
 msgid "Restart"
-msgstr ""
+msgstr "Перезапуск"
 
 #, kde-format
 #~ msgid ""
