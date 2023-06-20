@@ -38,8 +38,8 @@ K_PLUGIN_CLASS_WITH_JSON(KCMKDisplay, "kcm_kdisplay.json")
 
 using namespace Disman;
 
-KCMKDisplay::KCMKDisplay(QObject* parent, const KPluginMetaData& data, const QVariantList& args)
-    : KQuickManagedConfigModule(parent, data, args)
+KCMKDisplay::KCMKDisplay(QObject* parent, KPluginMetaData const& data)
+    : KQuickManagedConfigModule(parent, data)
 {
     qmlRegisterAnonymousType<OutputModel>("org.kwinft.private.kcm.screen", 1);
     qmlRegisterType<Disman::Output>("org.kwinft.private.kcm.kdisplay", 1, 0, "Output");
