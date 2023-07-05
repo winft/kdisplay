@@ -1,6 +1,6 @@
 add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kdisplay\")
 
-kcoreaddons_add_plugin(kcm_kdisplay INSTALL_NAMESPACE "plasma/kcms/systemsettings")
+kcmutils_add_qml_kcm(kcm_kdisplay)
 
 add_subdirectory(app)
 ki18n_install(po)
@@ -33,6 +33,3 @@ target_link_libraries(kcm_kdisplay
   KF6::PlasmaQuick
   Qt6::Sensors
 )
-
-kcmutils_generate_desktop_file(kcm_kdisplay)
-kpackage_install_package(package kcm_kdisplay kcms)

@@ -19,7 +19,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.15 as Controls
 import org.kde.kirigami 2.4 as Kirigami
 
-import org.kde.kcm 1.2 as KCM
+import org.kde.kcmutils as KCM
 
 Kirigami.FormLayout {
     twinFormLayouts: globalSettingsLayout

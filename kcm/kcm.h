@@ -59,7 +59,7 @@ public:
     };
     Q_ENUM(InvalidConfigReason)
 
-    KCMKDisplay(QObject* parent, const KPluginMetaData& data, const QVariantList& args);
+    KCMKDisplay(QObject* parent, KPluginMetaData const& data);
     ~KCMKDisplay() override = default;
 
     void load() override;
