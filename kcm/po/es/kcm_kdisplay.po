@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-16 21:14+0200\n"
+"POT-Creation-Date: 2023-06-20 12:38+0200\n"
 "PO-Revision-Date: 2023-04-27 23:49+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
-"Language-Team: Spanish <https://hosted.weblate.org/projects/kwinft/"
-"kdisplay-app/es/>\n"
+"Language-Team: Spanish <https://hosted.weblate.org/projects/kwinft/kdisplay-"
+"app/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,91 +63,88 @@ msgstr "Ninguno"
 msgid "Replicated by other display"
 msgstr "Replicado por otra pantalla"
 
-#: kcm/package/contents/ui/Orientation.qml:23
+#: kcm/ui/Orientation.qml:23
 #, kde-format
 msgid "Orientation:"
 msgstr "Orientación:"
 
-#: kcm/package/contents/ui/Orientation.qml:37
+#: kcm/ui/Orientation.qml:37
 #, kde-format
 msgid "Automatic"
 msgstr "Automático"
 
-#: kcm/package/contents/ui/Orientation.qml:46
+#: kcm/ui/Orientation.qml:46
 #, kde-format
 msgid "Only when in tablet mode"
 msgstr "Solo en modo tableta"
 
-#: kcm/package/contents/ui/Orientation.qml:55
+#: kcm/ui/Orientation.qml:55
 #, kde-format
 msgid "Manual"
 msgstr "Manual"
 
-#: kcm/package/contents/ui/Output.qml:247
+#: kcm/ui/Output.qml:247
 #, kde-format
 msgid "Replicas"
 msgstr "Idénticas"
 
-#: kcm/package/contents/ui/OutputPanel.qml:31
+#: kcm/ui/OutputPanel.qml:31
 #, kde-format
 msgid "Enabled"
 msgstr "Activada"
 
-#: kcm/package/contents/ui/OutputPanel.qml:39
+#: kcm/ui/OutputPanel.qml:39
 #, kde-format
 msgid "Primary"
 msgstr "Primaria"
 
-#: kcm/package/contents/ui/OutputPanel.qml:56
+#: kcm/ui/OutputPanel.qml:56
 #, kde-format
 msgid "Scale:"
 msgstr "Escala:"
 
-#: kcm/package/contents/ui/OutputPanel.qml:86
-#: kcm/package/contents/ui/Panel.qml:119
+#: kcm/ui/OutputPanel.qml:86 kcm/ui/Panel.qml:119
 #, kde-format
 msgctxt "Global scale factor expressed in percentage"
 msgid "%1%"
 msgstr "%1%"
 
-#: kcm/package/contents/ui/OutputPanel.qml:106
+#: kcm/ui/OutputPanel.qml:106
 #, kde-format
 msgid "Resolution:"
 msgstr "Resolución:"
 
-#: kcm/package/contents/ui/OutputPanel.qml:114
-#: kcm/package/contents/ui/OutputPanel.qml:141
+#: kcm/ui/OutputPanel.qml:114 kcm/ui/OutputPanel.qml:141
 #, kde-format
 msgid "Auto"
 msgstr "Automática"
 
-#: kcm/package/contents/ui/OutputPanel.qml:133
-#: kcm/package/contents/ui/OutputPanel.qml:148
+#: kcm/ui/OutputPanel.qml:133 kcm/ui/OutputPanel.qml:148
 #, kde-format
 msgid "Refresh rate:"
 msgstr "Frecuencia de actualización:"
 
-#: kcm/package/contents/ui/OutputPanel.qml:155
+#: kcm/ui/OutputPanel.qml:155
 #, kde-format
 msgid "Adaptive Sync"
 msgstr "Sincronización personalizable"
 
-#: kcm/package/contents/ui/OutputPanel.qml:164
+#: kcm/ui/OutputPanel.qml:164
 #, kde-format
 msgid "Replica of:"
 msgstr "Idéntico a:"
 
-#: kcm/package/contents/ui/Panel.qml:30
+#: kcm/ui/Panel.qml:30
 #, kde-format
 msgid "Device:"
 msgstr "Dispositivo:"
 
-#: kcm/package/contents/ui/Panel.qml:82
+#: kcm/ui/Panel.qml:82
 #, kde-format
 msgid "Global scale:"
 msgstr "Escala global:"
 
-#: kcm/package/contents/ui/Panel.qml:140
+#: kcm/ui/Panel.qml:140
 #, kde-format
 msgid ""
 "The global scale factor is limited to multiples of 6.25% to minimize visual "
@@ -157,58 +154,58 @@ msgstr ""
 "minimizar los fallos visuales en las aplicaciones que utilizan el sistema de "
 "ventanas X11."
 
-#: kcm/package/contents/ui/Panel.qml:152
+#: kcm/ui/Panel.qml:152
 #, kde-format
 msgid "Save displays' properties:"
 msgstr "Guardar las propiedades de las pantallas:"
 
-#: kcm/package/contents/ui/Panel.qml:158
+#: kcm/ui/Panel.qml:158
 #, kde-format
 msgid "For any display arrangement"
 msgstr "Para cualquier combinación de pantallas"
 
-#: kcm/package/contents/ui/Panel.qml:165
+#: kcm/ui/Panel.qml:165
 #, kde-format
 msgid "For only this specific display arrangement"
 msgstr "Solo para esta combinación de pantallas"
 
-#: kcm/package/contents/ui/RotationButton.qml:61
+#: kcm/ui/RotationButton.qml:61
 #, kde-format
 msgid "90° Clockwise"
 msgstr "90° en sentido horario"
 
-#: kcm/package/contents/ui/RotationButton.qml:65
+#: kcm/ui/RotationButton.qml:65
 #, kde-format
 msgid "Upside Down"
 msgstr "Al revés"
 
-#: kcm/package/contents/ui/RotationButton.qml:69
+#: kcm/ui/RotationButton.qml:69
 #, kde-format
 msgid "90° Counterclockwise"
 msgstr "90° en sentido anti-horario"
 
-#: kcm/package/contents/ui/RotationButton.qml:74
+#: kcm/ui/RotationButton.qml:74
 #, kde-format
 msgid "No Rotation"
 msgstr "Sin rotación"
 
-#: kcm/package/contents/ui/Screen.qml:59
+#: kcm/ui/Screen.qml:59
 #, kde-format
 msgid "Drag screens to re-arrange them"
 msgstr "Arrastra las pantallas para reordenarlas"
 
-#: kcm/package/contents/ui/Screen.qml:72
+#: kcm/ui/Screen.qml:72
 #, kde-format
 msgid "Identify"
 msgstr "Identificar"
 
-#: kcm/package/contents/ui/main.qml:51 kcm/package/contents/ui/main.qml:152
+#: kcm/ui/main.qml:51 kcm/ui/main.qml:152
 #, kde-format
 msgctxt "@info"
 msgid "All displays are disabled. Enable at least one."
 msgstr "Todas las pantallas están desactivadas. Activa al menos una."
 
-#: kcm/package/contents/ui/main.qml:53 kcm/package/contents/ui/main.qml:154
+#: kcm/ui/main.qml:53 kcm/ui/main.qml:154
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -217,29 +214,29 @@ msgstr ""
 "No se admiten huecos entre pantallas. Asegúrate de que todas las pantallas "
 "estén en contacto."
 
-#: kcm/package/contents/ui/main.qml:65 kcm/package/contents/ui/main.qml:167
+#: kcm/ui/main.qml:65 kcm/ui/main.qml:167
 #, kde-format
 msgid "A new output has been added. Settings have been reloaded."
 msgstr "Se ha añadido una nueva salida. Se han recargado los ajustes."
 
-#: kcm/package/contents/ui/main.qml:67 kcm/package/contents/ui/main.qml:169
+#: kcm/ui/main.qml:67 kcm/ui/main.qml:169
 #, kde-format
 msgid "An output has been removed. Settings have been reloaded."
 msgstr "Se ha eliminado una salida. Se ha vuelto a cargar la configuración."
 
-#: kcm/package/contents/ui/main.qml:107
+#: kcm/ui/main.qml:107
 #, kde-format
 msgid "No Disman backend found. Please check your Disman installation."
 msgstr ""
 "No se encontró el backend de Disman. Verifique si Disman está instalado."
 
-#: kcm/package/contents/ui/main.qml:117
+#: kcm/ui/main.qml:117
 #, kde-format
 msgid "Displays could not be saved due to error."
 msgstr ""
 "Las configuraciones de las pantallas no se guardaron debido a un error."
 
-#: kcm/package/contents/ui/main.qml:127
+#: kcm/ui/main.qml:127
 #, kde-format
 msgid ""
 "Global scale changes will come into effect after the system is restarted."
@@ -247,7 +244,7 @@ msgstr ""
 "Los cambios globales en la escala entrarán en vigor tras reiniciar el "
 "sistema."
 
-#: kcm/package/contents/ui/main.qml:133
+#: kcm/ui/main.qml:133
 #, kde-format
 msgid "Restart"
 msgstr "Reiniciar"

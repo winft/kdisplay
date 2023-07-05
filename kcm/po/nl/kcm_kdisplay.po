@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-16 21:14+0200\n"
+"POT-Creation-Date: 2023-06-20 12:38+0200\n"
 "PO-Revision-Date: 2023-04-22 08:52+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
-"Language-Team: Dutch <https://hosted.weblate.org/projects/kwinft/"
-"kdisplay-app/nl/>\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/kwinft/kdisplay-"
+"app/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,91 +63,88 @@ msgstr "Geen"
 msgid "Replicated by other display"
 msgstr "Zoals ingesteld door ander beeldscherm"
 
-#: kcm/package/contents/ui/Orientation.qml:23
+#: kcm/ui/Orientation.qml:23
 #, kde-format
 msgid "Orientation:"
 msgstr "Oriëntatie:"
 
-#: kcm/package/contents/ui/Orientation.qml:37
+#: kcm/ui/Orientation.qml:37
 #, kde-format
 msgid "Automatic"
 msgstr "Automatisch"
 
-#: kcm/package/contents/ui/Orientation.qml:46
+#: kcm/ui/Orientation.qml:46
 #, kde-format
 msgid "Only when in tablet mode"
 msgstr "Alleen in de tabletmodus"
 
-#: kcm/package/contents/ui/Orientation.qml:55
+#: kcm/ui/Orientation.qml:55
 #, kde-format
 msgid "Manual"
 msgstr "Handmatig"
 
-#: kcm/package/contents/ui/Output.qml:247
+#: kcm/ui/Output.qml:247
 #, kde-format
 msgid "Replicas"
 msgstr "Delen"
 
-#: kcm/package/contents/ui/OutputPanel.qml:31
+#: kcm/ui/OutputPanel.qml:31
 #, kde-format
 msgid "Enabled"
 msgstr "Ingeschakeld"
 
-#: kcm/package/contents/ui/OutputPanel.qml:39
+#: kcm/ui/OutputPanel.qml:39
 #, kde-format
 msgid "Primary"
 msgstr "Primair"
 
-#: kcm/package/contents/ui/OutputPanel.qml:56
+#: kcm/ui/OutputPanel.qml:56
 #, kde-format
 msgid "Scale:"
 msgstr "Schaal:"
 
-#: kcm/package/contents/ui/OutputPanel.qml:86
-#: kcm/package/contents/ui/Panel.qml:119
+#: kcm/ui/OutputPanel.qml:86 kcm/ui/Panel.qml:119
 #, kde-format
 msgctxt "Global scale factor expressed in percentage"
 msgid "%1%"
 msgstr "%1%"
 
-#: kcm/package/contents/ui/OutputPanel.qml:106
+#: kcm/ui/OutputPanel.qml:106
 #, kde-format
 msgid "Resolution:"
 msgstr "Resolutie:"
 
-#: kcm/package/contents/ui/OutputPanel.qml:114
-#: kcm/package/contents/ui/OutputPanel.qml:141
+#: kcm/ui/OutputPanel.qml:114 kcm/ui/OutputPanel.qml:141
 #, kde-format
 msgid "Auto"
 msgstr "Automatisch"
 
-#: kcm/package/contents/ui/OutputPanel.qml:133
-#: kcm/package/contents/ui/OutputPanel.qml:148
+#: kcm/ui/OutputPanel.qml:133 kcm/ui/OutputPanel.qml:148
 #, kde-format
 msgid "Refresh rate:"
 msgstr "Ververssnelheid:"
 
-#: kcm/package/contents/ui/OutputPanel.qml:155
+#: kcm/ui/OutputPanel.qml:155
 #, kde-format
 msgid "Adaptive Sync"
 msgstr "Aanpasbare synchronisatie"
 
-#: kcm/package/contents/ui/OutputPanel.qml:164
+#: kcm/ui/OutputPanel.qml:164
 #, kde-format
 msgid "Replica of:"
 msgstr "Gedeeld met:"
 
-#: kcm/package/contents/ui/Panel.qml:30
+#: kcm/ui/Panel.qml:30
 #, kde-format
 msgid "Device:"
 msgstr "Apparaat:"
 
-#: kcm/package/contents/ui/Panel.qml:82
+#: kcm/ui/Panel.qml:82
 #, kde-format
 msgid "Global scale:"
 msgstr "Algemene schaal:"
 
-#: kcm/package/contents/ui/Panel.qml:140
+#: kcm/ui/Panel.qml:140
 #, kde-format
 msgid ""
 "The global scale factor is limited to multiples of 6.25% to minimize visual "
@@ -156,58 +153,58 @@ msgstr ""
 "De algemene schaalfactor is beperkt tot veelvouden van 6.25%. Dit is zo "
 "gedaan om het aantal visuele storingen in X11-programma's te beperken."
 
-#: kcm/package/contents/ui/Panel.qml:152
+#: kcm/ui/Panel.qml:152
 #, kde-format
 msgid "Save displays' properties:"
 msgstr "Beeldschermeigenschappen bewaren:"
 
-#: kcm/package/contents/ui/Panel.qml:158
+#: kcm/ui/Panel.qml:158
 #, kde-format
 msgid "For any display arrangement"
 msgstr "Van elke schermindeling"
 
-#: kcm/package/contents/ui/Panel.qml:165
+#: kcm/ui/Panel.qml:165
 #, kde-format
 msgid "For only this specific display arrangement"
 msgstr "Alleen van deze schermindeling"
 
-#: kcm/package/contents/ui/RotationButton.qml:61
+#: kcm/ui/RotationButton.qml:61
 #, kde-format
 msgid "90° Clockwise"
 msgstr "90° naar rechts"
 
-#: kcm/package/contents/ui/RotationButton.qml:65
+#: kcm/ui/RotationButton.qml:65
 #, kde-format
 msgid "Upside Down"
 msgstr "Omlaag"
 
-#: kcm/package/contents/ui/RotationButton.qml:69
+#: kcm/ui/RotationButton.qml:69
 #, kde-format
 msgid "90° Counterclockwise"
 msgstr "90° naar links"
 
-#: kcm/package/contents/ui/RotationButton.qml:74
+#: kcm/ui/RotationButton.qml:74
 #, kde-format
 msgid "No Rotation"
 msgstr "Niet draaien"
 
-#: kcm/package/contents/ui/Screen.qml:59
+#: kcm/ui/Screen.qml:59
 #, kde-format
 msgid "Drag screens to re-arrange them"
 msgstr "Versleep beeldschermen om ze te herschikken"
 
-#: kcm/package/contents/ui/Screen.qml:72
+#: kcm/ui/Screen.qml:72
 #, kde-format
 msgid "Identify"
 msgstr "Identificeren"
 
-#: kcm/package/contents/ui/main.qml:51 kcm/package/contents/ui/main.qml:152
+#: kcm/ui/main.qml:51 kcm/ui/main.qml:152
 #, kde-format
 msgctxt "@info"
 msgid "All displays are disabled. Enable at least one."
 msgstr "Alle beeldeschermen zijn uitgeschakeld - schakel er minimaal één in."
 
-#: kcm/package/contents/ui/main.qml:53 kcm/package/contents/ui/main.qml:154
+#: kcm/ui/main.qml:53 kcm/ui/main.qml:154
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -216,28 +213,28 @@ msgstr ""
 "Ruimte tussen beeldschermen wordt niet ondersteund. Zorg dat alle "
 "beeldschermen pal naast elkaar staan."
 
-#: kcm/package/contents/ui/main.qml:65 kcm/package/contents/ui/main.qml:167
+#: kcm/ui/main.qml:65 kcm/ui/main.qml:167
 #, kde-format
 msgid "A new output has been added. Settings have been reloaded."
 msgstr "De instellingen zijn herladen omdat er een beeldscherm is toegevoegd."
 
-#: kcm/package/contents/ui/main.qml:67 kcm/package/contents/ui/main.qml:169
+#: kcm/ui/main.qml:67 kcm/ui/main.qml:169
 #, kde-format
 msgid "An output has been removed. Settings have been reloaded."
 msgstr "De instellingen zijn herladen omdat er een beeldscherm is verwijderd."
 
-#: kcm/package/contents/ui/main.qml:107
+#: kcm/ui/main.qml:107
 #, kde-format
 msgid "No Disman backend found. Please check your Disman installation."
 msgstr ""
 "Het Disman-backend is niet aangetroffen. Controleer je Disman-installatie."
 
-#: kcm/package/contents/ui/main.qml:117
+#: kcm/ui/main.qml:117
 #, kde-format
 msgid "Displays could not be saved due to error."
 msgstr "De beeldschermen kunnen niet worden opgeslagen."
 
-#: kcm/package/contents/ui/main.qml:127
+#: kcm/ui/main.qml:127
 #, kde-format
 msgid ""
 "Global scale changes will come into effect after the system is restarted."
@@ -245,7 +242,7 @@ msgstr ""
 "Er is een nieuwe algemene schaal toegepast. Herstart je computer om de "
 "wijzigingen toe te passen."
 
-#: kcm/package/contents/ui/main.qml:133
+#: kcm/ui/main.qml:133
 #, kde-format
 msgid "Restart"
 msgstr "Herstarten"
