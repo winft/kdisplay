@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-06-20 12:38+0200\n"
-"PO-Revision-Date: 2020-10-16 19:26+0000\n"
-"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
-"Language-Team: German <https://hosted.weblate.org/projects/kwinft/kdisplay-"
-"app/de/>\n"
+"PO-Revision-Date: 2023-08-20 00:59+0000\n"
+"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/kwinft/"
+"kdisplay-app/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3.1-dev\n"
+"X-Generator: Weblate 5.0-dev\n"
 
 #: kcm/app/main.cpp:20 kcm/app/main.cpp:22
 #, kde-format
@@ -69,21 +69,19 @@ msgid "Orientation:"
 msgstr "Orientierung:"
 
 #: kcm/ui/Orientation.qml:37
-#, fuzzy, kde-format
-#| msgid "Auto"
+#, kde-format
 msgid "Automatic"
 msgstr "Automatisch"
 
 #: kcm/ui/Orientation.qml:46
-#, fuzzy, kde-format
-#| msgid "Only when in tablet mode."
+#, kde-format
 msgid "Only when in tablet mode"
-msgstr "Nur wenn in Tabletmodus."
+msgstr "Nur wenn in Tabletmodus"
 
 #: kcm/ui/Orientation.qml:55
 #, kde-format
 msgid "Manual"
-msgstr ""
+msgstr "Manuell"
 
 #: kcm/ui/Output.qml:247
 #, kde-format
@@ -129,7 +127,7 @@ msgstr "Bildwiederholrate:"
 #: kcm/ui/OutputPanel.qml:155
 #, kde-format
 msgid "Adaptive Sync"
-msgstr ""
+msgstr "Adaptive Synchronisation"
 
 #: kcm/ui/OutputPanel.qml:164
 #, kde-format
@@ -192,23 +190,20 @@ msgid "No Rotation"
 msgstr "Ohne Drehung"
 
 #: kcm/ui/Screen.qml:59
-#, fuzzy, kde-format
-#| msgid "Drag displays to re-arrange them"
+#, kde-format
 msgid "Drag screens to re-arrange them"
-msgstr "Ziehe Bildschirme um sie neu anzuordnen"
+msgstr "Bildschirme zum Neuanordnen ziehen"
 
 #: kcm/ui/Screen.qml:72
-#, fuzzy, kde-format
-#| msgctxt "Itendifies displays with visual indicators"
-#| msgid "Identify"
+#, kde-format
 msgid "Identify"
-msgstr "Identifiziere"
+msgstr "Identifizieren"
 
 #: kcm/ui/main.qml:51 kcm/ui/main.qml:152
 #, kde-format
 msgctxt "@info"
 msgid "All displays are disabled. Enable at least one."
-msgstr ""
+msgstr "Alle Bildschirme sind deaktiviert. Aktivieren Sie mindestens einen."
 
 #: kcm/ui/main.qml:53 kcm/ui/main.qml:154
 #, kde-format
@@ -216,19 +211,18 @@ msgctxt "@info"
 msgid ""
 "Gaps between displays are not supported. Make sure all displays are touching."
 msgstr ""
+"Lücken zwischen den Bildschirmen werden nicht unterstützt. Stellen Sie "
+"sicher, dass sich alle Bildschirme berühren."
 
 #: kcm/ui/main.qml:65 kcm/ui/main.qml:167
-#, fuzzy, kde-format
-#| msgid "A new display has been added. Settings have been reloaded."
+#, kde-format
 msgid "A new output has been added. Settings have been reloaded."
-msgstr ""
-"Ein neuer Bildschirm wurde hinzugefügt. Einstellungen wurden neu geladen."
+msgstr "Eine neue Ausgabe wurde hinzugefügt. Einstellungen wurden neu geladen."
 
 #: kcm/ui/main.qml:67 kcm/ui/main.qml:169
-#, fuzzy, kde-format
-#| msgid "A display has been removed. Settings have been reloaded."
+#, kde-format
 msgid "An output has been removed. Settings have been reloaded."
-msgstr "Ein Bildschirm wurde entfernt. Einstellungen wurden neu geladen."
+msgstr "Eine Ausgabe wurde entfernt. Einstellungen wurden neu geladen."
 
 #: kcm/ui/main.qml:107
 #, kde-format
@@ -254,7 +248,7 @@ msgstr ""
 #: kcm/ui/main.qml:133
 #, kde-format
 msgid "Restart"
-msgstr ""
+msgstr "Neu starten"
 
 #, kde-format
 #~ msgid ""
