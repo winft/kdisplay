@@ -8,92 +8,95 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-09 16:44+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-09-09 22:48+0000\n"
+"Last-Translator: Denis96 <denis96.c@proton.me>\n"
+"Language-Team: Romanian <https://hosted.weblate.org/projects/kwinft/"
+"kdisplay-plasma-integration/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.0.1-dev\n"
 
 #: plasma-integration/kded/daemon.cpp:66
 #, kde-format
 msgid "Switch Display"
-msgstr ""
+msgstr "Schimbă Afișajul"
 
 #: plasma-integration/osd/osdaction.cpp:22
 #, kde-format
 msgid "Switch to external display"
-msgstr ""
+msgstr "Schimbă cu afișajul extern"
 
 #: plasma-integration/osd/osdaction.cpp:25
 #, kde-format
 msgid "Switch to laptop display"
-msgstr ""
+msgstr "Schimbă cu afișajul laptopului"
 
 #: plasma-integration/osd/osdaction.cpp:27
 #, kde-format
 msgid "Unify displays"
-msgstr ""
+msgstr "Uniți afișajele"
 
 #: plasma-integration/osd/osdaction.cpp:28
 #, kde-format
 msgid "Extend to left"
-msgstr ""
+msgstr "Extindeți în stânga"
 
 #: plasma-integration/osd/osdaction.cpp:30
 #, kde-format
 msgid "Extend to right"
-msgstr ""
+msgstr "Extindeți în dreapta"
 
 #: plasma-integration/osd/osdaction.cpp:32
 #, kde-format
 msgid "Leave unchanged"
-msgstr ""
+msgstr "Părăsiți fără a schimba"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:39
 #, kde-format
 msgid "Enable Presentation Mode"
-msgstr ""
+msgstr "Activați Modul de Prezentare"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:53
 #, kde-format
 msgid "User enabled presentation mode"
-msgstr ""
+msgstr "Utilizatorul a activat modul de prezentare"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:83
 #, kde-format
 msgid ""
 "This will prevent your display and computer from turning off automatically."
-msgstr ""
+msgstr "Asta va preveni afișajul și computerul tău din a se închide automat."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:110
 #, kde-format
 msgctxt "Some Application and n others enforce presentation mode"
 msgid "%2 and %1 other application are enforcing presentation mode."
 msgid_plural "%2 and %1 other applications are enforcing presentation mode."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%2 și %1 altă aplicație forțează modul de prezentare."
+msgstr[1] "%2 și %1 alte aplicații forțează modul de prezentare."
+msgstr[2] "%2 și %1 de alte aplicații forțează modul de prezentare."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:116
 #, kde-format
 msgctxt "Some Application enforce presentation mode"
 msgid "%1 is enforcing presentation mode."
-msgstr ""
+msgstr "%1 forțează modul de prezentare."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:119
 #, kde-format
 msgctxt ""
 "Some Application enforce presentation mode: Reason provided by the app"
 msgid "%1 is enforcing presentation mode: %2"
-msgstr ""
+msgstr "%1 forțează modul de prezentare: %2"
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:54
 #, kde-format
 msgid "Display Layout"
-msgstr ""
+msgstr "Aspectul Afișajelor"
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:93
 #, kde-format
@@ -101,13 +104,15 @@ msgid ""
 "You can only apply a different display layout when there is more than one "
 "display device plugged in."
 msgstr ""
+"Puteți schimba aspectul afișajelor doar când mai mult de un monitor este "
+"conectat."
 
 #: plasma-integration/plasmoid/package/contents/ui/main.qml:40
 #, kde-format
 msgid "Presentation mode is enabled"
-msgstr ""
+msgstr "Modul de prezentare este activat"
 
 #: plasma-integration/plasmoid/package/contents/ui/main.qml:101
 #, kde-format
 msgid "Configure Display Settings…"
-msgstr ""
+msgstr "Configurați Setările Afișajelor…"
