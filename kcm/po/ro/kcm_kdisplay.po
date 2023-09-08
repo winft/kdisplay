@@ -8,138 +8,142 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-06-20 12:38+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-09-09 22:48+0000\n"
+"Last-Translator: Denis96 <denis96.c@proton.me>\n"
+"Language-Team: Romanian <https://hosted.weblate.org/projects/kwinft/"
+"kdisplay-app/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.0.1-dev\n"
 
 #: kcm/app/main.cpp:20 kcm/app/main.cpp:22
 #, kde-format
 msgid "KDisplay"
-msgstr ""
+msgstr "KDisplay"
 
 #: kcm/app/main.cpp:24
 #, kde-format
 msgid "Copyright © 2020 Roman Gilg"
-msgstr ""
+msgstr "Drepturi de autor © 2020 Roman Gilg"
 
 #: kcm/app/main.cpp:31
 #, kde-format
 msgid "Arguments for the config module."
-msgstr ""
+msgstr "Argumente pentru modulul config."
 
 #: kcm/output_model.cpp:92
 #, kde-format
 msgctxt "Approximate refresh rate in Hz (rounded to integer)"
 msgid "≈ %1 Hz"
-msgstr ""
+msgstr "≈ %1 Hz"
 
 #: kcm/output_model.cpp:96
 #, kde-format
 msgctxt "Refresh rate in Hz (rounded to 3 digits)"
 msgid "%1 Hz"
-msgstr ""
+msgstr "%1 Hz"
 
 #: kcm/output_model.cpp:528
 #, kde-format
 msgctxt "Width x height (aspect ratio)"
 msgid "%1x%2 (%3:%4)"
-msgstr ""
+msgstr "%1x%2 (%3:%4)"
 
 #: kcm/output_model.cpp:590
 #, kde-format
 msgctxt "Displayed when no replication source is selected."
 msgid "None"
-msgstr ""
+msgstr "Niciunul"
 
 #: kcm/output_model.cpp:597
 #, kde-format
 msgid "Replicated by other display"
-msgstr ""
+msgstr "Replicat de alt afișaj"
 
 #: kcm/ui/Orientation.qml:23
 #, kde-format
 msgid "Orientation:"
-msgstr ""
+msgstr "Orientație:"
 
 #: kcm/ui/Orientation.qml:37
 #, kde-format
 msgid "Automatic"
-msgstr ""
+msgstr "Automat"
 
 #: kcm/ui/Orientation.qml:46
 #, kde-format
 msgid "Only when in tablet mode"
-msgstr ""
+msgstr "Doar in modul de tabletă"
 
 #: kcm/ui/Orientation.qml:55
 #, kde-format
 msgid "Manual"
-msgstr ""
+msgstr "Manual"
 
 #: kcm/ui/Output.qml:247
 #, kde-format
 msgid "Replicas"
-msgstr ""
+msgstr "Replici"
 
 #: kcm/ui/OutputPanel.qml:31
 #, kde-format
 msgid "Enabled"
-msgstr ""
+msgstr "Activat"
 
 #: kcm/ui/OutputPanel.qml:39
 #, kde-format
 msgid "Primary"
-msgstr ""
+msgstr "Principal"
 
 #: kcm/ui/OutputPanel.qml:56
 #, kde-format
 msgid "Scale:"
-msgstr ""
+msgstr "Mărime:"
 
 #: kcm/ui/OutputPanel.qml:86 kcm/ui/Panel.qml:119
 #, kde-format
 msgctxt "Global scale factor expressed in percentage"
 msgid "%1%"
-msgstr ""
+msgstr "%1%"
 
 #: kcm/ui/OutputPanel.qml:106
 #, kde-format
 msgid "Resolution:"
-msgstr ""
+msgstr "Rezoluție:"
 
 #: kcm/ui/OutputPanel.qml:114 kcm/ui/OutputPanel.qml:141
 #, kde-format
 msgid "Auto"
-msgstr ""
+msgstr "Auto"
 
 #: kcm/ui/OutputPanel.qml:133 kcm/ui/OutputPanel.qml:148
 #, kde-format
 msgid "Refresh rate:"
-msgstr ""
+msgstr "Rata de reîmprospătare:"
 
 #: kcm/ui/OutputPanel.qml:155
 #, kde-format
 msgid "Adaptive Sync"
-msgstr ""
+msgstr "Sincronizare adaptivă"
 
 #: kcm/ui/OutputPanel.qml:164
 #, kde-format
 msgid "Replica of:"
-msgstr ""
+msgstr "Replică a:"
 
 #: kcm/ui/Panel.qml:30
 #, kde-format
 msgid "Device:"
-msgstr ""
+msgstr "Dispozitiv:"
 
 #: kcm/ui/Panel.qml:82
 #, kde-format
 msgid "Global scale:"
-msgstr ""
+msgstr "Mărime globală:"
 
 #: kcm/ui/Panel.qml:140
 #, kde-format
@@ -147,57 +151,59 @@ msgid ""
 "The global scale factor is limited to multiples of 6.25% to minimize visual "
 "glitches in applications using the X11 windowing system."
 msgstr ""
+"Factorul mărimii globale este limitat la multipli de 6.25% pentru a minimiza "
+"erorile vizuale în aplicații ce folosesc sistemul de ferestre X11."
 
 #: kcm/ui/Panel.qml:152
 #, kde-format
 msgid "Save displays' properties:"
-msgstr ""
+msgstr "Salvează proprietățile afișajelor:"
 
 #: kcm/ui/Panel.qml:158
 #, kde-format
 msgid "For any display arrangement"
-msgstr ""
+msgstr "Pentru orice aspect al afișajelor"
 
 #: kcm/ui/Panel.qml:165
 #, kde-format
 msgid "For only this specific display arrangement"
-msgstr ""
+msgstr "Doar pentru acest specific aspect al afișajelor"
 
 #: kcm/ui/RotationButton.qml:61
 #, kde-format
 msgid "90° Clockwise"
-msgstr ""
+msgstr "90° În sensul acelor de ceasornic"
 
 #: kcm/ui/RotationButton.qml:65
 #, kde-format
 msgid "Upside Down"
-msgstr ""
+msgstr "Cu susul în jos"
 
 #: kcm/ui/RotationButton.qml:69
 #, kde-format
 msgid "90° Counterclockwise"
-msgstr ""
+msgstr "90° În sens invers acelor de ceasornic"
 
 #: kcm/ui/RotationButton.qml:74
 #, kde-format
 msgid "No Rotation"
-msgstr ""
+msgstr "Nici o Rotație"
 
 #: kcm/ui/Screen.qml:59
 #, kde-format
 msgid "Drag screens to re-arrange them"
-msgstr ""
+msgstr "Trage de afișaje pentru a le rearanja"
 
 #: kcm/ui/Screen.qml:72
 #, kde-format
 msgid "Identify"
-msgstr ""
+msgstr "Identifică"
 
 #: kcm/ui/main.qml:51 kcm/ui/main.qml:152
 #, kde-format
 msgctxt "@info"
 msgid "All displays are disabled. Enable at least one."
-msgstr ""
+msgstr "Toate afișajele sunt dezactivate. Activează măcar unul."
 
 #: kcm/ui/main.qml:53 kcm/ui/main.qml:154
 #, kde-format
@@ -205,34 +211,39 @@ msgctxt "@info"
 msgid ""
 "Gaps between displays are not supported. Make sure all displays are touching."
 msgstr ""
+"Golurile dintre afișaje nu sunt acceptate. Asigură-te că toate afișajele se "
+"ating."
 
 #: kcm/ui/main.qml:65 kcm/ui/main.qml:167
 #, kde-format
 msgid "A new output has been added. Settings have been reloaded."
-msgstr ""
+msgstr "O nouă ieșire a fost adăugată. Setările au fost reîncărcate."
 
 #: kcm/ui/main.qml:67 kcm/ui/main.qml:169
 #, kde-format
 msgid "An output has been removed. Settings have been reloaded."
-msgstr ""
+msgstr "O ieșire a fost eliminată. Setările au fost reîncărcate."
 
 #: kcm/ui/main.qml:107
 #, kde-format
 msgid "No Disman backend found. Please check your Disman installation."
 msgstr ""
+"Nici un backend Disman nu a fost găsit. Vă rugăm verificați instalarea de "
+"Disman."
 
 #: kcm/ui/main.qml:117
 #, kde-format
 msgid "Displays could not be saved due to error."
-msgstr ""
+msgstr "Afișajele nu au putut fi salvate din cauza unei erori."
 
 #: kcm/ui/main.qml:127
 #, kde-format
 msgid ""
 "Global scale changes will come into effect after the system is restarted."
 msgstr ""
+"Schimbările mărimii globale vor avea efect după ce sistemul este repornit."
 
 #: kcm/ui/main.qml:133
 #, kde-format
 msgid "Restart"
-msgstr ""
+msgstr "Repornire"
