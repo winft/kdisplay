@@ -8,92 +8,95 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-09 16:44+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-11-05 09:32+0000\n"
+"Last-Translator: marcin mikołajczak <me@mkljczk.pl>\n"
+"Language-Team: Polish <https://hosted.weblate.org/projects/kwinft/"
+"kdisplay-plasma-integration/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.2-dev\n"
 
 #: plasma-integration/kded/daemon.cpp:66
 #, kde-format
 msgid "Switch Display"
-msgstr ""
+msgstr "Przełącz ekran"
 
 #: plasma-integration/osd/osdaction.cpp:22
 #, kde-format
 msgid "Switch to external display"
-msgstr ""
+msgstr "Przełącz na zewnętrzny ekran"
 
 #: plasma-integration/osd/osdaction.cpp:25
 #, kde-format
 msgid "Switch to laptop display"
-msgstr ""
+msgstr "Przełącz na ekran laptopa"
 
 #: plasma-integration/osd/osdaction.cpp:27
 #, kde-format
 msgid "Unify displays"
-msgstr ""
+msgstr "Połącz wyjścia"
 
 #: plasma-integration/osd/osdaction.cpp:28
 #, kde-format
 msgid "Extend to left"
-msgstr ""
+msgstr "Rozszerz na lewo"
 
 #: plasma-integration/osd/osdaction.cpp:30
 #, kde-format
 msgid "Extend to right"
-msgstr ""
+msgstr "Rozszerz na prawo"
 
 #: plasma-integration/osd/osdaction.cpp:32
 #, kde-format
 msgid "Leave unchanged"
-msgstr ""
+msgstr "Pozostaw bez zmian"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:39
 #, kde-format
 msgid "Enable Presentation Mode"
-msgstr ""
+msgstr "Włącz tryb prezentacji"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:53
 #, kde-format
 msgid "User enabled presentation mode"
-msgstr ""
+msgstr "Użytkownik włączył tryb prezentacji"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:83
 #, kde-format
 msgid ""
 "This will prevent your display and computer from turning off automatically."
-msgstr ""
+msgstr "Dzięki temu, ekran i komputer nie będzie wyłączał się automatycznie."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:110
 #, kde-format
 msgctxt "Some Application and n others enforce presentation mode"
 msgid "%2 and %1 other application are enforcing presentation mode."
 msgid_plural "%2 and %1 other applications are enforcing presentation mode."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%2 i %1 więcej aplikacja wymusza tryb prezentacji."
+msgstr[1] "%2 i %1 więcej aplikacje wymuszają tryb prezentacji."
+msgstr[2] "%2 i %1 więcej aplikacji wymusza tryb prezentacji."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:116
 #, kde-format
 msgctxt "Some Application enforce presentation mode"
 msgid "%1 is enforcing presentation mode."
-msgstr ""
+msgstr "%1 wymusza tryb prezentacji."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:119
 #, kde-format
 msgctxt ""
 "Some Application enforce presentation mode: Reason provided by the app"
 msgid "%1 is enforcing presentation mode: %2"
-msgstr ""
+msgstr "%1 więcej aplikacje wymuszają tryb prezentacji: %2"
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:54
 #, kde-format
 msgid "Display Layout"
-msgstr ""
+msgstr "Układ wyświetlania"
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:93
 #, kde-format
@@ -101,13 +104,15 @@ msgid ""
 "You can only apply a different display layout when there is more than one "
 "display device plugged in."
 msgstr ""
+"Możesz zastosować inny układ wyświetlania, jeśli podłączone jest więcej niż "
+"jedno urządzenie wyświetlające."
 
 #: plasma-integration/plasmoid/package/contents/ui/main.qml:40
 #, kde-format
 msgid "Presentation mode is enabled"
-msgstr ""
+msgstr "Tryb prezentacji jest włączony"
 
 #: plasma-integration/plasmoid/package/contents/ui/main.qml:101
 #, kde-format
 msgid "Configure Display Settings…"
-msgstr ""
+msgstr "Konfiguruj ustawienia wyświetlania…"
