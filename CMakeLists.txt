@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(KDisplay)
-set(PROJECT_VERSION "5.27.80")
-set(KDISPLAY_VERSION ${PROJECT_VERSION})
+project(KDisplay VERSION 5.27.80)
+set(KDISPLAY_VERSION ${CMAKE_PROJECT_VERSION})
 
 add_definitions("-DKDISPLAY_VERSION=\"${KDISPLAY_VERSION}\"")
 
@@ -34,10 +33,13 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
   I18n
   IconThemes
   KCMUtils
-  Plasma
-  PlasmaQuick
   WindowSystem
   XmlGui
+)
+
+find_package(KF6 ${CMAKE_PROJECT_VERSION_MAJOR}.${CMAKE_PROJECT_VERSION_MINOR} REQUIRED COMPONENTS
+  Plasma
+  PlasmaQuick
 )
 
 find_package(LayerShellQt)
