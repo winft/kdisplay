@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KPluginFactory>
 #include <KSharedConfig>
 
+#include <QProcess>
 #include <QTimer>
 
 K_PLUGIN_CLASS_WITH_JSON(KCMKDisplay, "kcm_kdisplay.json")
