@@ -30,6 +30,6 @@ target_link_libraries(kcm_kdisplay
   KF6::I18n
   KF6::KCMUtils
   KF6::KCMUtilsQuick
-  KF6::PlasmaQuick
+  Plasma::PlasmaQuick
   Qt6::Sensors
 )
