@@ -8,91 +8,95 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-09 16:44+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-12-19 17:08+0000\n"
+"Last-Translator: ssantos <ssantos@web.de>\n"
+"Language-Team: Portuguese <https://hosted.weblate.org/projects/kwinft/"
+"kdisplay-plasma-integration/pt/>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.3\n"
 
 #: plasma-integration/kded/daemon.cpp:66
 #, kde-format
 msgid "Switch Display"
-msgstr ""
+msgstr "Alternar ecrã"
 
 #: plasma-integration/osd/osdaction.cpp:22
 #, kde-format
 msgid "Switch to external display"
-msgstr ""
+msgstr "Alternar para o ecrã externo"
 
 #: plasma-integration/osd/osdaction.cpp:25
 #, kde-format
 msgid "Switch to laptop display"
-msgstr ""
+msgstr "Alternar para o ecrã do portátil"
 
 #: plasma-integration/osd/osdaction.cpp:27
 #, kde-format
 msgid "Unify displays"
-msgstr ""
+msgstr "Unificar saídas"
 
 #: plasma-integration/osd/osdaction.cpp:28
 #, kde-format
 msgid "Extend to left"
-msgstr ""
+msgstr "Estender para a esquerda"
 
 #: plasma-integration/osd/osdaction.cpp:30
 #, kde-format
 msgid "Extend to right"
-msgstr ""
+msgstr "Estender para a direita"
 
 #: plasma-integration/osd/osdaction.cpp:32
 #, kde-format
 msgid "Leave unchanged"
-msgstr ""
+msgstr "Deixar sem alteração"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:39
 #, kde-format
 msgid "Enable Presentation Mode"
-msgstr ""
+msgstr "Ativar modo de apresentação"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:53
 #, kde-format
 msgid "User enabled presentation mode"
-msgstr ""
+msgstr "Modo de apresentação ativado pelo utilizador"
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:83
 #, kde-format
 msgid ""
 "This will prevent your display and computer from turning off automatically."
 msgstr ""
+"Isto irá prevenir que o seu ecrã ou computador seja desligado "
+"automaticamente."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:110
 #, kde-format
 msgctxt "Some Application and n others enforce presentation mode"
 msgid "%2 and %1 other application are enforcing presentation mode."
 msgid_plural "%2 and %1 other applications are enforcing presentation mode."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "O %2 e %1 outro programa estão forçando o modo de apresentação."
+msgstr[1] "O %2 e %1 outros programas estão forçando o modo de apresentação."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:116
 #, kde-format
 msgctxt "Some Application enforce presentation mode"
 msgid "%1 is enforcing presentation mode."
-msgstr ""
+msgstr "O %1 força o modo de apresentação."
 
 #: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:119
 #, kde-format
 msgctxt ""
 "Some Application enforce presentation mode: Reason provided by the app"
 msgid "%1 is enforcing presentation mode: %2"
-msgstr ""
+msgstr "O %1 força o modo de apresentação: %2"
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:54
 #, kde-format
 msgid "Display Layout"
-msgstr ""
+msgstr "Layout de ecrã"
 
 #: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:93
 #, kde-format
@@ -100,11 +104,13 @@ msgid ""
 "You can only apply a different display layout when there is more than one "
 "display device plugged in."
 msgstr ""
+"Só pode aplicar um layout de ecrã diferente quando houver mais que um ecrã "
+"conectado."
 
 #: plasma-integration/plasmoid/package/contents/ui/main.qml:40
 #, kde-format
 msgid "Presentation mode is enabled"
-msgstr ""
+msgstr "O modo de apresentação está ativo"
 
 #: plasma-integration/plasmoid/package/contents/ui/main.qml:101
 #, kde-format
