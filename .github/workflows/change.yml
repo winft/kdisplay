@@ -1,0 +1,43 @@
+# SPDX-FileCopyrightText: 2024 Roman Gilg <subdiff@gmail.com>
+#
+# SPDX-License-Identifier: MIT
+name: Main Checks
+on:
+  - push
+  - pull_request
+jobs:
+  message-lint:
+    uses: ./.github/workflows/commit-lint.yml
+    with:
+      upstream-repo: winft/kdisplay
+
+  clang-format:
+    uses: ./.github/workflows/clang-format.yml
+
+  l10n-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install gettext
+        run: sudo apt-get -y install gettext
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Run pot-files comparison script
+        run: bash tooling/i18n/compare_pot_files.sh
+
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      image: registry.gitlab.com/kwinft/ci-images/archlinux/kwinft-base-master
+    secrets: inherit
+
+  install:
+    uses: ./.github/workflows/install.yml
+    needs: build
+    with:
+      image: registry.gitlab.com/kwinft/ci-images/archlinux/kwinft-base-master
+
+  test:
+    uses: ./.github/workflows/test.yml
+    needs: build
+    with:
+      image: registry.gitlab.com/kwinft/ci-images/archlinux/kwinft-base-master
