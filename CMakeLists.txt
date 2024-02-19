@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(KDisplay VERSION 5.27.80)
-set(KDISPLAY_VERSION ${CMAKE_PROJECT_VERSION})
 
-add_definitions("-DKDISPLAY_VERSION=\"${KDISPLAY_VERSION}\"")
+add_definitions("-DKDISPLAY_VERSION=\"${PROJECT_VERSION}\"")
 
 set(QT_MIN_VERSION "6.4.0")
 set(KF6_MIN_VERSION "5.240.0")
@@ -37,8 +36,8 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
   XmlGui
 )
 
-find_package(Plasma ${CMAKE_PROJECT_VERSION_MAJOR}.${CMAKE_PROJECT_VERSION_MINOR} REQUIRED)
-find_package(PlasmaQuick ${CMAKE_PROJECT_VERSION_MAJOR}.${CMAKE_PROJECT_VERSION_MINOR} REQUIRED)
+find_package(Plasma ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR} REQUIRED)
+find_package(PlasmaQuick ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR} REQUIRED)
 
 find_package(LayerShellQt)
 set_package_properties(LayerShellQt PROPERTIES
