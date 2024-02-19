@@ -6,7 +6,7 @@ It provides a simple and straightforward UI for managing an arbitrary number of 
 <div align="center">
 
   <img src="docs/assets/app-screenshot.png"
-       alt="KDisplay in KWinFT Wayland session"
+       alt="KDisplay in Theseus' Ship Wayland session"
        width="400">
 </div>
 
@@ -25,7 +25,7 @@ It provides a simple and straightforward UI for managing an arbitrary number of 
 KDisplay works with many windowing system and compositors:
 * Any X11 desktop
 * Wayland:
-  * KWinFT and KWin
+  * Theseus' Ship and other The Compositor Modules based compositors
   * sway and other wlroots based compositors
 
 ### Packages
@@ -79,8 +79,11 @@ please join us there.
 If you are interested in improving the KDisplay source code directly,
 see the [CONTRIBUTING.md](CONTRIBUTING.md) file on how to get started.
 
+## Contact
+Issue tickets can be created for feature requests, bug reports or general discussions.
+For direct communication join [The Compositor Modules Matrix room](https://matrix.to/#/#como:matrix.org).
 
 [aur-package]: https://aur.archlinux.org/packages/kdisplay-kwinft
-[disman-reporting-issues]: https://gitlab.com/kwinft/disman#reporting-issues
-[issue]: https://gitlab.com/kwinft/kdisplay/-/issues
+[disman-reporting-issues]: https://github.com/winft/disman#reporting-issues
+[issue]: https://github.com/winft/kdisplay/issues
 [weblate]: https://hosted.weblate.org/engage/kwinft

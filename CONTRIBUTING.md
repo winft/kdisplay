@@ -1,12 +1,18 @@
 # Contributing to KDisplay
 
- - [Logging and Debugging](#logging-and-debugging)
+- [Contributing to KDisplay](#contributing-to-kdisplay)
+  - [Logging and Debugging](#logging-and-debugging)
     - [Runtime logging](#runtime-logging)
+      - [Preparations](#preparations)
+      - [Disman D-Bus service](#disman-d-bus-service)
+      - [KDE Daemon module](#kde-daemon-module)
+      - [KConfig Module (KCM)](#kconfig-module-kcm)
     - [Accessing the Wayland compositor log](#accessing-the-wayland-compositor-log)
     - [Debugging with GDB](#debugging-with-gdb)
- - [Submission Guideline](#submission-guideline)
- - [Commit Message Guideline](#commit-message-guideline)
- - [Contact](#contact)
+  - [Submission Guideline](#submission-guideline)
+  - [Commit Message Guideline](#commit-message-guideline)
+    - [Example](#example)
+    - [Tooling](#tooling)
 
 ## Logging and Debugging
 The first step in contributing to the project
@@ -84,13 +90,13 @@ If you debug KDisplay in a Wayland session it is often helpful to also get the d
 Wayland compositor.
 How this can be achieved depends on the compositor.
 
-For *KWinFT* see the respective section in its documentation on [runtime logging][kwinft-log].
+For *Theseus' Ship* see the respective section in its documentation on [runtime logging][theseus-ship-log].
 
 ### Debugging with GDB
 In case the KDE daemon or the KDisplay KCM crash, the GNU Debugger (GDB) can often provide
 valuable information about the crash in the form of a backtrace.
 
-For more information see KWinFT's [documentation about GDB][kwinft-debug-gdb].
+For more information see Theseus' Ship's [documentation about GDB][theseus-ship-debug-gdb].
 Most of it can be applied to applications making use of Disman directly and that often in an easier
 fashion.
 For example for starting KDisplay directly with GDB simply issue from a terminal emulator in your
@@ -105,10 +111,10 @@ in Wrapland's [contributing document][wrapland-submissions].
 
 *Summarizing the main points:*
 
-* Use [merge requests][merge-request] directly for smaller contributions, but create
+* Use [pull requests][pull-request] directly for smaller contributions, but create
   [issue tickets][issue] *beforehand* for [larger changes][wrapland-large-changes].
 * Adhere to the [KDE Frameworks Coding Style][frameworks-style].
-* Merge requests have to be posted against master or a feature branch. Commits to the stable branch
+* Pull requests have to be posted against master or a feature branch. Commits to the stable branch
   are only cherry-picked from the master branch after some testing on the master branch.
 
 ## Commit Message Guideline
@@ -141,20 +147,17 @@ amendments:
 ### Tooling
 See [Wrapland's documentation][wrapland-tooling] for available tooling.
 
-## Contact
-See [Wrapland's documentation][wrapland-contact] for contact information.
-
 [angular-revert]: https://github.com/angular/angular/blob/3cf2005a936bec2058610b0786dd0671dae3d358/CONTRIBUTING.md#revert
 [angular-subject]: https://github.com/angular/angular/blob/3cf2005a936bec2058610b0786dd0671dae3d358/CONTRIBUTING.md#subject
 [conventional-commits]: https://www.conventionalcommits.org/en/v1.0.0/#specification
-[disman-service]: https://gitlab.com/kwinft/disman/-/blob/master/CONTRIBUTING.md#dismans-d-bus-backend-service
+[disman-service]: https://github.com/winft/disman/blob/master/CONTRIBUTING.md#dismans-d-bus-backend-service
 [frameworks-style]: https://community.kde.org/Policies/Frameworks_Coding_Style
-[issue]: https://gitlab.com/kwinft/kdisplay/-/issues
-[kwinft-debug-gdb]: https://gitlab.com/kwinft/kwinft/-/blob/master/CONTRIBUTING.md#debugging-with-gdb
-[kwinft-log]: https://gitlab.com/kwinft/kwinft/-/blob/master/CONTRIBUTING.md#runtime-logging
-[merge-request]: https://gitlab.com/kwinft/kdisplay/-/merge_requests
+[issue]: https://github.com/winft/kdisplay/issues
+[theseus-ship-debug-gdb]: https://github.com/winft/theseus-ship/blob/master/CONTRIBUTING.md#debugging-with-gdb
+[theseus-ship-log]: https://github.com/winft/theseus-ship/blob/master/CONTRIBUTING.md#runtime-logging
+[pull-request]: https://github.com/winft/kdisplay/pull
 [plasma-schedule]: https://community.kde.org/Schedules/Plasma_5
-[wrapland-contact]: https://gitlab.com/kwinft/wrapland/-/blob/master/CONTRIBUTING.md#contact
-[wrapland-large-changes]: https://gitlab.com/kwinft/wrapland/-/blob/master/CONTRIBUTING.md#issues-for-large-changes
-[wrapland-submissions]: https://gitlab.com/kwinft/wrapland/-/blob/master/CONTRIBUTING.md#submission-guideline
-[wrapland-tooling]: https://gitlab.com/kwinft/wrapland/-/blob/master/CONTRIBUTING.md#tooling
+[wrapland-contact]: https://github.com/winft/wrapland/blob/master/CONTRIBUTING.md#contact
+[wrapland-large-changes]: https://github.com/winft/wrapland/blob/master/CONTRIBUTING.md#issues-for-large-changes
+[wrapland-submissions]: https://github.com/winft/wrapland/blob/master/CONTRIBUTING.md#submission-guideline
+[wrapland-tooling]: https://github.com/winft/wrapland/blob/master/CONTRIBUTING.md#tooling
