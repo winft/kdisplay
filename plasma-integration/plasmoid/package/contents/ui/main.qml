@@ -28,6 +28,7 @@ import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasma5support 2.0 as P5Support
 import org.kde.kquickcontrolsaddons 2.0
+import org.kde.kirigami 2.20 as Kirigami
 
 import org.kwinft.private.kdisplay 1.0
 
@@ -103,17 +104,17 @@ PlasmoidItem {
 
     fullRepresentation: ColumnLayout {
         spacing: 0
-        Layout.preferredWidth: units.gridUnit * 15
+        Layout.preferredWidth: Kirigami.Units.gridUnit * 15
 
         ScreenLayoutSelection {
-            Layout.leftMargin: units.smallSpacing
+            Layout.leftMargin: Kirigami.Units.smallSpacing
             Layout.fillWidth: true
         }
 
         PresentationModeItem {
             Layout.fillWidth: true
-            Layout.topMargin: units.largeSpacing
-            Layout.leftMargin: units.smallSpacing
+            Layout.topMargin: Kirigami.Units.largeSpacing
+            Layout.leftMargin: Kirigami.Units.smallSpacing
         }
 
         // compact the layout

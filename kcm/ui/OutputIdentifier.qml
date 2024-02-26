@@ -28,7 +28,7 @@ Rectangle {
     color: theme.backgroundColor
     border {
         color: theme.textColor
-        width: units.smallSpacing * 1.5
+        width: Kirigami.Units.smallSpacing * 1.5
     }
     radius: Kirigami.Units.smallSpacing * 2
     opacity: 0.9

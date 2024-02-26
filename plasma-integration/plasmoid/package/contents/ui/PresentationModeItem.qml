@@ -27,9 +27,10 @@ import QtQuick.Layouts 1.15
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
+import org.kde.kirigami 2.20 as Kirigami
 
 ColumnLayout {
-    spacing: units.smallSpacing
+    spacing: Kirigami.Units.smallSpacing
 
     PlasmaComponents3.CheckBox {
         id: checkBox
@@ -87,18 +88,18 @@ ColumnLayout {
     RowLayout {
         Layout.fillWidth: true
         Layout.leftMargin: checkBoxMetrics.width
-        spacing: units.smallSpacing
+        spacing: Kirigami.Units.smallSpacing
 
         PlasmaCore.IconItem {
-            Layout.preferredWidth: units.iconSizes.medium
-            Layout.preferredHeight: units.iconSizes.medium
+            Layout.preferredWidth: Kirigami.Units.iconSizes.medium
+            Layout.preferredHeight: Kirigami.Units.iconSizes.medium
             source: pmSource.inhibitions[0] ? pmSource.inhibitions[0].Icon || "" : ""
             visible: valid
         }
 
         PlasmaComponents3.Label {
             Layout.fillWidth: true
-            Layout.maximumWidth: Math.min(units.gridUnit * 20, implicitWidth)
+            Layout.maximumWidth: Math.min(Kirigami.Units.gridUnit * 20, implicitWidth)
             font.pointSize: theme.smallestFont.pointSize
             wrapMode: Text.WordWrap
             elide: Text.ElideRight
