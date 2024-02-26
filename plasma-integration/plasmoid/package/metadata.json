@@ -11,7 +11,7 @@
         "Description": "Quickly switch between screen layouts and presentation mode",
         "EnabledByDefault": true,
         "Icon": "preferences-desktop-display-randr",
-        "Id": "org.kde.kdisplay",
+        "Id": "org.kwinft.kdisplay",
         "License": "GPL",
         "Name": "Display Configuration",
         "Website": "https://kde.org/plasma-desktop"
