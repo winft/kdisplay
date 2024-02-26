@@ -22,8 +22,9 @@
  */
 #pragma once
 
-#include <Plasma/Applet>
+#include "../osd/osdaction.h"
 
+#include <Plasma/Applet>
 #include <disman/types.h>
 
 class KDisplayApplet : public Plasma::Applet
@@ -40,14 +41,11 @@ public:
     explicit KDisplayApplet(QObject* parent, const KPluginMetaData& data, const QVariantList& args);
     ~KDisplayApplet() override;
 
-    enum Action { SwitchToExternal, SwitchToInternal, Clone, ExtendLeft, ExtendRight };
-    Q_ENUM(Action)
-
     void init() override;
 
     int connectedOutputCount() const;
 
-    Q_INVOKABLE void applyLayoutPreset(Action action);
+    Q_INVOKABLE void applyLayoutPreset(KDisplay::OsdAction::Action action);
 
 Q_SIGNALS:
     void connectedOutputCountChanged();

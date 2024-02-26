@@ -22,8 +22,6 @@
  */
 #include "kdisplay_applet.h"
 
-#include "../osd/osdaction.h"
-
 #include <QMetaEnum>
 #include <QQmlEngine> // for qmlRegisterType
 
@@ -71,22 +69,17 @@ int KDisplayApplet::connectedOutputCount() const
     return m_connectedOutputCount;
 }
 
-void KDisplayApplet::applyLayoutPreset(Action action)
+void KDisplayApplet::applyLayoutPreset(KDisplay::OsdAction::Action action)
 {
     auto const actionEnum = QMetaEnum::fromType<KDisplay::OsdAction::Action>();
     Q_ASSERT(actionEnum.isValid());
-
-    const QString presetName = QString::fromLatin1(actionEnum.valueToKey(action));
-    if (presetName.isEmpty()) {
-        return;
-    }
 
     QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.kded6"),
                                                       QStringLiteral("/modules/kdisplay"),
                                                       QStringLiteral("org.kwinft.kdisplay"),
                                                       QStringLiteral("applyLayoutPreset"));
 
-    msg.setArguments({presetName});
+    msg.setArguments({QString::fromLatin1(actionEnum.valueToKey(action))});
 
     QDBusConnection::sessionBus().call(msg, QDBus::NoBlock);
 }
