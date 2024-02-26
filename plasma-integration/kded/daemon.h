@@ -38,11 +38,6 @@ public Q_SLOTS:
     bool getAutoRotate();
     void setAutoRotate(bool value);
 
-Q_SIGNALS:
-    // DBus
-    void outputConnected(const QString& outputName);
-    void unknownOutputConnected(const QString& outputName);
-
 private:
     void init(Disman::ConfigOperation* op);
 
