@@ -74,7 +74,7 @@ ColumnLayout {
     PlasmaExtras.DescriptiveLabel {
         Layout.fillWidth: true
         Layout.leftMargin: presentationModeSwitch.indicator.width + presentationModeSwitch.spacing
-        font.pointSize: theme.smallestFont.pointSize
+        font: Kirigami.Theme.smallFont
         text: i18n("This will prevent your display and computer from turning off automatically.")
         wrapMode: Text.WordWrap
     }
