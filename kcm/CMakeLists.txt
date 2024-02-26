@@ -25,7 +25,7 @@ ecm_qt_declare_logging_category(kcm_kdisplay
     DESCRIPTION "kdisplay kcm (kdisplay)" EXPORT KDISPLAY
 )
 
-target_link_libraries(kcm_kdisplay
+target_link_libraries(kcm_kdisplay PRIVATE
   disman::lib
   KF6::I18n
   KF6::KCMUtils
