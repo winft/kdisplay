@@ -16,5 +16,6 @@
         "Name": "Display Configuration",
         "Website": "https://kde.org/plasma-desktop"
     },
+    "X-Plasma-API-Minimum-Version": "6.0",
     "X-Plasma-NotificationAreaCategory": "Hardware"
 }
