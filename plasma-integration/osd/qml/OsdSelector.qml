@@ -8,10 +8,10 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.10
 
-import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.kirigami 2.20 as Kirigami
+import org.kde.ksvg 1.0 as KSvg
 
 import org.kwinft.kdisplay 1.0
 
@@ -117,12 +117,12 @@ Control {
         }
     }
 
-      background: PlasmaCore.FrameSvgItem {
+      background: KSvg.FrameSvgItem {
         id: shadow
         imagePath: "dialogs/background"
         prefix: "shadow"
 
-        PlasmaCore.FrameSvgItem {
+        KSvg.FrameSvgItem {
             id: background
             anchors.leftMargin: shadow.margins.left
             anchors.rightMargin: shadow.margins.right
