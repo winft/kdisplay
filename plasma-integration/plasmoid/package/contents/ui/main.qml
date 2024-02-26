@@ -60,10 +60,6 @@ PlasmoidItem {
         });
     }
 
-    function action_configure() {
-        KCMShell.openSystemSettings(kcmName);
-    }
-
     P5Support.DataSource {
         id: pmSource
         engine: "powermanagement"
@@ -95,11 +91,16 @@ PlasmoidItem {
         }
     }
 
+    PlasmaCore.Action {
+        id: configureAction
+        text: i18n("Configure Display Settings…")
+        icon.name: "preferences-desktop-display"
+        visible: kcmAllowed
+        onTriggered: KCMShell.openSystemSettings(kcmName)
+    }
+
     Component.onCompleted: {
-        if (kcmAllowed) {
-            Plasmoid.removeAction("configure");
-            Plasmoid.setAction("configure", i18n("Configure Display Settings…"), "preferences-desktop-display")
-        }
+        Plasmoid.setInternalAction("configure", configureAction);
     }
 
     fullRepresentation: ColumnLayout {
