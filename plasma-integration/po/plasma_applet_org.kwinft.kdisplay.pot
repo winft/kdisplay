@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-26 15:22+0100\n"
+"POT-Creation-Date: 2024-02-26 15:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,23 +53,23 @@ msgstr ""
 msgid "Leave unchanged"
 msgstr ""
 
-#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:39
+#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:40
 #, kde-format
 msgid "Enable Presentation Mode"
 msgstr ""
 
-#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:53
+#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:54
 #, kde-format
 msgid "User enabled presentation mode"
 msgstr ""
 
-#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:83
+#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:84
 #, kde-format
 msgid ""
 "This will prevent your display and computer from turning off automatically."
 msgstr ""
 
-#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:110
+#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:111
 #, kde-format
 msgctxt "Some Application and n others enforce presentation mode"
 msgid "%2 and %1 other application are enforcing presentation mode."
@@ -77,37 +77,37 @@ msgid_plural "%2 and %1 other applications are enforcing presentation mode."
 msgstr[0] ""
 msgstr[1] ""
 
-#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:116
+#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:117
 #, kde-format
 msgctxt "Some Application enforce presentation mode"
 msgid "%1 is enforcing presentation mode."
 msgstr ""
 
-#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:119
+#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:120
 #, kde-format
 msgctxt ""
 "Some Application enforce presentation mode: Reason provided by the app"
 msgid "%1 is enforcing presentation mode: %2"
 msgstr ""
 
-#: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:54
+#: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:55
 #, kde-format
 msgid "Display Layout"
 msgstr ""
 
-#: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:94
+#: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:95
 #, kde-format
 msgid ""
 "You can only apply a different display layout when there is more than one "
 "display device plugged in."
 msgstr ""
 
-#: plasma-integration/plasmoid/package/contents/ui/main.qml:39
+#: plasma-integration/plasmoid/package/contents/ui/main.qml:40
 #, kde-format
 msgid "Presentation mode is enabled"
 msgstr ""
 
-#: plasma-integration/plasmoid/package/contents/ui/main.qml:100
+#: plasma-integration/plasmoid/package/contents/ui/main.qml:101
 #, kde-format
 msgid "Configure Display Settings…"
 msgstr ""
