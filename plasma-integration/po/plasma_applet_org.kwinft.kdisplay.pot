@@ -69,7 +69,7 @@ msgid ""
 "This will prevent your display and computer from turning off automatically."
 msgstr ""
 
-#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:105
+#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:92
 #, kde-format
 msgctxt "Some Application and n others enforce presentation mode"
 msgid "%2 and %1 other application are enforcing presentation mode."
@@ -77,13 +77,13 @@ msgid_plural "%2 and %1 other applications are enforcing presentation mode."
 msgstr[0] ""
 msgstr[1] ""
 
-#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:111
+#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:98
 #, kde-format
 msgctxt "Some Application enforce presentation mode"
 msgid "%1 is enforcing presentation mode."
 msgstr ""
 
-#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:114
+#: plasma-integration/plasmoid/package/contents/ui/PresentationModeItem.qml:101
 #, kde-format
 msgctxt ""
 "Some Application enforce presentation mode: Reason provided by the app"
