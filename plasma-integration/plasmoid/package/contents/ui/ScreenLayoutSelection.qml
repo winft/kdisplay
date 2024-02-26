@@ -21,12 +21,12 @@
  *
  */
 
-import QtQuick 2.8
-import QtQuick.Layouts 1.1
+import QtQuick 2.15
+import QtQuick.Layouts 1.15
 
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 
 ColumnLayout {
@@ -65,12 +65,13 @@ ColumnLayout {
             id: screenLayoutRepeater
             model: root.screenLayouts
 
-            PlasmaComponents.Button {
+            PlasmaComponents3.Button {
                 width: screenLayoutRow.buttonSize
                 height: width
-                tooltip: modelData.label
-                Accessible.name: tooltip
                 onClicked: plasmoid.nativeInterface.applyLayoutPreset(modelData.action)
+
+                Accessible.name: modelData.label
+                PlasmaComponents3.ToolTip { text: modelData.label }
 
                 // HACK otherwise the icon won't expand to full button size
                 PlasmaCore.IconItem {
