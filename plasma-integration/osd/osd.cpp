@@ -25,6 +25,7 @@ Osd::Osd(Disman::OutputPtr const& output, QObject* parent)
     , m_output(output)
 {
     connect(output.get(), &Disman::Output::updated, this, &Osd::onOutputAvailabilityChanged);
+    m_engine.setProperty("_kirigamiTheme", QStringLiteral("KirigamiPlasmaStyle"));
 }
 
 Osd::~Osd()
