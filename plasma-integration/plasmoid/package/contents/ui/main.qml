@@ -31,12 +31,12 @@ import org.kde.kquickcontrolsaddons 2.0
 
 import org.kwinft.private.kdisplay 1.0
 
-Item {
+PlasmoidItem {
     id: root
 
     // Only show if there's screen layouts available or the user enabled presentation mode
-    Plasmoid.status: presentationModeEnabled || plasmoid.nativeInterface.connectedOutputCount > 1 ? PlasmaCore.Types.ActiveStatus : PlasmaCore.Types.PassiveStatus
-    Plasmoid.toolTipSubText: presentationModeEnabled ? i18n("Presentation mode is enabled") : ""
+    Plasmoid.status: presentationModeEnabled || (isLaptop && Plasmoid.connectedOutputCount > 1) ? PlasmaCore.Types.ActiveStatus : PlasmaCore.Types.PassiveStatus
+    toolTipSubText: presentationModeEnabled ? i18n("Presentation mode is enabled") : ""
 
     readonly property string kcmName: "kcm_kdisplay"
     readonly property bool kcmAllowed: KCMShell.authorize(kcmName + ".desktop").length > 0
@@ -96,12 +96,12 @@ Item {
 
     Component.onCompleted: {
         if (kcmAllowed) {
-            plasmoid.removeAction("configure");
-            plasmoid.setAction("configure", i18n("Configure Display Settings…"), "preferences-desktop-display")
+            Plasmoid.removeAction("configure");
+            Plasmoid.setAction("configure", i18n("Configure Display Settings…"), "preferences-desktop-display")
         }
     }
 
-    Plasmoid.fullRepresentation: ColumnLayout {
+    fullRepresentation: ColumnLayout {
         spacing: 0
         Layout.preferredWidth: units.gridUnit * 15
 

@@ -35,7 +35,7 @@ ColumnLayout {
     states: [
         State {
             // only makes sense to offer screen layout setup if there's more than one screen connected
-            when: plasmoid.nativeInterface.connectedOutputCount < 2
+            when: Plasmoid.connectedOutputCount < 2
 
             PropertyChanges {
                 target: screenLayoutRow
@@ -68,7 +68,7 @@ ColumnLayout {
             PlasmaComponents3.Button {
                 width: screenLayoutRow.buttonSize
                 height: width
-                onClicked: plasmoid.nativeInterface.applyLayoutPreset(modelData.action)
+                onClicked: Plasmoid.applyLayoutPreset(modelData.action)
 
                 Accessible.name: modelData.label
                 PlasmaComponents3.ToolTip { text: modelData.label }
