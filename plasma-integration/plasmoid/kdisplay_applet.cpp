@@ -42,15 +42,14 @@ KDisplayApplet::KDisplayApplet(QObject* parent,
                                const QVariantList& args)
     : Plasma::Applet(parent, data, args)
 {
+    qmlRegisterUncreatableType<KDisplay::OsdAction>(
+        "org.kwinft.private.kdisplay", 1, 0, "OsdAction", QStringLiteral("Can't create OsdAction"));
 }
 
 KDisplayApplet::~KDisplayApplet() = default;
 
 void KDisplayApplet::init()
 {
-    qmlRegisterUncreatableType<KDisplay::OsdAction>(
-        "org.kwinft.private.kdisplay", 1, 0, "OsdAction", QStringLiteral("Can't create OsdAction"));
-
     connect(new Disman::GetConfigOperation,
             &Disman::ConfigOperation::finished,
             this,
