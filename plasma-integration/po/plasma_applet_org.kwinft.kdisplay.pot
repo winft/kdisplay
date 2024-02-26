@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-26 15:24+0100\n"
+"POT-Creation-Date: 2024-02-26 15:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,12 +90,12 @@ msgctxt ""
 msgid "%1 is enforcing presentation mode: %2"
 msgstr ""
 
-#: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:55
+#: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:54
 #, kde-format
 msgid "Display Layout"
 msgstr ""
 
-#: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:95
+#: plasma-integration/plasmoid/package/contents/ui/ScreenLayoutSelection.qml:94
 #, kde-format
 msgid ""
 "You can only apply a different display layout when there is more than one "
