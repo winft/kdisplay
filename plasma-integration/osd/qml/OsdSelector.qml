@@ -69,7 +69,7 @@ Control {
             }
         }
 
-        PlasmaExtras.Heading {
+        Kirigami.Heading {
             text: root.infoText
             horizontalAlignment: Text.AlignHCenter
             maximumLineCount: 2
