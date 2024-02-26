@@ -93,7 +93,7 @@ ColumnLayout {
         Layout.maximumWidth: Math.min(Kirigami.Units.gridUnit * 20, implicitWidth)
         wrapMode: Text.Wrap
         text: i18n("You can only apply a different display layout when there is more than one display device plugged in.")
-        font.pointSize: theme.smallestFont.pointSize
+        font: Kirigami.Theme.smallFont
         visible: false
     }
 }
