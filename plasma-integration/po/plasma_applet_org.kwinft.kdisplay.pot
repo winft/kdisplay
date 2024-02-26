@@ -107,7 +107,7 @@ msgstr ""
 msgid "Presentation mode is enabled"
 msgstr ""
 
-#: plasma-integration/plasmoid/package/contents/ui/main.qml:101
+#: plasma-integration/plasmoid/package/contents/ui/main.qml:96
 #, kde-format
 msgid "Configure Display Settings…"
 msgstr ""
