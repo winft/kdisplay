@@ -14,11 +14,7 @@
         "Id": "org.kde.kdisplay",
         "License": "GPL",
         "Name": "Display Configuration",
-        "Version": "1.0",
         "Website": "https://kde.org/plasma-desktop"
     },
-    "X-Plasma-API": "declarativeappletscript",
-    "X-Plasma-MainScript": "ui/main.qml",
-    "X-Plasma-NotificationArea": "true",
     "X-Plasma-NotificationAreaCategory": "Hardware"
 }
