@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-26 15:23+0100\n"
+"POT-Creation-Date: 2024-02-26 15:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -102,12 +102,12 @@ msgid ""
 "display device plugged in."
 msgstr ""
 
-#: plasma-integration/plasmoid/package/contents/ui/main.qml:40
+#: plasma-integration/plasmoid/package/contents/ui/main.qml:43
 #, kde-format
 msgid "Presentation mode is enabled"
 msgstr ""
 
-#: plasma-integration/plasmoid/package/contents/ui/main.qml:96
+#: plasma-integration/plasmoid/package/contents/ui/main.qml:99
 #, kde-format
 msgid "Configure Display Settings…"
 msgstr ""
