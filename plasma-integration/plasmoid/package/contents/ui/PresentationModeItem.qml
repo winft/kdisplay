@@ -32,8 +32,8 @@ import org.kde.kirigami 2.20 as Kirigami
 ColumnLayout {
     spacing: Kirigami.Units.smallSpacing
 
-    PlasmaComponents3.CheckBox {
-        id: checkBox
+    PlasmaComponents3.Switch {
+        id: presentationModeSwitch
         Layout.fillWidth: true
         // Remove spacing between checkbox and the explanatory label below
         Layout.bottomMargin: -parent.spacing
@@ -44,8 +44,8 @@ ColumnLayout {
                 return;
             }
 
-            // disable CheckBox while job is running
-            checkBox.enabled = false;
+            // disable Switch while job is running
+            presentationModeSwitch.enabled = false;
 
             var service = pmSource.serviceForSource("PowerDevil");
 
@@ -56,7 +56,7 @@ ColumnLayout {
                 var job = service.startOperationCall(op);
                 job.finished.connect(function (job) {
                     presentationModeCookie = job.result;
-                    checkBox.enabled = true;
+                    presentationModeSwitch.enabled = true;
                 });
             } else {
                 var op = service.operationDescription("stopSuppressingScreenPowerManagement");
@@ -65,21 +65,15 @@ ColumnLayout {
                 var job = service.startOperationCall(op);
                 job.finished.connect(function (job) {
                     presentationModeCookie = -1;
-                    checkBox.enabled = true;
+                    presentationModeSwitch.enabled = true;
                 });
             }
         }
     }
 
-    // so we can align the labels below with the checkbox
-    PlasmaComponents3.CheckBox {
-        id: checkBoxMetrics
-        visible: false
-    }
-
     PlasmaExtras.DescriptiveLabel {
         Layout.fillWidth: true
-        Layout.leftMargin: checkBoxMetrics.width
+        Layout.leftMargin: presentationModeSwitch.indicator.width + presentationModeSwitch.spacing
         font.pointSize: theme.smallestFont.pointSize
         text: i18n("This will prevent your display and computer from turning off automatically.")
         wrapMode: Text.WordWrap
@@ -87,7 +81,7 @@ ColumnLayout {
 
     RowLayout {
         Layout.fillWidth: true
-        Layout.leftMargin: checkBoxMetrics.width
+        Layout.leftMargin: presentationModeSwitch.indicator.width + presentationModeSwitch.spacing
         spacing: Kirigami.Units.smallSpacing
 
         PlasmaCore.IconItem {
