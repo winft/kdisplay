@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(KDisplay VERSION 5.27.80)
+project(KDisplay VERSION 6.0.0)
 
 add_definitions("-DKDISPLAY_VERSION=\"${PROJECT_VERSION}\"")
 
@@ -46,7 +46,7 @@ set_package_properties(LayerShellQt PROPERTIES
     TYPE REQUIRED
 )
 
-set(MIN_DISMAN_VERSION "0.527.80")
+set(MIN_DISMAN_VERSION "0.600.0")
 find_package(disman ${MIN_DISMAN_VERSION} REQUIRED)
 
 add_subdirectory(kcm)

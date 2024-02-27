@@ -1,5 +1,47 @@
 # Changelog
 All notable changes to KDisplay will be documented in this file.
+## [6.0.0](https://github.com/winft/kdisplay/compare/kdisplay@5.27.0-beta.0...v6.0.0) (2024-02-27)
+
+
+### Features
+
+* force plasma theme in OSD ([9801592](https://github.com/winft/kdisplay/commit/98015929778c97be8ccdd56bbbea8e544129df90))
+* **plasmoid:**  use Switch for instant-apply "presentation mode" setting ([f9748c9](https://github.com/winft/kdisplay/commit/f9748c90f0a699674d9a6f77d05148017f03c570))
+* **plasmoid:** only show if the user enabled presentation mode ([1fb4065](https://github.com/winft/kdisplay/commit/1fb406505ff719c5a99c0555cd6abe27083c9837))
+* support adaptive sync ([f579f7e](https://github.com/winft/kdisplay/commit/f579f7e08be36763df595971d31d83ae9f9e35d3))
+* use Kirigami heading ([d10f040](https://github.com/winft/kdisplay/commit/d10f0405a4e6098d36477ee1311e229168793923))
+* use Kirigami units ([d567034](https://github.com/winft/kdisplay/commit/d5670344ffbb0be6fb66a945f687b7f898dcb22c))
+
+
+### Bug Fixes
+
+* adapt to kded6 renaming ([dc002dc](https://github.com/winft/kdisplay/commit/dc002dc285efd57b7077f0aa8b56c5cba6b6ebe3))
+* adapt to Plasma API changes ([b2c31aa](https://github.com/winft/kdisplay/commit/b2c31aa24dc23508edff483db2f909a2593ca572))
+* include declarations ([dba1473](https://github.com/winft/kdisplay/commit/dba1473ef9aede16ad68798a59b16b512564f035))
+* **plasmoid:** correct metadata id ([8b27155](https://github.com/winft/kdisplay/commit/8b271557c5ee05db3b780227fcab32e2cf4e111f))
+* **plasmoid:** register type in the ctor ([7d46843](https://github.com/winft/kdisplay/commit/7d46843dad243de5f9d0022d3869c933e069d39e))
+* port to new action API ([e6519b1](https://github.com/winft/kdisplay/commit/e6519b1a0a337e0153d6b61ec019ba873b5b0d96))
+* use Plasma5Support data source ([067ccdf](https://github.com/winft/kdisplay/commit/067ccdf65d1e5499d6c764dcc5e8c08baaade288))
+
+
+### Refactors
+
+* add parameters to source handlers ([1d560f0](https://github.com/winft/kdisplay/commit/1d560f0f6ca98bee78b751c9d60218d68f27516a))
+* copy InhibitionHint from battery applet ([657eaa6](https://github.com/winft/kdisplay/commit/657eaa66524953d7ab5ae8166b561d2142437a90))
+* modernize QML code to make it work with Qt 6 ([ff194dc](https://github.com/winft/kdisplay/commit/ff194dc1a1cffd296652cd0f4cf21969d51c258d))
+* **plasmoid:** use internal enum ([870e410](https://github.com/winft/kdisplay/commit/870e4106f8e9bdacd1d09dbaa90c88133c7e7a1d))
+* port to KConfig and KCMLauncher ([793cdfe](https://github.com/winft/kdisplay/commit/793cdfe0a771f6bf8d883ad57ad36af4e8ebd339))
+* port to KSvg ([28708fb](https://github.com/winft/kdisplay/commit/28708fb05f9f567b6e4268cd81e7ea1651e0ab5d))
+* port to PlasmaComponents3 ([82eecc0](https://github.com/winft/kdisplay/commit/82eecc0e4e755d45b312f23b7910986a4255cd39))
+* provide osd as separate application ([e9ae432](https://github.com/winft/kdisplay/commit/e9ae432f633fd21a4a0723f8348fb033496ad257))
+* remove output connected signals ([4785a15](https://github.com/winft/kdisplay/commit/4785a159a94e21a453a44e16af90155694a96b74))
+* use K_PLUGIN_CLASS directly ([50fbf43](https://github.com/winft/kdisplay/commit/50fbf43875a42cca0dd612ce1fb89d8dd4c8d5be))
+* use Kirigami font theme ([543b218](https://github.com/winft/kdisplay/commit/543b2181be85b5a35a38dc8a0ae5155ed00dbb75))
+* use Kirigami icon ([a5f8bfc](https://github.com/winft/kdisplay/commit/a5f8bfc03db724efd5a84b3682daf31f67aaef91))
+* use KX11Extras ([28f0ec1](https://github.com/winft/kdisplay/commit/28f0ec181b8c9efc4ea89e72f6bd1cc31059a258))
+* use Qt 6 ([9abba36](https://github.com/winft/kdisplay/commit/9abba3635c3342ebbe294a8027f47f2bc2bfc7d2))
+* use unversioned plasma core import ([47a0c6c](https://github.com/winft/kdisplay/commit/47a0c6cd2ca3a3073093867ccb0db02dacf0c442))
+
 ## [5.27.0](https://gitlab.com/kwinft/kdisplay/compare/kdisplay@5.27.0-beta.0...kdisplay@5.27.0) (2023-02-17)
 
 ## [5.27.0-beta.0](https://gitlab.com/kwinft/kdisplay/compare/kdisplay@5.26.0-beta.0...kdisplay@5.27.0-beta.0) (2023-02-16)
