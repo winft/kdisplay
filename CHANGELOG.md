@@ -1,5 +1,7 @@
 # Changelog
 All notable changes to KDisplay will be documented in this file.
+## [6.1.0](https://github.com/winft/kdisplay/compare/v6.0.0...v6.1.0) (2024-06-19)
+
 ## [6.0.0](https://github.com/winft/kdisplay/compare/kdisplay@5.27.0-beta.0...v6.0.0) (2024-02-27)
 
 
