@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(KDisplay VERSION 6.1.80)
+project(KDisplay VERSION 6.2.0)
 
 add_definitions("-DKDISPLAY_VERSION=\"${PROJECT_VERSION}\"")
 
